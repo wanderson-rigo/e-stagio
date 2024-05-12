@@ -1,30 +1,30 @@
-from App import app, db
-from App.models import Role, User
-from werkzeug.security import generate_password_hash
+from app.models import Role, User
+from app import app, db, user_datastore
+from flask_security.utils import hash_password
 
+# Função para adicionar roles
 def add_roles():
-    roles = ['professores', 'empresas', 'supervisores', 'alunos', 'admin']
+    roles = ['professor', 'empresa', 'supervisor', 'aluno', 'admin']
     for role_name in roles:
-        if not Role.query.filter_by(name=role_name).first():
-            role = Role(name=role_name)
-            db.session.add(role)
+        if not user_datastore.find_role(role_name):
+            user_datastore.create_role(name=role_name)
     db.session.commit()
 
 def add_admin():
-    if not User.query.filter_by(username='admin').first():
+    if not User.query.filter_by(email='admin@example.com').first():
         admin_role = Role.query.filter_by(name='admin').first()
-        if not admin_role:
-            print("Admin role not found, please add roles first.")
-            return
-        
-        admin_user = User(
-            username='admin',
-            password_hash=generate_password_hash('Admin123'),
-            email='admin@admin.com',
-            role_id=admin_role.id
-        )
-        db.session.add(admin_user)
-        db.session.commit()
+        if admin_role:
+            admin_user = User(
+                username='admin',
+                email='admin@example.com',
+                password=hash_password('Admin123!'),  # Senha hasheada
+                role_id=admin_role.id  # Associa a role 'admin' ao usuário
+            )
+            
+            db.session.add(admin_user)
+            db.session.commit()
+        else:
+            print("Role 'admin' not found. Please make sure to add roles first.")
 
 if __name__ == '__main__':
     with app.app_context():

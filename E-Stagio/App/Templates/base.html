@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Welcome{% endblock %}</title>
+    <title>{% block title %}Meu Aplicativo Flask{% endblock %}</title>
+    <!-- CSS Bootstrap para estilização básica -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bloco adicional para CSS customizado -->
+    {% block head %}{% endblock %}
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        </nav>
-    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">MeuApp</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <!-- Adicione mais itens de navegação conforme necessário -->
+            </ul>
+        </div>
+    </nav>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <div class="container mt-5">
+        <!-- Bloco de conteúdo principal que será substituído nos templates filhos -->
+        {% block content %}{% endblock %}
+    </div>
 
-    <footer>
-        <p>&copy; 2024 My Flask App</p>
-    </footer>
-
+    <!-- Scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bloco adicional para scripts customizados -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

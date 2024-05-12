@@ -1,22 +1,31 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import Config
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore
+from flask_mail import Mail
+from config import Config
 
-# Inicialize o Flask
+# Initialize Flask
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Inicialize o SQLAlchemy
+# Initialize SQLAlchemy
 db = SQLAlchemy(app)
 
-# Agora é seguro importar os modelos porque 'db' já foi definido
-from App.models import User, Role
+# Initialize Flask-Mail
+mail = Mail(app)
+
+# Now it's safe to import models because 'db' has been defined
+from app.models import User, Role
 
 migrate = Migrate(app, db)
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+
+# Initialize Flask-Security with the custom register form
 security = Security(app, user_datastore)
 
-# Importe as rotas após a inicialização dos modelos e extensões
-from App import routes
+# Import routes after initializing models and extensions
+from app import routes
+
+for rule in app.url_map.iter_rules():
+    print(rule)
