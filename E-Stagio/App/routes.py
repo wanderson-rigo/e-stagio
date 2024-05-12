@@ -4,9 +4,10 @@ from flask import render_template, redirect, url_for, flash, request
 from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role
-from flask_security import login_user
+from flask_security import login_user, current_user, roles_required, login_required
 
 @app.route('/send-test-email')
+@roles_required('admin')
 def send_test_email():
     try:
         # Cria a mensagem
@@ -23,12 +24,25 @@ def send_test_email():
     
 @app.route('/')
 def index():
-    return render_template('index.html') 
+    if not current_user.is_authenticated:
+        return render_template('index.html')  # For public/unlogged users
+    elif 'admin' in current_user.roles:
+        return render_template('admin/index_admin.html')  # For admin
+    elif 'professor' in current_user.roles:
+        return render_template('professor/index_professor.html')  # For teachers
+    elif 'estudante' in current_user.roles:
+        return render_template('estudante/index_estudante.html')  # For students
+    elif 'empresa' in current_user.roles:
+        return render_template('empresa/index_empresa.html')  # For companies
+    elif 'supervisor' in current_user.roles:
+        return render_template('supervisor/index_supervisor.html')  # For supervisors
+    else:
+        return render_template('index.html') 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     msg = ""
-    roles = Role.query.all()  # Query all roles to display in the form
+    roles = Role.query.filter(Role.name != 'admin').all()
     if request.method == 'POST':
         user = User.query.filter_by(email=request.form['email']).first()
         if user:
@@ -42,7 +56,7 @@ def signup():
         user.confirmed_at = datetime.datetime.now()
         
         # Store the role
-        role_id = request.form.get('options')  # Get the role ID from the form
+        role_id = request.form.get('options')
         role = Role.query.filter_by(id=role_id).first()
         if role:
             user.roles.append(role)

@@ -1,18 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Login</h2>
-<form action="{{ url_for_security('login') }}" method="POST">
-    {{ login_user_form.hidden_tag() }}
-    <p>
-        {{ login_user_form.email.label }}<br>
-        {{ login_user_form.email(size=32) }}
-    </p>
-    <p>
-        {{ login_user_form.password.label }}<br>
-        {{ login_user_form.password(size=32) }}
-    </p>
-    <p>{{ login_user_form.remember.label }} {{ login_user_form.remember }}</p>
-    <p><input type="submit" value="Login"></p>
-</form>
-<p><a href="{{ url_for_security('forgot_password') }}">Esqueceu a senha?</a></p>
+<div class="container mt-4">
+    <h2>Login</h2>
+    <form action="{{ url_for_security('login') }}" method="POST" class="needs-validation" novalidate>
+        {{ login_user_form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ login_user_form.email.label(class="form-label") }}
+            {{ login_user_form.email(class="form-control", size=32) }}
+            {% if login_user_form.email.errors %}
+                <div class="invalid-feedback">
+                    {{ login_user_form.email.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ login_user_form.password.label(class="form-label") }}
+            {{ login_user_form.password(class="form-control", size=32) }}
+            {% if login_user_form.password.errors %}
+                <div class="invalid-feedback">
+                    {{ login_user_form.password.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 form-check">
+            {{ login_user_form.remember(class="form-check-input") }}
+            {{ login_user_form.remember.label(class="form-check-label") }}
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+
+    <p><a href="{{ url_for_security('forgot_password') }}" class="link-primary">Esqueceu a senha?</a></p>
+</div>
 {% endblock %}

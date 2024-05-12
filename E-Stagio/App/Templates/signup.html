@@ -1,35 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
 <!-- signup.html -->
 
-<h2>Sign up</h2>
+<h2 class="mb-4">Registrar</h2>
 
 <!-- Show only if user is logged in -->
 {% if current_user.is_authenticated %}
-You are already logged in.
-
+<div class="alert alert-info" role="alert">
+    You are already logged in.
+</div>
 <!-- Show if user is NOT logged in -->
 {% else %}
-{{ msg }}<br>
+{% if msg %}
+<div class="alert alert-warning" role="alert">
+    {{ msg }}
+</div>
+{% endif %}
 
 <!-- Form for signup -->
-<form action="#" method="POST" id="signup-form">
-    <label>Email Address </label>
-    <input type="text" name="email" required /><br><br>
+<form action="#" method="POST" id="signup-form" class="needs-validation" novalidate>
+    <div class="form-group">
+        <label for="email">Email: </label>
+        <input type="email" class="form-control" name="email" id="email" required>
+        <div class="invalid-feedback">
+            Please provide a valid email.
+        </div>
+    </div>
 
-    <label>Password </label>
-    <input type="password" name="password" required /><br><br>
+    <div class="form-group">
+        <label for="password">Senha: </label>
+        <input type="password" class="form-control" name="password" id="password" required>
+        <div class="invalid-feedback">
+            Please enter your password.
+        </div>
+    </div>
 
-    <label for="role">Choose a role:</label>
-    <select name="options" id="role" required>
-        {% for role in roles %}
-        <option value="{{ role.id }}">{{ role.name }}</option>
-        {% endfor %}
-    </select>
+    <div class="form-group">
+        <label for="role">Choose a role:</label>
+        <select name="options" id="role" class="form-control" required>
+            {% for role in roles %}
+            <option value="{{ role.id }}">{{ role.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Você vai utilizar como ?
+        </div>
+    </div>
 
-    <button type="submit">Submit</button><br><br>
-
-    <!-- Link for signin -->
-    <span>Already have an account?</span>
-    <a href="/signin">Sign in</a>
+    <button type="submit" class="btn btn-primary">Registrar</button>
 </form>
+
+<div class="mt-3">
+    <span>Já possui uma conta?</span>
+    <a href="/login" class="link-primary">Entrar</a>
+</div>
+
 <!-- End the if block -->
 {% endif %}
+
+
+
+{% endblock %}
