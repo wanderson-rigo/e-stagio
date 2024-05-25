@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, date
 from app import db
 from flask_security import UserMixin, RoleMixin
 
@@ -31,3 +31,103 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f'<User {self.username}>'
+    
+class Empresa(db.Model):
+    __tablename__ = 'empresas'
+
+    id = db.Column(db.Integer, primary_key=True)  # Chave primária autoincrementável
+    cnpj = db.Column(db.String(18), unique=True, nullable=False)  # CNPJ como campo único
+    qsa = db.Column(db.String(255), nullable=False)  # QSA é opcional
+    rg_responsavel = db.Column(db.String(20), nullable=False)  # RG do responsável
+    cpf_responsavel = db.Column(db.String(14), nullable=False)  # CPF do responsável
+    nome_empresa = db.Column(db.String(100), nullable=False)  # Nome da empresa
+    nome_responsavel = db.Column(db.String(100), nullable=False)  # Nome do responsável
+    email_empresa = db.Column(db.String(100), nullable=False)  # Email da empresa
+    email_responsavel = db.Column(db.String(100), nullable=True)  # Email do responsável
+    telefone_empresa = db.Column(db.String(20), nullable=False)  # Telefone da empresa
+    telefone_responsavel = db.Column(db.String(20), nullable=True)  # Telefone do responsável
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_approved = db.Column(db.Boolean())
+    
+    user = db.relationship('User', backref=db.backref('empresas', lazy=True))
+
+    def __repr__(self):
+        return f'<Empresa {self.nome_empresa}>'
+
+class Professor(db.Model):
+    __tablename__ = 'professores'
+
+    id = db.Column(db.Integer, primary_key=True)  # Automatic primary key
+    nome = db.Column(db.String(100), nullable=False)  # Nome do professor
+    email = db.Column(db.String(100), unique=False, nullable=False)  # Email must be unique
+    cpf = db.Column(db.String(14), unique=True, nullable=False)  # Formatted CPF with uniqueness
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_approved = db.Column(db.Boolean())
+
+    user = db.relationship('User', backref=db.backref('professores', lazy=True))
+    
+    def __repr__(self):
+        return f'<Professor {self.nome}>'
+    
+class Aluno(User):
+    __tablename__ = 'alunos'
+
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    matricula = db.Column(db.String(20), unique=True, nullable=False)
+    data_de_nascimento = db.Column(db.Date, nullable=False)
+    rg = db.Column(db.String(20), nullable=False)
+    cpf = db.Column(db.String(14), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    celular = db.Column(db.String(15), nullable=False)
+    
+    user = db.relationship('User', backref=db.backref('alunos', lazy=True))
+    
+    def __repr__(self):
+        return f'<Professor {self.nome}>'
+    
+class Supervisor(db.Model):
+    __tablename__ = 'supervisores'
+
+    id = db.Column(db.Integer, primary_key=True)
+    cpf = db.Column(db.String(14), unique=True, nullable=False)
+    nome = db.Column(db.String(100), nullable=False)
+    formacao = db.Column(db.String(100), nullable=False)
+    telefone = db.Column(db.String(15), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    empresa_id = db.Column(db.Integer, db.ForeignKey('empresas.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_approved = db.Column(db.Boolean())
+
+    empresa = db.relationship('Empresa', backref=db.backref('supervisores', lazy=True))
+    user = db.relationship('User', backref=db.backref('supervisor', lazy=True))
+    
+    def __repr__(self):
+        return f'<Supervisor {self.nome}>'
+    
+class Estagio(db.Model):
+    __tablename__ = 'estagios'
+
+    id = db.Column(db.Integer, primary_key=True)
+    aluno_id = db.Column(db.Integer, db.ForeignKey('alunos.id'), nullable=False)
+    professor_id = db.Column(db.Integer, db.ForeignKey('professores.id'), nullable=False)
+    supervisor_id = db.Column(db.Integer, db.ForeignKey('supervisores.id'), nullable=False)
+    empresa_id = db.Column(db.Integer, db.ForeignKey('empresas.id'), nullable=False)
+    modalidade = db.Column(db.String(50), nullable=False)
+    carga_horaria = db.Column(db.Integer, nullable=False)
+    atividades = db.Column(db.Text, nullable=False)
+    setor = db.Column(db.String(100), nullable=False)
+    remuneracao = db.Column(db.Boolean, nullable=False)
+    valor_remuneracao = db.Column(db.Float, nullable=True)  # Pode ser nulo se não houver remuneração
+    horario_estagio = db.Column(db.String(100), nullable=False)
+    data_inicio = db.Column(db.Date, nullable=False)
+    data_conclusao = db.Column(db.Date, nullable=False)
+    is_approved = db.Column(db.Boolean())
+
+    aluno = db.relationship('Aluno', backref=db.backref('estagios', lazy=True))
+    professor = db.relationship('Professor', backref=db.backref('estagios', lazy=True))
+    supervisor = db.relationship('Supervisor', backref=db.backref('estagios', lazy=True))
+    empresa = db.relationship('Empresa', backref=db.backref('estagios', lazy=True))
+
+    def __repr__(self):
+        return f'<Estagio {self.id} do Aluno {self.aluno_id}>'

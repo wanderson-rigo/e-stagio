@@ -3,8 +3,9 @@ from flask_mail import Message
 from flask import render_template, redirect, url_for, flash, request
 from app import app, db, mail
 from flask_security.utils import hash_password
-from app.models import User, Role
+from app.models import User, Role, Professor
 from flask_security import login_user, current_user, roles_required, login_required
+from app.forms import ProfessorForm
 
 @app.route('/send-test-email')
 @roles_required('admin')
@@ -21,6 +22,28 @@ def send_test_email():
         return "Email sent successfully!"
     except Exception as e:
         return f"Failed to send email: {e}"
+
+@app.route('/admin/cadastro-professor', methods=['GET', 'POST'])
+@roles_required('admin')
+def cadastro_professor():
+    form = ProfessorForm()
+    if form.validate_on_submit():
+        # Criar o usuário primeiro
+        hashed_password = hash_password(form.password.data)
+        user = User(email=form.email.data, password=hashed_password, active=True)
+        user.username = user.email
+        user.confirmed_at = datetime.datetime.now()
+        db.session.add(user)
+        db.session.commit()
+
+        # Criar o professor e associá-lo ao usuário
+        professor = Professor(nome=form.nome.data, cpf=form.cpf.data, email=form.email.data, user_id=user.id)
+        db.session.add(professor)
+        db.session.commit()
+
+        flash('Professor cadastrado com sucesso!', 'success')
+        return redirect(url_for('index'))
+    return render_template('admin/cadastro_professor.html', form=form)
     
 @app.route('/')
 def index():
@@ -63,7 +86,7 @@ def signup():
         
         db.session.add(user)
         db.session.commit()
-        
+        # need to validate the email but not important by now
         flash('Por favor, confira seu e-mail para verificar sua conta.', 'success')
         
         return redirect(url_for('index'))
