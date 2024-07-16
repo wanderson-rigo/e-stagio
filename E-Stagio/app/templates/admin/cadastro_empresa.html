@@ -1,0 +1,88 @@
+<!-- templates/admin/cadastro_empresa.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Cadastro de Empresa</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.nome.label }}<br>
+        {{ form.nome(size=32) }}<br>
+        {% for error in form.nome.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.email.label }}<br>
+        {{ form.email(size=32) }}<br>
+        {% for error in form.email.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.telefone.label }}<br>
+        {{ form.telefone(size=32) }}<br>
+        {% for error in form.telefone.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.cnpj.label }}<br>
+        {{ form.cnpj(size=32) }}<br>
+        {% for error in form.cnpj.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.qsa.label }}<br>
+        {{ form.qsa(size=32) }}<br>
+        {% for error in form.qsa.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}<br>
+        {% for error in form.password.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.nome_responsavel.label }}<br>
+        {{ form.nome_responsavel(size=32) }}<br>
+        {% for error in form.nome_responsavel.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.email_responsavel.label }}<br>
+        {{ form.email_responsavel(size=32) }}<br>
+        {% for error in form.email_responsavel.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.telefone_responsavel.label }}<br>
+        {{ form.telefone_responsavel(size=32) }}<br>
+        {% for error in form.telefone_responsavel.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.rg_responsavel.label }}<br>
+        {{ form.rg_responsavel(size=32) }}<br>
+        {% for error in form.rg_responsavel.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.cpf_responsavel.label }}<br>
+        {{ form.cpf_responsavel(size=32) }}<br>
+        {% for error in form.rg_responsavel.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

@@ -69,10 +69,10 @@ class Professor(db.Model):
     def __repr__(self):
         return f'<Professor {self.nome}>'
     
-class Aluno(User):
+class Aluno(db.Model):
     __tablename__ = 'alunos'
 
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)  # Automatic primary key
     nome = db.Column(db.String(100), nullable=False)
     matricula = db.Column(db.String(20), unique=True, nullable=False)
     data_de_nascimento = db.Column(db.Date, nullable=False)
@@ -80,11 +80,13 @@ class Aluno(User):
     cpf = db.Column(db.String(14), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     celular = db.Column(db.String(15), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_approved = db.Column(db.Boolean())
     
     user = db.relationship('User', backref=db.backref('alunos', lazy=True))
     
     def __repr__(self):
-        return f'<Professor {self.nome}>'
+        return f'<Aluno {self.nome}>'
     
 class Supervisor(db.Model):
     __tablename__ = 'supervisores'
