@@ -3,20 +3,18 @@ from flask_mail import Message
 from flask import render_template, redirect, url_for, flash, request
 from app import app, db, mail
 from flask_security.utils import hash_password
-from app.models import User, Role, Professor, Empresa, Aluno, Supervisor
+from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm
 
 @app.route('/send-test-email')
 @roles_required('admin')
 def send_test_email():
     try:
-        # Cria a mensagem
         msg = Message("Test Email",
                       recipients=["brunopergher_1@hotmail.com"],  # Substitua pelo endereço de e-mail do destinatário
                       body="This is a test email sent from Flask-Mail.")
         
-        # Envia a mensagem
         mail.send(msg)
         
         return "Email sent successfully!"
@@ -212,6 +210,46 @@ def cadastro_supervisor():
         
     return render_template('admin/cadastro_supervisor.html', form=form)
 
+@app.route('/admin/cadastro-estagio', methods=['GET', 'POST'])
+@roles_required('admin')
+def cadastro_estagio():
+    form = EstagioForm()
+    form.aluno_id.choices = [(a.id, a.nome) for a in Aluno.query.all()]
+    form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.all()]
+    form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.all()]
+    form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.all()]
+
+    if form.validate_on_submit():
+        try:
+            estagio = Estagio(
+                aluno_id=form.aluno_id.data,
+                professor_id=form.professor_id.data,
+                supervisor_id=form.supervisor_id.data,
+                empresa_id=form.empresa_id.data,
+                modalidade=form.modalidade.data,
+                carga_horaria=form.carga_horaria.data,
+                atividades=form.atividades.data,
+                setor=form.setor.data,
+                remuneracao=form.remuneracao.data,
+                valor_remuneracao=form.valor_remuneracao.data if form.remuneracao.data else None,
+                horario_estagio=form.horario_estagio.data,
+                data_inicio=form.data_inicio.data,
+                data_conclusao=form.data_conclusao.data,
+                is_approved=True
+            )
+            
+            db.session.add(estagio)
+            db.session.commit()
+            
+            flash('Estágio cadastrado com sucesso!', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Failed to create estágio. Error: {str(e)}', 'error')
+            return render_template('admin/cadastro_estagio.html', form=form)
+
+    return render_template('admin/cadastro_estagio.html', form=form)
+
 @app.route('/')
 def index():
     if not current_user.is_authenticated:
@@ -228,6 +266,169 @@ def index():
         return render_template('supervisor/index_supervisor.html')  # For supervisors
     else:
         return render_template('index.html') 
+
+@app.route('/admin/professores')
+@roles_required('admin')
+def lista_professores():
+    professores = Professor.query.all()
+    return render_template('admin/listagem_professores.html', professores=professores)
+
+@app.route('/admin/supervisores', methods=['GET', 'POST'])
+@roles_required('admin')
+def lista_supervisores():
+    supervisores = Supervisor.query.join(Empresa, Supervisor.empresa_id == Empresa.id).all()
+    return render_template('admin/listagem_supervisores.html', supervisores=supervisores)
+
+@app.route('/admin/alunos')
+@roles_required('admin')
+def lista_alunos():
+    alunos = Aluno.query.all()
+    return render_template('admin/listagem_alunos.html', alunos=alunos)
+
+@app.route('/admin/empresas')
+@roles_required('admin')
+def lista_empresas():
+    empresas = Empresa.query.all()
+    return render_template('admin/listagem_empresas.html', empresas=empresas)
+
+@app.route('/admin/estagios', methods=['GET'])
+@roles_required('admin')
+def lista_estagios():
+    estagios = Estagio.query.all()
+    return render_template('admin/listagem_estagios.html', estagios=estagios)
+
+@app.route('/admin/editar-empresa/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_empresa(id):
+    empresa = Empresa.query.get_or_404(id)
+    form = EmpresaEditForm(obj=empresa)
+
+    if form.validate_on_submit():
+        try:
+            empresa.nome_empresa = form.nome_empresa.data
+            empresa.email_empresa = form.email_empresa.data
+            empresa.telefone_empresa = form.telefone_empresa.data
+            empresa.cnpj = form.cnpj.data
+            empresa.qsa = form.qsa.data
+            empresa.nome_responsavel = form.nome_responsavel.data
+            empresa.email_responsavel = form.email_responsavel.data
+            empresa.telefone_responsavel = form.telefone_responsavel.data
+            empresa.rg_responsavel = form.rg_responsavel.data
+            empresa.cpf_responsavel = form.cpf_responsavel.data
+            
+            db.session.commit()
+            flash('Empresa atualizada com sucesso!', 'success')
+            return redirect(url_for('lista_empresas'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar empresa: {e}', 'error')
+
+    return render_template('admin/editar_empresa.html', form=form)
+
+@app.route('/admin/editar-aluno/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_aluno(id):
+    aluno = Aluno.query.get_or_404(id)
+    form = AlunoEditForm(obj=aluno)
+
+    if form.validate_on_submit():
+        aluno.nome = form.nome.data
+        aluno.email = form.email.data
+        aluno.cpf = form.cpf.data
+        aluno.rg = form.rg.data
+        aluno.data_de_nascimento = form.dob.data
+        aluno.celular = form.celular.data
+        aluno.matricula = form.matricula.data
+
+        try:
+            db.session.commit()
+            flash('Aluno atualizado com sucesso!', 'success')
+            return redirect(url_for('lista_alunos'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar aluno. {str(e)}', 'error')
+
+    return render_template('admin/editar_aluno.html', form=form)
+
+@app.route('/admin/editar-supervisor/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_supervisor(id):
+    supervisor = Supervisor.query.get_or_404(id)
+    form = SupervisorEditForm(obj=supervisor)
+
+    if form.validate_on_submit():
+        try:
+            supervisor.nome = form.nome.data
+            supervisor.email = form.email.data
+            supervisor.telefone = form.telefone.data
+            supervisor.cpf = form.cpf.data
+            supervisor.formacao = form.formacao.data
+            supervisor.empresa_id = form.empresaId.data
+
+            db.session.commit()
+            flash('Supervisor atualizado com sucesso!', 'success')
+            return redirect(url_for('lista_supervisores'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar supervisor. {str(e)}', 'error')
+
+    return render_template('admin/editar_supervisor.html', form=form)
+
+@app.route('/admin/editar-professor/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_professor(id):
+    professor = Professor.query.get_or_404(id)
+    form = ProfessorFormEdit(obj=professor)
+    if form.validate_on_submit():
+        print("aqui")
+        try:
+            print(form.data)
+            professor.nome = form.nome.data
+            professor.email = form.email.data
+            professor.cpf = form.cpf.data
+            db.session.add(professor)
+            db.session.commit()
+            flash('Professor atualizado com sucesso!', 'success')
+            return redirect(url_for('lista_professores'))
+        except Exception as e:
+            print(e)
+            print('Error:', str(e))
+            db.session.rollback()
+            flash(f'Erro ao atualizar professor. {str(e)}', 'danger')
+
+    return render_template('admin/editar_professor.html', form=form, professor=professor)
+
+@app.route('/admin/editar-estagio/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_estagio(id):
+    estagio = Estagio.query.get_or_404(id)
+    form = EstagioForm(obj=estagio)
+
+    if form.validate_on_submit():
+        try:
+            estagio.aluno_id = form.aluno_id.data
+            estagio.professor_id = form.professor_id.data
+            estagio.supervisor_id = form.supervisor_id.data
+            estagio.empresa_id = form.empresa_id.data
+            estagio.modalidade = form.modalidade.data
+            estagio.carga_horaria = form.carga_horaria.data
+            estagio.atividades = form.atividades.data
+            estagio.setor = form.setor.data
+            estagio.remuneracao = form.remuneracao.data
+            estagio.valor_remuneracao = form.valor_remuneracao.data
+            estagio.horario_estagio = form.horario_estagio.data
+            estagio.data_inicio = form.data_inicio.data
+            estagio.data_conclusao = form.data_conclusao.data
+            estagio.is_approved = form.is_approved.data
+
+            db.session.commit()
+            flash('Estágio atualizado com sucesso!', 'success')
+            return redirect(url_for('lista_estagios'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar estágio: {e}', 'error')
+
+    return render_template('admin/editar_estagio.html', form=form, estagio=estagio)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

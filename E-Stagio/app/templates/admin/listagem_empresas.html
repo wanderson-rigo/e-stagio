@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Empresas</h2>
+    <a href="{{ url_for('cadastro_empresa') }}" class="btn btn-success mb-3">Adicionar Nova Empresa</a>
+    <table id="empresaTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>CNPJ</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empresa in empresas %}
+            <tr>
+                <td>{{ empresa.nome_empresa }}</td>
+                <td>{{ empresa.email_empresa }}</td>
+                <td>{{ empresa.cnpj }}</td>
+                <td>
+                    <a href="{{ url_for('editar_empresa', id=empresa.id) }}" class="btn btn-primary">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#empresaTable').DataTable({
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "Nenhuma empresa encontrada",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "Nenhuma empresa disponível",
+            "infoFiltered": "(filtrado de _MAX_ registros no total)",
+            "search": "Buscar:",
+            "paginate": {
+                "first":      "Primeiro",
+                "last":       "Último",
+                "next":       "Próximo",
+                "previous":   "Anterior"
+            },
+            "emptyTable":     "Nenhum dado disponível na tabela"
+        },
+        "pageLength": 10
+    });
+});
+</script>
+{% endblock %}

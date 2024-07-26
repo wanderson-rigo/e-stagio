@@ -1,0 +1,33 @@
+<!-- templates/admin/editar_professor.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Professor</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.nome.label(class="form-label") }}
+            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+            {% for error in form.nome.errors %}
+            <div class="invalid-feedback">{{ error }}</div
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {% for error in form.email.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.cpf.label(class="form-label") }}
+            {{ form.cpf(class="form-control" + (" is-invalid" if form.cpf.errors else "")) }}
+            {% for error in form.cpf.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        <a href="{{ url_for('lista_professores') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
