@@ -15,6 +15,18 @@ db = SQLAlchemy(app)
 # Initialize Flask-Mail
 mail = Mail(app)
 
+@app.template_filter('readable_status')
+def readable_status(status_enum):
+    translations = {
+        'AGUARDANDO_APROVACAO': 'Aguardando aprovação',
+        'APROVADO': 'Aprovado',
+        'EM_ANDAMENTO': 'Em andamento',
+        'FINALIZADO': 'Finalizado',
+        'CANCELADO': 'Cancelado',
+        'AGUARDANDO_AVALIACAO': 'Aguardando avaliação'
+    }
+    return translations.get(status_enum.name, 'Status desconhecido')
+
 # Now it's safe to import models because 'db' has been defined
 from app.models import User, Role
 

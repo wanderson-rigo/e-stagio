@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime, date
 from app import db
 from flask_security import UserMixin, RoleMixin
+from sqlalchemy.types import Enum as SQLEnum
+import enum
 
 # Tabela associativa para a relação muitos-para-muitos entre User e Role
 roles_users = db.Table('roles_users',
@@ -106,7 +108,15 @@ class Supervisor(db.Model):
     
     def __repr__(self):
         return f'<Supervisor {self.nome}>'
-    
+
+class StatusEstagio(enum.Enum):
+    AGUARDANDO_APROVACAO = 'aguardando_aprovacao'
+    APROVADO = 'aprovado'
+    EM_ANDAMENTO = 'em_andamento'
+    AGUARDANDO_AVALIACAO = 'aguardando_avaliacao'
+    FINALIZADO = 'finalizado'
+    CANCELADO = 'cancelado'
+
 class Estagio(db.Model):
     __tablename__ = 'estagios'
 
@@ -125,11 +135,12 @@ class Estagio(db.Model):
     data_inicio = db.Column(db.Date, nullable=False)
     data_conclusao = db.Column(db.Date, nullable=False)
     is_approved = db.Column(db.Boolean())
+    status = db.Column(SQLEnum(StatusEstagio), default=StatusEstagio.AGUARDANDO_APROVACAO, nullable=False)
 
     aluno = db.relationship('Aluno', backref=db.backref('estagios', lazy=True))
     professor = db.relationship('Professor', backref=db.backref('estagios', lazy=True))
     supervisor = db.relationship('Supervisor', backref=db.backref('estagios', lazy=True))
     empresa = db.relationship('Empresa', backref=db.backref('estagios', lazy=True))
-
+    
     def __repr__(self):
         return f'<Estagio {self.id} do Aluno {self.aluno_id}>'

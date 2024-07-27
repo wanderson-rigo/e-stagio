@@ -93,6 +93,13 @@
             <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         </div>
+        <div class="form-group">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(class="form-control" + (" is-invalid" if form.status.errors else "")) }}
+            {% for error in form.status.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
         <button type="submit" class="btn btn-primary">Atualizar</button>
         <a href="{{ url_for('lista_estagios') }}" class="btn btn-secondary">Cancelar</a>
     </form>

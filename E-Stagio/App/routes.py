@@ -3,7 +3,7 @@ from flask_mail import Message
 from flask import render_template, redirect, url_for, flash, request
 from app import app, db, mail
 from flask_security.utils import hash_password
-from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio
+from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
 from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm
 
@@ -235,7 +235,8 @@ def cadastro_estagio():
                 horario_estagio=form.horario_estagio.data,
                 data_inicio=form.data_inicio.data,
                 data_conclusao=form.data_conclusao.data,
-                is_approved=True
+                is_approved=True,
+                status = form.status.data
             )
             
             db.session.add(estagio)
@@ -404,6 +405,19 @@ def editar_estagio(id):
     estagio = Estagio.query.get_or_404(id)
     form = EstagioForm(obj=estagio)
 
+    # Carregar as opções para os SelectFields
+    form.aluno_id.choices = [(a.id, a.nome) for a in Aluno.query.order_by(Aluno.nome).all()]
+    form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.order_by(Professor.nome).all()]
+    form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.order_by(Supervisor.nome).all()]
+    form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.order_by(Empresa.nome_empresa).all()]
+
+    # Definir a opção selecionada com o valor atual
+    form.aluno_id.data = estagio.aluno_id
+    form.professor_id.data = estagio.professor_id
+    form.supervisor_id.data = estagio.supervisor_id
+    form.empresa_id.data = estagio.empresa_id
+    form.status.data = estagio.status.name 
+
     if form.validate_on_submit():
         try:
             estagio.aluno_id = form.aluno_id.data
@@ -419,8 +433,8 @@ def editar_estagio(id):
             estagio.horario_estagio = form.horario_estagio.data
             estagio.data_inicio = form.data_inicio.data
             estagio.data_conclusao = form.data_conclusao.data
-            estagio.is_approved = form.is_approved.data
-
+            estagio.status = StatusEstagio[form.status.data]
+            
             db.session.commit()
             flash('Estágio atualizado com sucesso!', 'success')
             return redirect(url_for('lista_estagios'))

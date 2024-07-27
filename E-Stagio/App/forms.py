@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField
 from wtforms.validators import DataRequired, Email, Length
+from app.models import StatusEstagio
 
 class ProfessorForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
@@ -96,4 +97,5 @@ class EstagioForm(FlaskForm):
     horario_estagio = StringField('Horário do Estágio', validators=[DataRequired()])
     data_inicio = DateField('Data de Início', format='%Y-%m-%d', validators=[DataRequired()])
     data_conclusao = DateField('Data de Conclusão', format='%Y-%m-%d', validators=[DataRequired()])
-    submit = SubmitField('Registrar Estágio')
+    status = SelectField('Status', coerce=str, choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio], validators=[DataRequired()])
+    submit = SubmitField('Salvar Estágio')

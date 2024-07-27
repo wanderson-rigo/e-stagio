@@ -13,6 +13,7 @@
                 <th>Supervisor</th>
                 <th>Empresa</th>
                 <th>Modalidade</th>
+                <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
                 <td>{{ estagio.supervisor.nome }}</td>
                 <td>{{ estagio.empresa.nome_empresa }}</td>
                 <td>{{ estagio.modalidade }}</td>
+                <td>{{ estagio.status | readable_status }}</td>
                 <td>
                     <a href="{{ url_for('editar_estagio', id=estagio.id) }}" class="btn btn-primary">Editar</a>
                 </td>
