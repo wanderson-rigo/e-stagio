@@ -14,6 +14,7 @@ class ProfessorFormEdit(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     cpf = StringField('CPF', validators=[DataRequired(), Length(min=11, max=14)])
+    ativo = BooleanField('Ativo')
     submit = SubmitField('Editar')
     
 class EmpresaForm(FlaskForm):
@@ -41,6 +42,7 @@ class EmpresaEditForm(FlaskForm):
     telefone_responsavel = StringField('Telefone do Responsável', validators=[DataRequired()])
     rg_responsavel = StringField('RG do Responsável', validators=[DataRequired()])
     cpf_responsavel = StringField('CPF do Responsável', validators=[DataRequired(), Length(min=11, max=14)])
+    ativo = BooleanField('Ativo')
     submit = SubmitField('Editar')
 
 class SupervisorForm(FlaskForm):
@@ -60,6 +62,7 @@ class SupervisorEditForm(FlaskForm):
     cpf = StringField('CPF', validators=[DataRequired(), Length(min=11, max=14)])
     formacao = StringField('Formação', validators=[DataRequired()])
     empresaId = SelectField('Empresa', coerce=int, validators=[DataRequired()])  # Changed to SelectField
+    ativo = BooleanField('Ativo')
     submit = SubmitField('Editar')
 
 class AlunoForm(FlaskForm):
@@ -81,6 +84,7 @@ class AlunoEditForm(FlaskForm):
     cpf = StringField('CPF', validators=[DataRequired(), Length(min=11, max=14)])
     rg = StringField('RG', validators=[DataRequired(), Length(min=3, max=15)])
     dob = DateField("Data de Nascimento", format='%Y-%m-%d', validators=[DataRequired()])
+    ativo = BooleanField('Ativo')
     submit = SubmitField('Editar')
     
 class EstagioForm(FlaskForm):
@@ -99,3 +103,9 @@ class EstagioForm(FlaskForm):
     data_conclusao = DateField('Data de Conclusão', format='%Y-%m-%d', validators=[DataRequired()])
     status = SelectField('Status', coerce=str, choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio], validators=[DataRequired()])
     submit = SubmitField('Salvar Estágio')
+    
+class AdminForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Senha', validators=[DataRequired()])
+    ativo = BooleanField('Ativo')
+    submit = SubmitField('Registrar')

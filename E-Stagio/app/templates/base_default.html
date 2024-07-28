@@ -21,20 +21,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('lista_professores') }}">Professores</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('lista_alunos') }}">Alunos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('lista_empresas') }}">Empresas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('lista_supervisores') }}">Supervisores</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('lista_admin') }}">Admins</a>
                 </li>
                 {% if not current_user.is_authenticated %}
                 <li class="nav-item">

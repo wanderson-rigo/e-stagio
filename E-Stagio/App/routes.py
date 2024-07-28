@@ -5,7 +5,10 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm
+from sqlalchemy.orm import joinedload
+
+# Inicio Area Geral
 
 @app.route('/send-test-email')
 @roles_required('admin')
@@ -20,6 +23,76 @@ def send_test_email():
         return "Email sent successfully!"
     except Exception as e:
         return f"Failed to send email: {e}"
+
+
+@app.route('/')
+def index():
+    if not current_user.is_authenticated:
+        return render_template('index.html')  # For public/unlogged users
+    elif 'admin' in current_user.roles:
+        return render_template('admin/index_admin.html')  # For admin
+    elif 'professor' in current_user.roles:
+        return render_template('professor/index_professor.html')  # For teachers
+    elif 'estudante' in current_user.roles:
+        return render_template('estudante/index_estudante.html')  # For students
+    elif 'empresa' in current_user.roles:
+        return render_template('empresa/index_empresa.html')  # For companies
+    elif 'supervisor' in current_user.roles:
+        return render_template('supervisor/index_supervisor.html')  # For supervisors
+    else:
+        return render_template('index.html') 
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    msg = ""
+    roles = Role.query.filter(Role.name != 'admin').all()
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
+        if user:
+            msg = "User already exists"
+            return render_template('signup.html', msg=msg, roles=roles)
+        
+        hashed_password = hash_password(request.form['password'])
+        user = User(email=request.form['email'], active=True, password=hashed_password)
+        user.username = user.email
+        user.confirmed_at = datetime.datetime.now()
+        
+        role_id = request.form.get('options')
+        role = Role.query.filter_by(id=role_id).first()
+        if role:
+            user.roles.append(role)
+        
+        db.session.add(user)
+        db.session.commit()
+        flash('Por favor, confira seu e-mail para verificar sua conta.', 'success')
+        
+        return redirect(url_for('index'))
+    else:
+        return render_template("signup.html", msg=msg, roles=roles)
+    
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
+    msg=""
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
+        if user:
+            if  user.password == request.form['password']:
+                login_user(user)
+                return redirect(url_for('index'))
+            else:
+                msg="Usuario ou Senha Incorretos"
+        
+        else:
+            msg="Usuario ou Senha Incorretos"
+        return render_template('signin.html', msg=msg)
+        
+    else:
+        return render_template("signin.html", msg=msg)
+
+# Fim Area Geral
+
+# Inicio Area de Cadastros
 
 @app.route('/admin/cadastro-professor', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -194,7 +267,8 @@ def cadastro_supervisor():
                 user_id=user.id,
                 formacao=form.formacao.data,
                 empresa_id=form.empresaId.data,
-                telefone=form.telefone.data
+                telefone=form.telefone.data,
+                IsApproved=True 
             )
             
             db.session.add(supervisor)
@@ -204,7 +278,6 @@ def cadastro_supervisor():
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
-            print(e)
             flash(f'Failed to create Supervisor. Error: {str(e)}', 'error')
             return render_template('admin/cadastro_supervisor.html', form=form)
         
@@ -218,6 +291,7 @@ def cadastro_estagio():
     form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.all()]
     form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.all()]
     form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.all()]
+    form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
 
     if form.validate_on_submit():
         try:
@@ -251,22 +325,44 @@ def cadastro_estagio():
 
     return render_template('admin/cadastro_estagio.html', form=form)
 
-@app.route('/')
-def index():
-    if not current_user.is_authenticated:
-        return render_template('index.html')  # For public/unlogged users
-    elif 'admin' in current_user.roles:
-        return render_template('admin/index_admin.html')  # For admin
-    elif 'professor' in current_user.roles:
-        return render_template('professor/index_professor.html')  # For teachers
-    elif 'estudante' in current_user.roles:
-        return render_template('estudante/index_estudante.html')  # For students
-    elif 'empresa' in current_user.roles:
-        return render_template('empresa/index_empresa.html')  # For companies
-    elif 'supervisor' in current_user.roles:
-        return render_template('supervisor/index_supervisor.html')  # For supervisors
-    else:
-        return render_template('index.html') 
+@app.route('/admin/cadastro-admin', methods=['GET', 'POST'])
+@roles_required('admin')
+def cadastro_admin():
+    form = AdminForm()
+
+    if form.validate_on_submit():
+        try:
+            hashed_password = hash_password(form.password.data)
+            
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=True,
+                username=form.email.data,
+                confirmed_at=datetime.datetime.now()
+            )
+            
+            admin_role = Role.query.filter_by(name='admin').first()
+            if admin_role:
+                user.roles.append(admin_role)
+            
+            db.session.add(user)
+            db.session.flush()
+            db.session.commit()
+            
+            flash('Novo Admin cadastrado com sucesso!', 'success')
+            
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Falha para criar um admim. Erro: {str(e)}', 'error')
+            return render_template('admin/cadastro_admin.html', form=form)
+    
+    return render_template('admin/cadastro_admin.html', form=form)
+
+# Fim Area de Cadastros
+
+# Inicio Area de Listagem
 
 @app.route('/admin/professores')
 @roles_required('admin')
@@ -298,11 +394,24 @@ def lista_estagios():
     estagios = Estagio.query.all()
     return render_template('admin/listagem_estagios.html', estagios=estagios)
 
+@app.route('/admin/admins', methods=['GET'])
+@roles_required('admin')
+def lista_admin():
+    admins = User.query.join(User.roles).filter(Role.name == 'admin').options(joinedload(User.roles)).all()
+    return render_template('admin/listagem_admin.html', admins=admins)
+
+# Fim Area de Listagem
+
+# Inicio Area de Edição
 @app.route('/admin/editar-empresa/<int:id>', methods=['GET', 'POST'])
 @roles_required('admin')
 def editar_empresa(id):
     empresa = Empresa.query.get_or_404(id)
+    user = empresa.user
     form = EmpresaEditForm(obj=empresa)
+    
+    if request.method == 'GET':
+        form.ativo.data = user.active 
 
     if form.validate_on_submit():
         try:
@@ -316,6 +425,7 @@ def editar_empresa(id):
             empresa.telefone_responsavel = form.telefone_responsavel.data
             empresa.rg_responsavel = form.rg_responsavel.data
             empresa.cpf_responsavel = form.cpf_responsavel.data
+            user.active = form.ativo.data
             
             db.session.commit()
             flash('Empresa atualizada com sucesso!', 'success')
@@ -330,7 +440,11 @@ def editar_empresa(id):
 @roles_required('admin')
 def editar_aluno(id):
     aluno = Aluno.query.get_or_404(id)
+    user = aluno.user
     form = AlunoEditForm(obj=aluno)
+    
+    if request.method == 'GET':
+        form.ativo.data = user.active
 
     if form.validate_on_submit():
         aluno.nome = form.nome.data
@@ -340,6 +454,7 @@ def editar_aluno(id):
         aluno.data_de_nascimento = form.dob.data
         aluno.celular = form.celular.data
         aluno.matricula = form.matricula.data
+        user.active = form.ativo.data
 
         try:
             db.session.commit()
@@ -355,7 +470,16 @@ def editar_aluno(id):
 @roles_required('admin')
 def editar_supervisor(id):
     supervisor = Supervisor.query.get_or_404(id)
+    user = supervisor.user
     form = SupervisorEditForm(obj=supervisor)
+    form.empresaId.choices = [
+        (empresa.id, empresa.nome_empresa) 
+        for empresa in Empresa.query.join(User).filter(Empresa.is_approved == True, User.active == True).all()
+    ]
+    
+    if request.method == 'GET':
+        form.ativo.data = user.active
+        form.empresaId.data = supervisor.empresa_id
 
     if form.validate_on_submit():
         try:
@@ -365,6 +489,7 @@ def editar_supervisor(id):
             supervisor.cpf = form.cpf.data
             supervisor.formacao = form.formacao.data
             supervisor.empresa_id = form.empresaId.data
+            user.active = form.ativo.data
 
             db.session.commit()
             flash('Supervisor atualizado com sucesso!', 'success')
@@ -379,25 +504,52 @@ def editar_supervisor(id):
 @roles_required('admin')
 def editar_professor(id):
     professor = Professor.query.get_or_404(id)
+    user = professor.user
     form = ProfessorFormEdit(obj=professor)
+    
+    if request.method == 'GET':
+        form.ativo.data = user.active 
+        
     if form.validate_on_submit():
-        print("aqui")
         try:
-            print(form.data)
             professor.nome = form.nome.data
             professor.email = form.email.data
             professor.cpf = form.cpf.data
+            user.active = form.ativo.data 
+            
             db.session.add(professor)
             db.session.commit()
             flash('Professor atualizado com sucesso!', 'success')
             return redirect(url_for('lista_professores'))
         except Exception as e:
-            print(e)
-            print('Error:', str(e))
             db.session.rollback()
             flash(f'Erro ao atualizar professor. {str(e)}', 'danger')
 
     return render_template('admin/editar_professor.html', form=form, professor=professor)
+
+@app.route('/admin/editar-admin/<int:id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def editar_admin(id):
+    admin = User.query.get_or_404(id)
+    form = AdminForm(obj=admin)
+    
+    if request.method == 'GET':
+        form.ativo.data = admin.active 
+        
+    if form.validate_on_submit():
+        try:
+            admin.email = form.email.data
+            admin.username = form.email.data
+            admin.active = form.ativo.data 
+            
+            db.session.commit()
+            flash('Admin atualizado com sucesso!', 'success')
+            return redirect(url_for('lista_admin'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar Admin. {str(e)}', 'danger')
+
+    return render_template('admin/editar_admin.html', form=form, admin=admin)
 
 @app.route('/admin/editar-estagio/<int:id>', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -410,13 +562,16 @@ def editar_estagio(id):
     form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.order_by(Professor.nome).all()]
     form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.order_by(Supervisor.nome).all()]
     form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.order_by(Empresa.nome_empresa).all()]
-
+    form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
+    
     # Definir a opção selecionada com o valor atual
-    form.aluno_id.data = estagio.aluno_id
-    form.professor_id.data = estagio.professor_id
-    form.supervisor_id.data = estagio.supervisor_id
-    form.empresa_id.data = estagio.empresa_id
-    form.status.data = estagio.status.name 
+    # Define apenas na carga inicial da página (GET), não após o envio do formulário (POST)
+    if request.method == 'GET':
+        form.aluno_id.data = estagio.aluno_id
+        form.professor_id.data = estagio.professor_id
+        form.supervisor_id.data = estagio.supervisor_id
+        form.empresa_id.data = estagio.empresa_id
+        form.status.data = estagio.status.name
 
     if form.validate_on_submit():
         try:
@@ -435,6 +590,7 @@ def editar_estagio(id):
             estagio.data_conclusao = form.data_conclusao.data
             estagio.status = StatusEstagio[form.status.data]
             
+            db.session.merge(estagio)
             db.session.commit()
             flash('Estágio atualizado com sucesso!', 'success')
             return redirect(url_for('lista_estagios'))
@@ -444,49 +600,4 @@ def editar_estagio(id):
 
     return render_template('admin/editar_estagio.html', form=form, estagio=estagio)
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    msg = ""
-    roles = Role.query.filter(Role.name != 'admin').all()
-    if request.method == 'POST':
-        user = User.query.filter_by(email=request.form['email']).first()
-        if user:
-            msg = "User already exists"
-            return render_template('signup.html', msg=msg, roles=roles)
-        
-        hashed_password = hash_password(request.form['password'])
-        user = User(email=request.form['email'], active=True, password=hashed_password)
-        user.username = user.email
-        user.confirmed_at = datetime.datetime.now()
-        
-        role_id = request.form.get('options')
-        role = Role.query.filter_by(id=role_id).first()
-        if role:
-            user.roles.append(role)
-        
-        db.session.add(user)
-        db.session.commit()
-        flash('Por favor, confira seu e-mail para verificar sua conta.', 'success')
-        
-        return redirect(url_for('index'))
-    else:
-        return render_template("signup.html", msg=msg, roles=roles)
-    
-@app.route('/signin', methods=['GET', 'POST'])
-def signin():
-    msg=""
-    if request.method == 'POST':
-        user = User.query.filter_by(email=request.form['email']).first()
-        if user:
-            if  user.password == request.form['password']:
-                login_user(user)
-                return redirect(url_for('index'))
-            else:
-                msg="Usuario ou Senha Incorretos"
-        
-        else:
-            msg="Usuario ou Senha Incorretos"
-        return render_template('signin.html', msg=msg)
-        
-    else:
-        return render_template("signin.html", msg=msg)
+# Fim Area de Edição

@@ -1,0 +1,57 @@
+<!-- templates/admin/listagem_admins.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Administradores</h2>
+    <a href="{{ url_for('cadastro_admin') }}" class="btn btn-success mb-3">Adicionar Novo Admin</a>
+    <table id="adminsTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.email }}</td>
+                <td>
+                    <a href="{{ url_for('editar_admin', id=admin.id) }}" class="btn btn-primary">Editar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">Nenhum administrador encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script>
+$(document).ready(function() {
+    $('#adminsTable').DataTable({
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "Nenhum admin encontrada",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "Nenhum aadmin disponível",
+            "infoFiltered": "(filtrado de _MAX_ registros no total)",
+            "search": "Buscar:",
+            "paginate": {
+                "first":      "Primeiro",
+                "last":       "Último",
+                "next":       "Próximo",
+                "previous":   "Anterior"
+            },
+            "emptyTable":     "Nenhum dado disponível na tabela"
+        },
+        "pageLength": 10
+    });
+});
+</script>
+{% endblock %}
