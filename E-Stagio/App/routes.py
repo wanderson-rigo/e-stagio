@@ -7,6 +7,7 @@ from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagi
 from flask_security import login_user, current_user, roles_required, login_required
 from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm
 from sqlalchemy.orm import joinedload
+from sqlalchemy import or_, and_
 
 # Inicio Area Geral
 
@@ -239,7 +240,9 @@ def cadastro_aluno():
 @roles_required('admin')
 def cadastro_supervisor():
     form = SupervisorForm()
-    form.empresaId.choices = [(empresa.id, empresa.nome_empresa) for empresa in Empresa.query.all()]
+    form.empresaId.choices = [
+        (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
+    ]
     
     if form.validate_on_submit():
         try:
@@ -287,10 +290,22 @@ def cadastro_supervisor():
 @roles_required('admin')
 def cadastro_estagio():
     form = EstagioForm()
-    form.aluno_id.choices = [(a.id, a.nome) for a in Aluno.query.all()]
-    form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.all()]
-    form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.all()]
-    form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.all()]
+    form.aluno_id.choices = [
+        (a.id, a.nome) for a in Aluno.query.join(Aluno.user).filter(Aluno.is_approved == True, User.active == True).all()
+    ]
+    
+    form.professor_id.choices = [
+        (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(Professor.is_approved == True, User.active == True).all()
+    ]
+    
+    form.supervisor_id.choices = [
+        (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(Supervisor.is_approved == True, User.active == True).all()
+    ]
+    
+    form.empresa_id.choices = [
+        (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
+    ]
+    
     form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
 
     if form.validate_on_submit():
@@ -472,10 +487,15 @@ def editar_supervisor(id):
     supervisor = Supervisor.query.get_or_404(id)
     user = supervisor.user
     form = SupervisorEditForm(obj=supervisor)
-    form.empresaId.choices = [
-        (empresa.id, empresa.nome_empresa) 
-        for empresa in Empresa.query.join(User).filter(Empresa.is_approved == True, User.active == True).all()
-    ]
+    
+    empresas_choices = Empresa.query.join(User).filter(
+        or_(
+            Empresa.id == supervisor.empresa_id, 
+            and_(Empresa.is_approved == True, User.active == True)
+        )
+    ).all()
+    
+    form.empresaId.choices = [(empresa.id, empresa.nome_empresa) for empresa in empresas_choices]
     
     if request.method == 'GET':
         form.ativo.data = user.active
@@ -557,11 +577,42 @@ def editar_estagio(id):
     estagio = Estagio.query.get_or_404(id)
     form = EstagioForm(obj=estagio)
 
-    # Carregar as opções para os SelectFields
-    form.aluno_id.choices = [(a.id, a.nome) for a in Aluno.query.order_by(Aluno.nome).all()]
-    form.professor_id.choices = [(p.id, p.nome) for p in Professor.query.order_by(Professor.nome).all()]
-    form.supervisor_id.choices = [(s.id, s.nome) for s in Supervisor.query.order_by(Supervisor.nome).all()]
-    form.empresa_id.choices = [(e.id, e.nome_empresa) for e in Empresa.query.order_by(Empresa.nome_empresa).all()]
+    form.aluno_id.choices = [
+        (a.id, a.nome) for a in Aluno.query.join(Aluno.user).filter(
+            or_(
+                Aluno.id == estagio.aluno_id,
+                and_(Aluno.is_approved == True, User.active == True)
+            )
+        ).all()
+    ]
+    
+    form.professor_id.choices = [
+        (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(
+            or_(
+                Professor.id == estagio.professor_id,
+                and_(Professor.is_approved == True, User.active == True)
+            )
+        ).all()
+    ]
+    
+    form.supervisor_id.choices = [
+        (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(
+            or_(
+                Supervisor.id == estagio.supervisor_id,
+                and_(Supervisor.is_approved == True, User.active == True)
+            )
+        ).all()
+    ]
+    
+    form.empresa_id.choices = [
+        (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(
+            or_(
+                Empresa.id == estagio.empresa_id,
+                and_(Empresa.is_approved == True, User.active == True)
+            )
+        ).all()
+    ]
+    
     form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
     
     # Definir a opção selecionada com o valor atual
