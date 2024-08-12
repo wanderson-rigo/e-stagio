@@ -460,6 +460,7 @@ def editar_aluno(id):
     
     if request.method == 'GET':
         form.ativo.data = user.active
+        form.dob.data = aluno.data_de_nascimento
 
     if form.validate_on_submit():
         aluno.nome = form.nome.data

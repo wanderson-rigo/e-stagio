@@ -1,13 +1,12 @@
-- [ ]  fix date on student edit
+- [x]  fix date on student edit
 - [ ]  filter active or not entities on datatable
-- [ ]  change password function
 - [ ]  Improve css
 - [ ]  Fix date picker
-- [ ]  improve feedback actions - form
+- [x]  improve feedback actions - form
 - [ ]  add logs
 - [ ]  add default pages  as 404
-- [ ]  Fix input date on edit page
-- [ ]  fix input feedback to be in portuguese.
+- [x]  Fix input date on edit page
+- [x]  fix input feedback to be in portuguese.
 - [x]  load every info of estagio from choices
 - [x]  enum not updating
 - [x]  fix select of status
