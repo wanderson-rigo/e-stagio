@@ -93,7 +93,7 @@ def signin():
 
 # Fim Area Geral
 
-# Inicio Area de Cadastros
+# Inicio Area de Cadastros Admin
 
 @app.route('/admin/cadastro-professor', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -375,9 +375,9 @@ def cadastro_admin():
     
     return render_template('admin/cadastro_admin.html', form=form)
 
-# Fim Area de Cadastros
+# Fim Area de Cadastros Admin
 
-# Inicio Area de Listagem
+# Inicio Area de Listagem Admin
 
 @app.route('/admin/professores')
 @roles_required('admin')
@@ -415,9 +415,9 @@ def lista_admin():
     admins = User.query.join(User.roles).filter(Role.name == 'admin').options(joinedload(User.roles)).all()
     return render_template('admin/listagem_admin.html', admins=admins)
 
-# Fim Area de Listagem
+# Fim Area de Listagem Admin
 
-# Inicio Area de Edição
+# Inicio Area de Edição Admin
 @app.route('/admin/editar-empresa/<int:id>', methods=['GET', 'POST'])
 @roles_required('admin')
 def editar_empresa(id):
@@ -652,4 +652,16 @@ def editar_estagio(id):
 
     return render_template('admin/editar_estagio.html', form=form, estagio=estagio)
 
-# Fim Area de Edição
+# Fim Area de Edição Admin
+
+# Inicio Area Empresa
+
+@app.route('/home-empresa', methods=['GET'])
+@roles_required('empresa')
+def index_empresa():
+    estagios = Estagio.query.join(Empresa, Estagio.empresa_id == Empresa.id) \
+                        .filter(Empresa.user_id == current_user.id).all()
+    
+    return render_template('empresa/index_empresa.html', estagios=estagios)
+
+# Fim Area Empresa

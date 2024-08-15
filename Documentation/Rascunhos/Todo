@@ -1,7 +1,7 @@
 - [x]  fix date on student edit
 - [ ]  filter active or not entities on datatable
 - [ ]  Improve css
-- [ ]  Fix date picker
+- [ ]  Fix date picker - day - month - year
 - [x]  improve feedback actions - form
 - [ ]  add logs
 - [ ]  add default pages  as 404
