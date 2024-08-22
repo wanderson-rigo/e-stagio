@@ -13,7 +13,7 @@
 - [ ]  Create a live server for tests.
 - [ ]  Teacher flow.
 - [ ]  student flow.
-- [ ]  Company flow.
+- [x]  Company flow.        
 - [ ]  Supervisor flow.
 - [ ]  Admin page for approve new members or internship.
 
