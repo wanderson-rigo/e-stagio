@@ -5,7 +5,7 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -663,5 +663,56 @@ def index_empresa():
                         .filter(Empresa.user_id == current_user.id).all()
     
     return render_template('empresa/index_empresa.html', estagios=estagios)
+
+@app.route('/empresa/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@roles_required('empresa')
+def avaliacao_empresa(estagio_id):
+    # Busca o estágio específico vinculado à empresa atual
+    estagio = Estagio.query.join(Empresa).filter(
+        Estagio.id == estagio_id,
+        Empresa.user_id == current_user.id
+    ).first_or_404()
+
+    # Instancia o formulário passando o estagio como objeto, para preencher os campos se já houverem notas
+    form = EmpresaAvaliacaoForm(obj=estagio)
+
+    if form.validate_on_submit():
+        try:
+            # Atualiza as notas e outros campos de avaliação
+            estagio.empresa_nota_interesse = form.empresa_nota_interesse.data
+            estagio.empresa_nota_iniciativa = form.empresa_nota_iniciativa.data
+            estagio.empresa_nota_cooperacao = form.empresa_nota_cooperacao.data
+            estagio.empresa_nota_assiduidade = form.empresa_nota_assiduidade.data
+            estagio.empresa_nota_pontualidade = form.empresa_nota_pontualidade.data
+            estagio.empresa_nota_disciplina = form.empresa_nota_disciplina.data
+            estagio.empresa_nota_sociabilidade = form.empresa_nota_sociabilidade.data
+            estagio.empresa_nota_adaptabilidade = form.empresa_nota_adaptabilidade.data
+            estagio.empresa_nota_responsabilidade = form.empresa_nota_responsabilidade.data
+            estagio.empresa_nota_etica = form.empresa_nota_etica.data
+            estagio.empresa_atividades = form.empresa_atividades.data
+            estagio.emprsa_comentarios = form.emprsa_comentarios.data
+            
+            # Calcula a média das notas
+            estagio.empresa_media_notas = sum([
+                form.empresa_nota_interesse.data,
+                form.empresa_nota_iniciativa.data,
+                form.empresa_nota_cooperacao.data,
+                form.empresa_nota_assiduidade.data,
+                form.empresa_nota_pontualidade.data,
+                form.empresa_nota_disciplina.data,
+                form.empresa_nota_sociabilidade.data,
+                form.empresa_nota_adaptabilidade.data,
+                form.empresa_nota_responsabilidade.data,
+                form.empresa_nota_etica.data
+            ]) / 10
+            
+            db.session.commit()
+            flash('Avaliação salva com sucesso!', 'success')
+            return redirect(url_for('index_empresa'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao salvar avaliação: {e}', 'error')
+
+    return render_template('empresa/avaliacao_empresa.html', form=form, estagio=estagio)
 
 # Fim Area Empresa

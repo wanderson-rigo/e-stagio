@@ -1,4 +1,4 @@
-{% extends "base_default.html" %}
+{% extends "base_empresa.html" %}
 {% block content %}
 <!-- home.html -->
 <div class="container mt-4">
@@ -21,8 +21,7 @@
                 <td>{{ estagio.supervisor.nome }}</td>
                 <td>{{ estagio.status | readable_status }}</td>
                 <td>
-                    TODO dar nota
-                    <!-- <a href="{{ url_for('editar_estagio', id=estagio.id) }}" class="btn btn-primary">Editar</a> -->
+                    <a href="{{ url_for('avaliacao_empresa', estagio_id=estagio.id) }}" class="btn btn-primary">Notas</a>
                 </td>
             </tr>
             {% else %}

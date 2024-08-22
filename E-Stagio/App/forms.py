@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, NumberRange
 from app.models import StatusEstagio
 
 class ProfessorForm(FlaskForm):
@@ -109,3 +109,18 @@ class AdminForm(FlaskForm):
     password = PasswordField('Senha', validators=[DataRequired()])
     ativo = BooleanField('Ativo')
     submit = SubmitField('Registrar')
+    
+class EmpresaAvaliacaoForm(FlaskForm):
+    empresa_nota_interesse = FloatField('Interesse', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_iniciativa = FloatField('Iniciativa', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_cooperacao = FloatField('Cooperação', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_assiduidade = FloatField('Assiduidade', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_pontualidade = FloatField('Pontualidade', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_disciplina = FloatField('Disciplina', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_sociabilidade = FloatField('Sociabilidade', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_adaptabilidade = FloatField('Adaptabilidade', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_responsabilidade = FloatField('Responsabilidade', validators=[NumberRange(min=0, max=10)])
+    empresa_nota_etica = FloatField('Ética', validators=[NumberRange(min=0, max=10)])
+    empresa_atividades = TextAreaField('Atividades', validators=[DataRequired()])
+    emprsa_comentarios = TextAreaField('Comentários')
+    submit = SubmitField('Salvar Avaliação')
