@@ -124,3 +124,11 @@ class EmpresaAvaliacaoForm(FlaskForm):
     empresa_atividades = TextAreaField('Atividades', validators=[DataRequired()])
     emprsa_comentarios = TextAreaField('Comentários')
     submit = SubmitField('Salvar Avaliação')
+    
+class EmpresaAvaliacaoForm(FlaskForm):
+    supervisor_nota= FloatField('Nota', validators=[NumberRange(min=0, max=10)])
+    supervisor_comentarios = TextAreaField('Comentários ou Observações')
+    estagiario_name = TextAreaField('Aluno')
+    estagiario_concedente = TextAreaField('Concedente')
+    
+    submit = SubmitField('Salvar Avaliação')

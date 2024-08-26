@@ -716,3 +716,15 @@ def avaliacao_empresa(estagio_id):
     return render_template('empresa/avaliacao_empresa.html', form=form, estagio=estagio)
 
 # Fim Area Empresa
+
+# Inicio Area Supervisor
+
+@app.route('/home-supervisor', methods=['GET'])
+@roles_required('supervisor')
+def index_supervisor():
+    estagios = Estagio.query.join(Empresa, Estagio.supervisor_id == Supervisor.id) \
+                        .filter(Supervisor.user_id == current_user.id).all()
+    
+    return render_template('supervisor/index_supervisor.html', estagios=estagios)
+
+# Fim Area Supervisor
