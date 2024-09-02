@@ -10,9 +10,12 @@
 - [x]  load every info of estagio from choices
 - [x]  enum not updating
 - [x]  fix select of status
+- [ ]  select of supervisor need to be following the company
 - [ ]  Create a live server for tests.
 - [ ]  Teacher flow.
 - [ ]  student flow.
 - [x]  Company flow.        
 - [ ]  Supervisor flow. - confirm if this is needed ?
 - [ ]  Admin page for approve new members or internship.
+- [ ]  Bakc to page button on avaliation
+

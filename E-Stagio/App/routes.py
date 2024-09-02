@@ -5,7 +5,7 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -37,9 +37,9 @@ def index():
     elif 'estudante' in current_user.roles:
         return render_template('estudante/index_estudante.html')  # For students
     elif 'empresa' in current_user.roles:
-        return render_template('empresa/index_empresa.html')  # For companies
+        return redirect(url_for('index_empresa'))
     elif 'supervisor' in current_user.roles:
-        return render_template('supervisor/index_supervisor.html')  # For supervisors
+        return redirect(url_for('index_supervisor'))
     else:
         return render_template('index.html') 
 
@@ -271,7 +271,7 @@ def cadastro_supervisor():
                 formacao=form.formacao.data,
                 empresa_id=form.empresaId.data,
                 telefone=form.telefone.data,
-                IsApproved=True 
+                is_approved=True 
             )
             
             db.session.add(supervisor)
@@ -722,9 +722,63 @@ def avaliacao_empresa(estagio_id):
 @app.route('/home-supervisor', methods=['GET'])
 @roles_required('supervisor')
 def index_supervisor():
-    estagios = Estagio.query.join(Empresa, Estagio.supervisor_id == Supervisor.id) \
+    estagios = Estagio.query.join(Supervisor, Estagio.supervisor_id == Supervisor.id) \
                         .filter(Supervisor.user_id == current_user.id).all()
     
     return render_template('supervisor/index_supervisor.html', estagios=estagios)
+
+@app.route('/supervisor/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@roles_required('supervisor')
+def avaliacao_supervisor(estagio_id):
+    # Busca o estágio específico vinculado à empresa atual
+    estagio = Estagio.query.join(Supervisor).filter(
+        Estagio.id == estagio_id,
+        Supervisor.user_id == current_user.id
+    ).first_or_404()
+
+    form = SupervisorAvaliacaoForm(obj=estagio)
+    form.supervisor_nota_assiduidade_e_pontualidade.data = estagio.supervisor_nota_assiduidade_e_pontuabilidade
+    if form.validate_on_submit():
+        try:
+            # Atualiza as notas e outros campos de avaliação
+            estagio.supervisor_nota_interesse = form.supervisor_nota_interesse.data
+            estagio.supervisor_nota_iniciativa = form.supervisor_nota_iniciativa.data
+            estagio.supervisor_nota_cooperacao = form.supervisor_nota_cooperacao.data
+            estagio.supervisor_nota_assiduidade_e_pontuabilidade = form.supervisor_nota_assiduidade_e_pontualidade.data
+            estagio.supervisor_nota_criatividade_e_engenhosidade = form.supervisor_nota_criatividade_e_engenhosidade.data
+            estagio.supervisor_nota_disciplina = form.supervisor_nota_disciplina.data
+            estagio.supervisor_nota_sociabilidade = form.supervisor_nota_sociabilidade.data
+            estagio.supervisor_nota_adaptabilidade = form.supervisor_nota_adaptabilidade.data
+            estagio.supervisor_nota_responsabilidade = form.supervisor_nota_responsabilidade.data
+            estagio.supervisor_evolucao_tecnica = form.supervisor_evolucao_tecnica.data
+            estagio.supervisor_nota_etica = form.supervisor_nota_etica.data
+            estagio.supervisor_atividades = form.supervisor_atividades.data
+            estagio.supervisor_comentarios = form.supervisor_comentarios.data
+            
+            # Calcula a média das notas
+            notas = [
+                form.supervisor_nota_interesse.data,
+                form.supervisor_nota_iniciativa.data,
+                form.supervisor_nota_cooperacao.data,
+                form.supervisor_nota_assiduidade_e_pontualidade.data,
+                form.supervisor_nota_criatividade_e_engenhosidade.data,
+                form.supervisor_nota_disciplina.data,
+                form.supervisor_nota_sociabilidade.data,
+                form.supervisor_nota_adaptabilidade.data,
+                form.supervisor_nota_responsabilidade.data,
+                form.supervisor_evolucao_tecnica.data,
+                form.supervisor_nota_etica.data
+            ]
+            
+            estagio.supervisor_media_notas = sum(filter(None, notas)) / len([n for n in notas if n is not None])
+
+            db.session.commit()
+            flash('Avaliação salva com sucesso!', 'success')
+            return redirect(url_for('index_supervisor'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao salvar avaliação: {e}', 'error')
+            
+    return render_template('supervisor/avaliacao_supervisor.html', form=form, estagio=estagio)
 
 # Fim Area Supervisor
