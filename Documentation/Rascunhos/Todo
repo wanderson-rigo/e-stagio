@@ -17,5 +17,8 @@
 - [x]  Company flow.        
 - [x]  Supervisor flow.
 - [ ]  Admin page for approve new members or internship.
-- [ ]  Bakc to page button on avaliation
+- [ ]  Back to page button on evaluation
+- [ ]  improve message of error when email duplicated
+- [ ]  can have more than 2 evaluators ?
+
 

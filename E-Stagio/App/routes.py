@@ -5,7 +5,7 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -25,7 +25,6 @@ def send_test_email():
     except Exception as e:
         return f"Failed to send email: {e}"
 
-
 @app.route('/')
 def index():
     if not current_user.is_authenticated:
@@ -33,7 +32,7 @@ def index():
     elif 'admin' in current_user.roles:
         return render_template('admin/index_admin.html')  # For admin
     elif 'professor' in current_user.roles:
-        return render_template('professor/index_professor.html')  # For teachers
+        return redirect(url_for('index_professor'))
     elif 'estudante' in current_user.roles:
         return render_template('estudante/index_estudante.html')  # For students
     elif 'empresa' in current_user.roles:
@@ -782,3 +781,71 @@ def avaliacao_supervisor(estagio_id):
     return render_template('supervisor/avaliacao_supervisor.html', form=form, estagio=estagio)
 
 # Fim Area Supervisor
+
+# Area Professor
+
+@app.route('/home-professor', methods=['GET'])
+@roles_required('professor')
+def index_professor():
+    estagios = Estagio.query.join(Professor, Estagio.professor_id == Professor.id) \
+                        .filter(Professor.user_id == current_user.id).all()
+    
+    return render_template('professor/index_professor.html', estagios=estagios)
+
+@app.route('/professor/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@roles_required('professor')
+def avaliacao_professor(estagio_id):
+    estagio = Estagio.query.join(Professor).filter(
+        Estagio.id == estagio_id,
+        Professor.user_id == current_user.id
+    ).first_or_404()
+
+    form = ProfessorAvaliacaoForm(obj=estagio)
+    if form.validate_on_submit():
+        try:
+            # Atualiza as notas e outros campos de avaliação
+            estagio.professor_nota_avaliacao = form.professor_nota_avaliacao.data
+            estagio.professor_avaliacao_comentarios = form.professor_avaliacao_comentarios.data
+
+            db.session.commit()
+            flash('Avaliação salva com sucesso!', 'success')
+            return redirect(url_for('index_professor'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao salvar avaliação: {e}', 'error')
+            
+    return render_template('professor/avaliacao_professor.html', form=form, estagio=estagio)
+
+@app.route('/banca/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@roles_required('professor')
+def notas_banca(estagio_id):
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+
+    form = BancaAvaliacaoForm(obj=estagio)
+    
+    if form.validate_on_submit():
+        try:
+            estagio.banca_nota_apresentacao_oral_1 = form.banca_nota_apresentacao_oral_1.data
+            estagio.banca_nota_pratica_profissional_1 = form.banca_nota_pratica_profissional_1.data
+            estagio.banca_nota_relatorio_1 = form.banca_nota_relatorio_1.data
+            estagio.banca_nota_apresentacao_oral_2 = form.banca_nota_apresentacao_oral_2.data
+            estagio.banca_nota_pratica_profissional_2 = form.banca_nota_pratica_profissional_2.data
+            estagio.banca_nota_relatorio_2 = form.banca_nota_relatorio_2.data
+            estagio.banca_avaliador_1 = form.banca_avaliador_1.data
+            estagio.banca_avaliador_2 = form.banca_avaliador_2.data
+            estagio.banca_aprovado = form.banca_aprovado.data
+            estagio.banca_reprovado = form.banca_reprovado.data
+            estagio.banca_aprovado_com_ressalva = form.banca_aprovado_com_ressalva.data
+            estagio.banca_relatorio_entrega = form.banca_relatorio_entrega.data
+            estagio.banca_refazer_apresentacao = form.banca_refazer_apresentacao.data
+            estagio.banca_comentarios = form.banca_comentarios.data
+
+            db.session.commit()
+            flash('Avaliação da banca salva com sucesso!', 'success')
+            return redirect(url_for('index_professor'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao salvar avaliação: {e}', 'error')
+    
+    return render_template('professor/notas_banca.html', form=form, estagio=estagio)
+# Fim Area Professor

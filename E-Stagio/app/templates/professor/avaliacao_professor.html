@@ -1,0 +1,26 @@
+{% extends "base_professor.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Avaliação do Professor Orientador</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.professor_nota_avaliacao.label(class="form-label") }}
+            {{ form.professor_nota_avaliacao(type="number", class="form-control" + (" is-invalid" if form.professor_nota_avaliacao.errors else "")) }}
+            {% for error in form.professor_nota_avaliacao.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.professor_avaliacao_comentarios.label(class="form-label") }}
+            {{ form.professor_avaliacao_comentarios(class="form-control" + (" is-invalid" if form.professor_avaliacao_comentarios.errors else "")) }}
+            {% for error in form.professor_avaliacao_comentarios.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
+    </form>
+</div>
+
+{% endblock %}

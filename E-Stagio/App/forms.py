@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField
-from wtforms.validators import DataRequired, Email, Length, NumberRange
+from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField, HiddenField
+from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional, ValidationError
 from app.models import StatusEstagio
 
 class ProfessorForm(FlaskForm):
@@ -140,3 +140,27 @@ class SupervisorAvaliacaoForm(FlaskForm):
     supervisor_atividades = TextAreaField('Atividades', validators=[DataRequired()])
     supervisor_comentarios = TextAreaField('Comentários')
     submit = SubmitField('Salvar Avaliação')
+    
+class ProfessorAvaliacaoForm(FlaskForm):
+    professor_nota_avaliacao = FloatField('Levando em conta os aspectos como interesse, iniciativa, comprometimento, prazos, e atividades desenvolvidas pleo estagiário(a) a nota de 0 a 10 é', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    professor_avaliacao_comentarios = TextAreaField('Comentários / Oberservações')
+    submit = SubmitField('Salvar Avaliação')
+    
+class BancaAvaliacaoForm(FlaskForm):
+    banca_nota_avaliacao_empresa = FloatField('Nota Avaliação Empresa', render_kw={'readonly': True})
+    banca_nota_avaliacao_orientador = FloatField('Nota Avaliação Orientador', render_kw={'readonly': True})
+    banca_autoavaliacao = FloatField('Autoavaliação', render_kw={'readonly': True})
+    banca_nota_apresentacao_oral_1 = FloatField('Nota Apresentação Oral 1', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_nota_pratica_profissional_1 = FloatField('Nota Prática Profissional 1', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_nota_relatorio_1 = FloatField('Nota Relatório 1', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_nota_apresentacao_oral_2 = FloatField('Nota Apresentação Oral 2', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_nota_pratica_profissional_2 = FloatField('Nota Prática Profissional 2', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_nota_relatorio_2 = FloatField('Nota Relatório 2', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    banca_avaliador_1 = TextAreaField('Avaliador 1', validators=[DataRequired()])
+    banca_avaliador_2 = TextAreaField('Avaliador 2', validators=[DataRequired()])
+    banca_aprovado = BooleanField('Aprovado', validators=[Optional()])
+    banca_reprovado = BooleanField('Reprovado', validators=[Optional()])
+    banca_aprovado_com_ressalva = BooleanField('Aprovado com Ressalva', validators=[Optional()])
+    banca_relatorio_entrega = DateField('Data de Entrega do Relatório', validators=[Optional()])
+    banca_refazer_apresentacao = DateField('Data para Refazer Apresentação', validators=[Optional()])
+    banca_comentarios = TextAreaField('Comentários', validators=[Optional()])
