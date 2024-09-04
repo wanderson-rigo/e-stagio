@@ -1,10 +1,11 @@
 - [x]  fix date on student edit
-- [ ]  filter active or not entities on datatable
-- [ ]  Improve css
-- [ ]  Fix date picker - day - month - year
+- [ ]  filter active or not entities on datatable - maybe
+- [ ]  Improve css - Working on
+- [ ]  Fix date picker - day - month - year 
 - [x]  improve feedback actions - form
+- [ ]  number range is english change to portuguese
 - [ ]  add logs
-- [ ]  add default pages  as 404
+- [ ]  add default pages  as 404, 500, 401
 - [x]  Fix input date on edit page
 - [x]  fix input feedback to be in portuguese.
 - [x]  load every info of estagio from choices
@@ -20,5 +21,12 @@
 - [ ]  Back to page button on evaluation
 - [ ]  improve message of error when email duplicated
 - [ ]  can have more than 2 evaluators ?
+- [ ] fix inputs can not be 0 in evaluation company or supervisor
+- [ ]  fix value not being populated on evaluation of supervisor
+- [ ]  
+- [ ]  
+- [ ]  
+- [ ]  
+
 
 
