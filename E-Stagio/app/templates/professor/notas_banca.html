@@ -6,6 +6,30 @@
         {{ form.hidden_tag() }}
         
         <div class="form-group">
+            {{ form.banca_nota_avaliacao_empresa.label(class="form-label") }}
+            {{ form.banca_nota_avaliacao_empresa(type="number", class="form-control" + (" is-invalid" if form.banca_nota_avaliacao_empresa.errors else "")) }}
+            {% for error in form.banca_nota_avaliacao_empresa.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.banca_nota_avaliacao_orientador.label(class="form-label") }}
+            {{ form.banca_nota_avaliacao_orientador(type="number", class="form-control" + (" is-invalid" if form.banca_nota_avaliacao_orientador.errors else "")) }}
+            {% for error in form.banca_nota_avaliacao_orientador.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.banca_autoavaliacao.label(class="form-label") }}
+            {{ form.banca_autoavaliacao(type="number", class="form-control" + (" is-invalid" if form.banca_autoavaliacao.errors else "")) }}
+            {% for error in form.banca_autoavaliacao.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
             {{ form.banca_nota_apresentacao_oral_1.label(class="form-label") }}
             {{ form.banca_nota_apresentacao_oral_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_1.errors else "")) }}
             {% for error in form.banca_nota_apresentacao_oral_1.errors %}

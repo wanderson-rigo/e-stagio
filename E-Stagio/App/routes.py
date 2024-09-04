@@ -705,6 +705,8 @@ def avaliacao_empresa(estagio_id):
                 form.empresa_nota_etica.data
             ]) / 10
             
+            estagio.banca_nota_avaliacao_empresa = estagio.empresa_media_notas
+            
             db.session.commit()
             flash('Avaliação salva com sucesso!', 'success')
             return redirect(url_for('index_empresa'))
@@ -736,7 +738,7 @@ def avaliacao_supervisor(estagio_id):
     ).first_or_404()
 
     form = SupervisorAvaliacaoForm(obj=estagio)
-    form.supervisor_nota_assiduidade_e_pontualidade.data = estagio.supervisor_nota_assiduidade_e_pontuabilidade
+    
     if form.validate_on_submit():
         try:
             # Atualiza as notas e outros campos de avaliação
@@ -770,6 +772,7 @@ def avaliacao_supervisor(estagio_id):
             ]
             
             estagio.supervisor_media_notas = sum(filter(None, notas)) / len([n for n in notas if n is not None])
+            estagio.banca_nota_avaliacao_orientador = estagio.supervisor_media_notas
 
             db.session.commit()
             flash('Avaliação salva com sucesso!', 'success')
