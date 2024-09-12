@@ -164,3 +164,18 @@ class BancaAvaliacaoForm(FlaskForm):
     banca_relatorio_entrega = DateField('Data de Entrega do Relatório', validators=[Optional()])
     banca_refazer_apresentacao = DateField('Data para Refazer Apresentação', validators=[Optional()])
     banca_comentarios = TextAreaField('Comentários', validators=[Optional()])
+    
+class EstagioFormAdd(FlaskForm):
+    professor_id = SelectField('Professor', coerce=int, validators=[DataRequired()])
+    supervisor_id = SelectField('Supervisor', coerce=int, validators=[DataRequired()])
+    empresa_id = SelectField('Empresa', coerce=int, validators=[DataRequired()])
+    modalidade = StringField('Modalidade', validators=[DataRequired()])
+    carga_horaria = IntegerField('Carga Horária', validators=[DataRequired()])
+    atividades = TextAreaField('Atividades', validators=[DataRequired()])
+    setor = StringField('Setor', validators=[DataRequired()])
+    remuneracao = BooleanField('Remuneração')
+    valor_remuneracao = FloatField('Valor da Remuneração', default=0.0)
+    horario_estagio = StringField('Horário do Estágio', validators=[DataRequired()])
+    data_inicio = DateField('Data de Início', format='%Y-%m-%d', validators=[DataRequired()])
+    data_conclusao = DateField('Data de Conclusão', format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Salvar Estágio')

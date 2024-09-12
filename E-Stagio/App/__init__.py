@@ -39,5 +39,5 @@ security = Security(app, user_datastore)
 # Import routes after initializing models and extensions
 from app import routes
 
-for rule in app.url_map.iter_rules():
-    print(rule)
+#for rule in app.url_map.iter_rules():
+#   print(rule)

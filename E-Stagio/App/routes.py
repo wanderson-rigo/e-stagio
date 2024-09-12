@@ -5,7 +5,7 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, EstagioFormAdd, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -33,8 +33,8 @@ def index():
         return render_template('admin/index_admin.html')  # For admin
     elif 'professor' in current_user.roles:
         return redirect(url_for('index_professor'))
-    elif 'estudante' in current_user.roles:
-        return render_template('estudante/index_estudante.html')  # For students
+    elif 'aluno' in current_user.roles:
+        return redirect(url_for('index_aluno'))
     elif 'empresa' in current_user.roles:
         return redirect(url_for('index_empresa'))
     elif 'supervisor' in current_user.roles:
@@ -852,3 +852,126 @@ def notas_banca(estagio_id):
     
     return render_template('professor/notas_banca.html', form=form, estagio=estagio)
 # Fim Area Professor
+
+# Area Aluno
+
+@app.route('/home-aluno', methods=['GET', 'POST'])
+@roles_required('aluno')
+def index_aluno():
+    aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
+    estagio = Estagio.query.filter_by(aluno_id=aluno.id).first()
+    print("ta dando pau aqui")
+    
+    if estagio:  # Se o aluno já possui um estágio, mostrar os dados do estágio para edição
+        form = EstagioFormAdd(obj=estagio)
+        print("ta dando pau aqui")
+
+        form.professor_id.choices = [
+            (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(
+                or_(
+                    Professor.id == estagio.professor_id,
+                    and_(Professor.is_approved == True, User.active == True)
+                )
+            ).all()
+        ]
+
+        form.supervisor_id.choices = [
+            (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(
+                or_(
+                    Supervisor.id == estagio.supervisor_id,
+                    and_(Supervisor.is_approved == True, User.active == True)
+                )
+            ).all()
+        ]
+
+        form.empresa_id.choices = [
+            (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(
+                or_(
+                    Empresa.id == estagio.empresa_id,
+                    and_(Empresa.is_approved == True, User.active == True)
+                )
+            ).all()
+        ]
+
+        if request.method == 'GET':
+            form.professor_id.data = estagio.professor_id
+            form.supervisor_id.data = estagio.supervisor_id
+            form.empresa_id.data = estagio.empresa_id
+
+        if form.validate_on_submit():
+            try:
+                print("ta dando pau aqui")
+                
+                estagio.professor_id = form.professor_id.data
+                estagio.supervisor_id = form.supervisor_id.data
+                estagio.empresa_id = form.empresa_id.data
+                estagio.modalidade = form.modalidade.data
+                estagio.carga_horaria = form.carga_horaria.data
+                estagio.atividades = form.atividades.data
+                estagio.setor = form.setor.data
+                estagio.remuneracao = form.remuneracao.data
+                estagio.valor_remuneracao = form.valor_remuneracao.data
+                estagio.horario_estagio = form.horario_estagio.data
+                estagio.data_inicio = form.data_inicio.data
+                estagio.data_conclusao = form.data_conclusao.data
+
+                print("ta dando pau aqui")
+                
+                db.session.merge(estagio)
+                db.session.commit()
+                flash('Estágio atualizado com sucesso!', 'success')
+                return redirect(url_for('index'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Erro ao atualizar estágio: {e}', 'error')
+    else:  # Se o aluno não possui um estágio, permitir o cadastro
+        form = EstagioFormAdd()
+        form.professor_id.choices = [
+            (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(Professor.is_approved == True, User.active == True).all()
+        ]
+
+        form.supervisor_id.choices = [
+            (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(Supervisor.is_approved == True, User.active == True).all()
+        ]
+
+        form.empresa_id.choices = [
+            (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
+        ]
+
+        print("ta dando pau aqui ??")
+        print(form.validate_on_submit())
+        
+        if form.validate_on_submit():
+            try:
+                estagio = Estagio(
+                    aluno_id=aluno.id,
+                    professor_id=form.professor_id.data,
+                    supervisor_id=form.supervisor_id.data,
+                    empresa_id=form.empresa_id.data,
+                    modalidade=form.modalidade.data,
+                    carga_horaria=form.carga_horaria.data,
+                    atividades=form.atividades.data,
+                    setor=form.setor.data,
+                    remuneracao=form.remuneracao.data,
+                    valor_remuneracao=form.valor_remuneracao.data if form.remuneracao.data else None,
+                    horario_estagio=form.horario_estagio.data,
+                    data_inicio=form.data_inicio.data,
+                    data_conclusao=form.data_conclusao.data,
+                    is_approved=False,
+                    status=StatusEstagio.AGUARDANDO_APROVACAO
+                )
+
+                print("ta dando pau aqui ??")
+                
+                db.session.add(estagio)
+                db.session.commit()
+
+                flash('Estágio cadastrado com sucesso!', 'success')
+                return redirect(url_for('index'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Erro ao cadastrar estágio. Error: {str(e)}', 'error')
+
+    return render_template('aluno/cadastro_estagio.html', form=form, aluno=aluno)
+
+# Fim Area Aluno
