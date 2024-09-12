@@ -5,7 +5,7 @@ from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, SupervisorForm, EstagioForm, EstagioFormAdd, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
+from app.forms import ProfessorForm, EmpresaForm, AlunoForm, AutoAvaliacaoForm, SupervisorForm, EstagioForm, EstagioFormAdd, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -962,28 +962,59 @@ def index_aluno():
 
     return render_template('aluno/cadastro_estagio.html', form=form, aluno=aluno)
 
-@app.route('/aluno/autoavaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@app.route('/auto-avaliacao', methods=['GET', 'POST'])
 @roles_required('aluno')
-def autoavaliacao(estagio_id):
-    estagio = Estagio.query.join(Aluno).filter(
-        Estagio.id == estagio_id,
-        Aluno.user_id == current_user.id
-    ).first_or_404()
+def auto_avaliacao():
+    aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
+    estagio = Estagio.query.filter_by(aluno_id=aluno.id).first_or_404()
 
-    form = ProfessorAvaliacaoForm(obj=estagio)
+    form = AutoAvaliacaoForm(obj=estagio)
+
     if form.validate_on_submit():
         try:
-            # Atualiza as notas e outros campos de avaliação
-            estagio.professor_nota_avaliacao = form.professor_nota_avaliacao.data
-            estagio.professor_avaliacao_comentarios = form.professor_avaliacao_comentarios.data
+            estagio.aluno_nota_rendimento = form.aluno_nota_rendimento.data
+            estagio.aluno_nota_facilidade_e_compreensao = form.aluno_nota_facilidade_e_compreensao.data
+            estagio.aluno_nota_conhecimentos_tecnicos = form.aluno_nota_conhecimentos_tecnicos.data
+            estagio.aluno_nota_organizacao_metodo_trabalho = form.aluno_nota_organizacao_metodo_trabalho.data
+            estagio.aluno_nota_iniciativa_independencia = form.aluno_nota_iniciativa_independencia.data
+            estagio.aluno_nota_disciplina = form.aluno_nota_disciplina.data
+            estagio.aluno_nota_sociabilidade_desempenho = form.aluno_nota_sociabilidade_desempenho.data
+            estagio.aluno_nota_assiduidade = form.aluno_nota_assiduidade.data
+            estagio.aluno_nota_cooperecao = form.aluno_nota_cooperecao.data
+            estagio.aluno_nota_responsabilidade = form.aluno_nota_responsabilidade.data
+            estagio.aluno_atividades = form.aluno_atividades.data
+            estagio.aluno_comentarios = form.aluno_comentarios.data
+            estagio.aluno_avaliacao_empresa_condicoes = form.aluno_avaliacao_empresa_condicoes.data
+            estagio.aluno_avaliacao_atendeu_expectativas = form.aluno_avaliacao_atendeu_expectativas.data
+            estagio.aluno_avaliacao_contribui_formacao_profissional = form.aluno_avaliacao_contribui_formacao_profissional.data
+            estagio.aluno_avaliacao_recomendaria_para_outro = form.aluno_avaliacao_recomendaria_para_outro.data
+            estagio.aluno_avaliacao_curso_capacitou = form.aluno_avaliacao_curso_capacitou.data
+            estagio.aluno_avaliacao_orientador_acompanhou = form.aluno_avaliacao_orientador_acompanhou.data
+            estagio.aluno_avaliacao_supervisor_acompanhou = form.aluno_avaliacao_supervisor_acompanhou.data
+
+            # Calcula a média das notas numéricas
+            notas = [
+                form.aluno_nota_rendimento.data,
+                form.aluno_nota_facilidade_e_compreensao.data,
+                form.aluno_nota_conhecimentos_tecnicos.data,
+                form.aluno_nota_organizacao_metodo_trabalho.data,
+                form.aluno_nota_iniciativa_independencia.data,
+                form.aluno_nota_disciplina.data,
+                form.aluno_nota_sociabilidade_desempenho.data,
+                form.aluno_nota_assiduidade.data,
+                form.aluno_nota_cooperecao.data,
+                form.aluno_nota_responsabilidade.data
+            ]
+            estagio.aluno_media_notas = sum(filter(None, notas)) / len([n for n in notas if n is not None])
 
             db.session.commit()
-            flash('Avaliação salva com sucesso!', 'success')
-            return redirect(url_for('index_professor'))
+            flash('Autoavaliação salva com sucesso!', 'success')
+            return redirect(url_for('index_aluno'))
         except Exception as e:
             db.session.rollback()
-            flash(f'Erro ao salvar avaliação: {e}', 'error')
-            
-    return render_template('professor/avaliacao_professor.html', form=form, estagio=estagio)
+            flash(f'Erro ao salvar autoavaliação: {str(e)}', 'error')
+
+    return render_template('aluno/autoavaliacao.html', form=form)
+
 
 # Fim Area Aluno

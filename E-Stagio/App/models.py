@@ -179,6 +179,13 @@ class Estagio(db.Model):
     aluno_atividades = db.Column(db.Text, nullable=True)
     aluno_comentarios = db.Column(db.Text, nullable=True)
     aluno_media_notas = db.Column(db.Float, nullable=True)
+    aluno_avaliacao_empresa_condicoes = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_atendeu_expectativas = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_contribui_formacao_profissional = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_recomendaria_para_outro = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_curso_capacitou = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_orientador_acompanhou = db.Column(db.Integer, nullable=True)
+    aluno_avaliacao_supervisor_acompanhou = db.Column(db.Integer, nullable=True)
     
     professor_nota_avaliacao = db.Column(db.Float, nullable=True)
     professor_avaliacao_comentarios = db.Column(db.Text, nullable=True)

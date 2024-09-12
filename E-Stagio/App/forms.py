@@ -179,3 +179,28 @@ class EstagioFormAdd(FlaskForm):
     data_inicio = DateField('Data de Início', format='%Y-%m-%d', validators=[DataRequired()])
     data_conclusao = DateField('Data de Conclusão', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Salvar Estágio')
+    
+class AutoAvaliacaoForm(FlaskForm):
+    aluno_nota_rendimento = FloatField('Rendimento', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_facilidade_e_compreensao = FloatField('Facilidade e Compreensão', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_conhecimentos_tecnicos = FloatField('Conhecimentos Técnicos', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_organizacao_metodo_trabalho = FloatField('Organização e Método de Trabalho', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_iniciativa_independencia = FloatField('Iniciativa e Independência', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_disciplina = FloatField('Disciplina', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_sociabilidade_desempenho = FloatField('Sociabilidade e Desempenho', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_assiduidade = FloatField('Assiduidade', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_cooperecao = FloatField('Cooperação', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_nota_responsabilidade = FloatField('Responsabilidade', validators=[Optional(), NumberRange(min=0, max=10)])
+    aluno_atividades = TextAreaField('Descreva as atividades realizadas', validators=[Optional()])
+    aluno_comentarios = TextAreaField('Comentários', validators=[Optional()])
+
+    # Campos de avaliação com valores 1 = sim, 2 = não, 3 = mais ou menos
+    aluno_avaliacao_empresa_condicoes = IntegerField('A empresa ofereceu boas condições de trabalho?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_atendeu_expectativas = IntegerField('O estágio atendeu suas expectativas?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_contribui_formacao_profissional = IntegerField('O estágio contribuiu para sua formação profissional?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_recomendaria_para_outro = IntegerField('Recomendaria a empresa para outro aluno?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_curso_capacitou = IntegerField('O curso capacitou adequadamente para o estágio?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_orientador_acompanhou = IntegerField('O orientador acompanhou adequadamente?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_supervisor_acompanhou = IntegerField('O supervisor acompanhou adequadamente?', validators=[Optional(), NumberRange(min=1, max=3)])
+
+    submit = SubmitField('Salvar Autoavaliação')

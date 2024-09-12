@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,12 @@
     <!-- Bloco adicional para CSS customizado -->
     {% block head %}{% endblock %}
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{{ url_for('index') }}">E-Stagio IFC Videira</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -29,6 +32,11 @@
                     <a class="nav-link" href="{{ url_for('signup') }}">Cadastrar</a>
                 </li>
                 {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auto_avaliacao') }}">Autoavaliação</a>
+                </li>
+
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Sair</a>
@@ -42,11 +50,11 @@
         <!-- Bloco de conteúdo principal que será substituído nos templates filhos -->
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
         {% endif %}
         {% endwith %}
 
@@ -59,4 +67,5 @@
     <!-- Bloco adicional para scripts customizados -->
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

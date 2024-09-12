@@ -2,7 +2,13 @@
 {% extends "base_aluno.html" %}
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Cadastro de Estágio</h2>
+    <h2 class="mb-4">
+        {% if estagio and estagio.id %}
+            Meu Estágio
+        {% else %}
+            Cadastrar Estágio
+        {% endif %}
+    </h2>
     <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
@@ -138,6 +144,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+        <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary">Fazer Autoavaliação</a>
     </form>
 </div>
 {% endblock %}
