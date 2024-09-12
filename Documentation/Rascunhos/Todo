@@ -8,12 +8,12 @@
 - [ ]  add default pages  as 404, 500, 401
 - [x]  Fix input date on edit page
 - [x]  fix input feedback to be in portuguese.
-- [x]  load every info of estagio from choices
+- [x]  load every info of internship from choices
 - [x]  enum not updating
 - [x]  fix select of status
 - [ ]  select of supervisor need to be following the company
 - [ ]  Create a live server for tests.
-- [ ]  Teacher flow.
+- [x]  Teacher flow.
 - [ ]  student flow.
 - [x]  Company flow.        
 - [x]  Supervisor flow.
@@ -23,7 +23,7 @@
 - [ ]  can have more than 2 evaluators ?
 - [ ] fix inputs can not be 0 in evaluation company or supervisor
 - [ ]  fix value not being populated on evaluation of supervisor
-- [ ]  
+- [ ]  Just get supervisor from the selected company
 - [ ]  
 - [ ]  
 - [ ]  
