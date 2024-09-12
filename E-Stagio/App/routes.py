@@ -962,4 +962,28 @@ def index_aluno():
 
     return render_template('aluno/cadastro_estagio.html', form=form, aluno=aluno)
 
+@app.route('/aluno/autoavaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+@roles_required('aluno')
+def autoavaliacao(estagio_id):
+    estagio = Estagio.query.join(Aluno).filter(
+        Estagio.id == estagio_id,
+        Aluno.user_id == current_user.id
+    ).first_or_404()
+
+    form = ProfessorAvaliacaoForm(obj=estagio)
+    if form.validate_on_submit():
+        try:
+            # Atualiza as notas e outros campos de avaliação
+            estagio.professor_nota_avaliacao = form.professor_nota_avaliacao.data
+            estagio.professor_avaliacao_comentarios = form.professor_avaliacao_comentarios.data
+
+            db.session.commit()
+            flash('Avaliação salva com sucesso!', 'success')
+            return redirect(url_for('index_professor'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao salvar avaliação: {e}', 'error')
+            
+    return render_template('professor/avaliacao_professor.html', form=form, estagio=estagio)
+
 # Fim Area Aluno

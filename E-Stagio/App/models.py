@@ -166,6 +166,20 @@ class Estagio(db.Model):
     supervisor_comentarios = db.Column(db.Text, nullable=True)
     supervisor_media_notas = db.Column(db.Float, nullable=True)
     
+    aluno_nota_rendimento = db.Column(db.Float, nullable=True)
+    aluno_nota_facilidade_e_compreensao = db.Column(db.Float, nullable=True)
+    aluno_nota_conhecimentos_tecnicos = db.Column(db.Float, nullable=True)
+    aluno_nota_organizacao_metodo_trabalho = db.Column(db.Float, nullable=True)
+    aluno_nota_iniciativa_independencia = db.Column(db.Float, nullable=True)
+    aluno_nota_disciplina = db.Column(db.Float, nullable=True)
+    aluno_nota_sociabilidade_desempenho = db.Column(db.Float, nullable=True)
+    aluno_nota_assiduidade = db.Column(db.Float, nullable=True)
+    aluno_nota_cooperecao = db.Column(db.Float, nullable=True)
+    aluno_nota_responsabilidade = db.Column(db.Float, nullable=True)
+    aluno_atividades = db.Column(db.Text, nullable=True)
+    aluno_comentarios = db.Column(db.Text, nullable=True)
+    aluno_media_notas = db.Column(db.Float, nullable=True)
+    
     professor_nota_avaliacao = db.Column(db.Float, nullable=True)
     professor_avaliacao_comentarios = db.Column(db.Text, nullable=True)
     
