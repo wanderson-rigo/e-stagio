@@ -860,12 +860,9 @@ def notas_banca(estagio_id):
 def index_aluno():
     aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
     estagio = Estagio.query.filter_by(aluno_id=aluno.id).first()
-    print("ta dando pau aqui")
     
     if estagio:  # Se o aluno já possui um estágio, mostrar os dados do estágio para edição
         form = EstagioFormAdd(obj=estagio)
-        print("ta dando pau aqui")
-
         form.professor_id.choices = [
             (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(
                 or_(
@@ -900,8 +897,6 @@ def index_aluno():
 
         if form.validate_on_submit():
             try:
-                print("ta dando pau aqui")
-                
                 estagio.professor_id = form.professor_id.data
                 estagio.supervisor_id = form.supervisor_id.data
                 estagio.empresa_id = form.empresa_id.data
@@ -915,8 +910,6 @@ def index_aluno():
                 estagio.data_inicio = form.data_inicio.data
                 estagio.data_conclusao = form.data_conclusao.data
 
-                print("ta dando pau aqui")
-                
                 db.session.merge(estagio)
                 db.session.commit()
                 flash('Estágio atualizado com sucesso!', 'success')
@@ -938,9 +931,6 @@ def index_aluno():
             (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
         ]
 
-        print("ta dando pau aqui ??")
-        print(form.validate_on_submit())
-        
         if form.validate_on_submit():
             try:
                 estagio = Estagio(
@@ -961,8 +951,6 @@ def index_aluno():
                     status=StatusEstagio.AGUARDANDO_APROVACAO
                 )
 
-                print("ta dando pau aqui ??")
-                
                 db.session.add(estagio)
                 db.session.commit()
 
