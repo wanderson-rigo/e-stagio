@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField, SelectField, TextAreaField, BooleanField, FloatField, HiddenField, TimeField
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional, ValidationError
 from app.models import StatusEstagio
 
@@ -195,12 +195,21 @@ class AutoAvaliacaoForm(FlaskForm):
     aluno_comentarios = TextAreaField('Comentários', validators=[Optional()])
 
     # Campos de avaliação com valores 1 = sim, 2 = não, 3 = mais ou menos
-    aluno_avaliacao_empresa_condicoes = IntegerField('A empresa ofereceu boas condições de trabalho?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_atendeu_expectativas = IntegerField('O estágio atendeu suas expectativas?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_contribui_formacao_profissional = IntegerField('O estágio contribuiu para sua formação profissional?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_recomendaria_para_outro = IntegerField('Recomendaria a empresa para outro aluno?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_curso_capacitou = IntegerField('O curso capacitou adequadamente para o estágio?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_orientador_acompanhou = IntegerField('O orientador acompanhou adequadamente?', validators=[Optional(), NumberRange(min=1, max=3)])
-    aluno_avaliacao_supervisor_acompanhou = IntegerField('O supervisor acompanhou adequadamente?', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_empresa_condicoes = IntegerField('A empresa ofereceu boas condições de trabalho? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_atendeu_expectativas = IntegerField('O estágio atendeu suas expectativas? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_contribui_formacao_profissional = IntegerField('O estágio contribuiu para sua formação profissional? 1 - SIM, 2 - NÃO, 3 - Mais ou menos. ', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_recomendaria_para_outro = IntegerField('Recomendaria a empresa para outro aluno? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_curso_capacitou = IntegerField('O curso capacitou adequadamente para o estágio? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_orientador_acompanhou = IntegerField('O orientador acompanhou adequadamente? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
+    aluno_avaliacao_supervisor_acompanhou = IntegerField('O supervisor acompanhou adequadamente? 1 - SIM, 2 - NÃO, 3 - Mais ou menos.', validators=[Optional(), NumberRange(min=1, max=3)])
 
     submit = SubmitField('Salvar Autoavaliação')
+    
+class AtividadesEstagioForm(FlaskForm):
+    descricao = StringField('Descrição', validators=[DataRequired(), Length(max=255)])
+    data = DateField('Data', format='%Y-%m-%d', validators=[DataRequired()])
+    horario_entrada = TimeField('Horário de Entrada', validators=[DataRequired()])
+    horario_saida = TimeField('Horário de Saída', validators=[DataRequired()])
+    horas_totais = FloatField('Horas Totais', validators=[Optional(), NumberRange(min=0)])
+    estagio_id = IntegerField('ID do Estágio', validators=[DataRequired()])
+    submit = SubmitField('Registrar Atividade')

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="mb-4">
-        {% if estagio and estagio.id %}
+        {% if form and form.professor_id %}
             Meu Estágio
         {% else %}
             Cadastrar Estágio
@@ -145,6 +145,7 @@
 
         <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
         <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary">Fazer Autoavaliação</a>
+        <a href="{{ url_for('listar_atividades_estagio') }}" class="btn btn-primary">Ver Atividades de Estágio</a>
     </form>
 </div>
 {% endblock %}

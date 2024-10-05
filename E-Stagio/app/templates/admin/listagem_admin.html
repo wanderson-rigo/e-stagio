@@ -4,28 +4,30 @@
 <div class="container mt-4">
     <h2>Lista de Administradores</h2>
     <a href="{{ url_for('cadastro_admin') }}" class="btn btn-success mb-3">Adicionar Novo Admin</a>
-    <table id="adminsTable" class="table table-striped">
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for admin in admins %}
-            <tr>
-                <td>{{ admin.email }}</td>
-                <td>
-                    <a href="{{ url_for('editar_admin', id=admin.id) }}" class="btn btn-primary">Editar</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="4">Nenhum administrador encontrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="adminsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td data-label="Email">{{ admin.email }}</td>
+                    <td data-label="Ações">
+                        <a href="{{ url_for('editar_admin', id=admin.id) }}" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2">Nenhum administrador encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
 
@@ -37,9 +39,9 @@ $(document).ready(function() {
     $('#adminsTable').DataTable({
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "Nenhum admin encontrada",
+            "zeroRecords": "Nenhum admin encontrado",
             "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "Nenhum aadmin disponível",
+            "infoEmpty": "Nenhum admin disponível",
             "infoFiltered": "(filtrado de _MAX_ registros no total)",
             "search": "Buscar:",
             "paginate": {
@@ -54,4 +56,44 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<style>
+@media (max-width: 768px) {
+    .table-responsive table thead {
+        display: none;
+    }
+
+    .table-responsive table tbody, 
+    .table-responsive table tr, 
+    .table-responsive table td {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .table-responsive table tr {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #dee2e6; 
+        padding: 10px 0;
+    }
+
+    .table-responsive table td {
+        text-align: center; 
+        position: relative;
+        padding: 10px 0;
+    }
+
+    .table-responsive table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 100%;
+        padding: 10px 0;
+        font-weight: bold;
+        text-align: center; 
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+}
+</style>
 {% endblock %}

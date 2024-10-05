@@ -1,0 +1,46 @@
+<!-- templates/admin/cadastro_atividade.html -->
+{% extends "base_aluno.html" %}
+{% block content %}
+<h2>Cadastro de Atividade de Estágio</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.descricao.label }}<br>
+        {{ form.descricao(size=64) }}<br>
+        {% for error in form.descricao.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.data.label }}<br>
+        {{ form.data(size=32) }}<br>
+        {% for error in form.data.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.horario_entrada.label }}<br>
+        {{ form.horario_entrada(size=32) }}<br>
+        {% for error in form.horario_entrada.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.horario_saida.label }}<br>
+        {{ form.horario_saida(size=32) }}<br>
+        {% for error in form.horario_saida.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.horas_totais.label }}<br>
+        {{ form.horas_totais(size=32) }}<br>
+        {% for error in form.horas_totais.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

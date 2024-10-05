@@ -117,6 +117,21 @@ class StatusEstagio(enum.Enum):
     FINALIZADO = 'finalizado'
     CANCELADO = 'cancelado'
 
+class AtividadesEstagio(db.Model):
+    __tablename__ = 'atividades_estagio'
+
+    id = db.Column(db.Integer, primary_key=True) 
+    descricao = db.Column(db.String(255), nullable=False)
+    horario_entrada = db.Column(db.Time, nullable=False)
+    horario_saida = db.Column(db.Time, nullable=False)
+    horas_totais = db.Column(db.Float, nullable=False)
+    data = db.Column(db.Date, nullable=False)
+    estagio_id = db.Column(db.Integer, db.ForeignKey('estagios.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Atividade  {self.descricao} - Estágio {self.estagio_id}>'
+
+
 class Estagio(db.Model):
     __tablename__ = 'estagios'
 

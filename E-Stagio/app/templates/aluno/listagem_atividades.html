@@ -1,0 +1,65 @@
+<!-- templates/aluno/listagem_atividades.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Atividades de Estágio</h2>
+    <a href="{{ url_for('cadastrar_atividade_estagio') }}" class="btn btn-success mb-3">Adicionar Nova Atividade</a>
+    <table id="atividadesTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Horário de Entrada</th>
+                <th>Horário de Saída</th>
+                <th>Horas Totais</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atividade in atividades %}
+            <tr>
+                <td>{{ atividade.data.strftime('%d/%m/%Y') }}</td>
+                <td>{{ atividade.descricao }}</td>
+                <td>{{ atividade.horario_entrada.strftime('%H:%M') }}</td>
+                <td>{{ atividade.horario_saida.strftime('%H:%M') }}</td>
+                <td>{{ atividade.horas_totais }}</td>
+                <td>
+                    <a href="{{ url_for('editar_atividade_estagio', atividade_id=atividade.id) }}" class="btn btn-primary">Editar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">Nenhuma atividade cadastrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
+$(document).ready(function() {
+    $('#atividadesTable').DataTable({
+        "order": [[0, "asc"]],
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "Nenhuma atividade encontrada",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "Nenhuma atividade disponível",
+            "infoFiltered": "(filtrado de _MAX_ registros no total)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primeiro",
+                "last": "Último",
+                "next": "Próximo",
+                "previous": "Anterior"
+            },
+            "emptyTable": "Nenhum dado disponível na tabela"
+        },
+        "pageLength": 10
+    });
+});
+</script>
+{% endblock %}

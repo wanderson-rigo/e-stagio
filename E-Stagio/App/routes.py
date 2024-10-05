@@ -3,9 +3,9 @@ from flask_mail import Message
 from flask import render_template, redirect, url_for, flash, request
 from app import app, db, mail
 from flask_security.utils import hash_password
-from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio
+from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio, AtividadesEstagio
 from flask_security import login_user, current_user, roles_required, login_required
-from app.forms import ProfessorForm, EmpresaForm, AlunoForm, AutoAvaliacaoForm, SupervisorForm, EstagioForm, EstagioFormAdd, ProfessorFormEdit, SupervisorEditForm, AlunoEditForm, EmpresaEditForm, AdminForm, EmpresaAvaliacaoForm, SupervisorAvaliacaoForm, ProfessorAvaliacaoForm, BancaAvaliacaoForm
+from app.forms import *
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
 
@@ -1016,5 +1016,74 @@ def auto_avaliacao():
 
     return render_template('aluno/autoavaliacao.html', form=form)
 
+@app.route('/aluno/cadastrar-atividade', methods=['GET', 'POST'])
+@roles_required('aluno')
+def cadastrar_atividade_estagio():
+    aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
+    estagio = Estagio.query.filter_by(aluno_id=aluno.id).first_or_404()
+    
+    form = AtividadesEstagioForm()
+    form.estagio_id.data = estagio.id  # Preenche automaticamente o ID do estágio no formulário
+
+    if form.validate_on_submit():
+        try:
+            atividade = AtividadesEstagio(
+                descricao=form.descricao.data,
+                data=form.data.data,
+                horario_entrada=form.horario_entrada.data,
+                horario_saida=form.horario_saida.data,
+                horas_totais=form.horas_totais.data,
+                estagio_id=estagio.id
+            )
+            db.session.add(atividade)
+            db.session.commit()
+            
+            flash('Atividade cadastrada com sucesso!', 'success')
+            return redirect(url_for('index_aluno'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao cadastrar atividade: {str(e)}', 'error')
+
+    return render_template('aluno/cadastro_atividade.html', form=form)
+
+@app.route('/aluno/listar-atividades', methods=['GET'])
+@roles_required('aluno')
+def listar_atividades_estagio():
+    aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
+    estagio = Estagio.query.filter_by(aluno_id=aluno.id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    return render_template('aluno/listagem_atividades.html', atividades=atividades, estagio=estagio)
+
+@app.route('/aluno/editar-atividade/<int:atividade_id>', methods=['GET', 'POST'])
+@roles_required('aluno')
+def editar_atividade_estagio(atividade_id):
+    atividade = AtividadesEstagio.query.filter_by(id=atividade_id).first_or_404()
+    aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
+    
+    # Verificar se a atividade pertence ao estágio do aluno atual
+    estagio = Estagio.query.filter_by(aluno_id=aluno.id).first_or_404()
+    if atividade.estagio_id != estagio.id:
+        flash('Você não tem permissão para editar essa atividade.', 'error')
+        return redirect(url_for('listar_atividades_estagio'))
+
+    form = AtividadesEstagioForm(obj=atividade)
+    
+    if form.validate_on_submit():
+        try:
+            atividade.descricao = form.descricao.data
+            atividade.data = form.data.data
+            atividade.horario_entrada = form.horario_entrada.data
+            atividade.horario_saida = form.horario_saida.data
+            atividade.horas_totais = form.horas_totais.data
+
+            db.session.commit()
+            flash('Atividade editada com sucesso!', 'success')
+            return redirect(url_for('listar_atividades_estagio'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao editar atividade: {str(e)}', 'error')
+    
+    return render_template('aluno/editar_atividade.html', form=form, atividade=atividade)
 
 # Fim Area Aluno
