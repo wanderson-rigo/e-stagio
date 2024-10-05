@@ -1086,4 +1086,12 @@ def editar_atividade_estagio(atividade_id):
     
     return render_template('aluno/editar_atividade.html', form=form, atividade=atividade)
 
+@app.route('/banca/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
+
+@app.route('/listar-atividades/<int:estagio_id>', methods=['GET'])
+def listar_atividades(estagio_id):
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    return render_template('aluno/listagem_atividades_publica.html', atividades=atividades, estagio=estagio)
 # Fim Area Aluno

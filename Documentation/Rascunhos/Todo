@@ -14,7 +14,7 @@
 - [ ]  fix value not being populated on evaluation of supervisor
 - [ ]  Just get supervisor from the selected company
 - [ ]  home company strange behavior
-- [ ]  implement select for yes /no /so so
+- [ ]  implement select for yes / no / so so in autoavaliação
 - [X]  activities of student
 - [ ]  activities of student show on supervisor
 - [ ]  accept professor
