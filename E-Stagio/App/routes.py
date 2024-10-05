@@ -1088,10 +1088,31 @@ def editar_atividade_estagio(atividade_id):
 
 @app.route('/banca/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
 
-@app.route('/listar-atividades/<int:estagio_id>', methods=['GET'])
-def listar_atividades(estagio_id):
+@app.route('/listar-atividades-empresa/<int:estagio_id>', methods=['GET'])
+def listar_atividades_empresa(estagio_id):
     estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
     atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
 
-    return render_template('aluno/listagem_atividades_publica.html', atividades=atividades, estagio=estagio)
+    return render_template('aluno/listagem_atividades_empresa.html', atividades=atividades, estagio=estagio)
+
+@app.route('/listar-atividades-supervisor/<int:estagio_id>', methods=['GET'])
+def listar_atividades_supervisor(estagio_id):
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    return render_template('aluno/listagem_atividades_supervisor.html', atividades=atividades, estagio=estagio)
+
+@app.route('/listar-atividades-professor/<int:estagio_id>', methods=['GET'])
+def listar_atividades_professor(estagio_id):
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    return render_template('aluno/listagem_atividades_professor.html', atividades=atividades, estagio=estagio)
+
+@app.route('/listar-atividades-admin/<int:estagio_id>', methods=['GET'])
+def listar_atividades_admin(estagio_id):
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    return render_template('aluno/listagem_atividades_admin.html', atividades=atividades, estagio=estagio)
 # Fim Area Aluno

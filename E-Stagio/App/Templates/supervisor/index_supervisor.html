@@ -20,6 +20,7 @@
                 <td>{{ estagio.status | readable_status }}</td>
                 <td>
                     <a href="{{ url_for('avaliacao_supervisor', estagio_id=estagio.id) }}" class="btn btn-primary">Notas</a>
+                    <a href="{{ url_for('listar_atividades_supervisor', estagio_id=estagio.id) }}" class="btn btn-primary">Atividades</a>
                 </td>
             </tr>
             {% else %}
