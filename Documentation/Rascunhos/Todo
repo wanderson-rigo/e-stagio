@@ -4,7 +4,8 @@
 - [ ]  add logs
 - [ ]  add default pages  as 404, 500, 401
 - [ ]  select of supervisor need to be following the company selected
-- [ ]  Create a live server for tests. - Doing now
+- [ ]  Create a live server for tests. - Doing now - <==
+- [ ]  Generate PDFs Filled. - Doing now - <==
 - [X]  student flow.
 - [X]  Admin page for approve new members.
 - [ ]  Back to page button on evaluation
