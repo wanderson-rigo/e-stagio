@@ -50,11 +50,11 @@ def signup():
     if request.method == 'POST':
         user = User.query.filter_by(email=request.form['email']).first()
         if user:
-            msg = "User already exists"
+            msg = "Email já esta em uso"
             return render_template('signup.html', msg=msg, roles=roles)
         
         hashed_password = hash_password(request.form['password'])
-        user = User(email=request.form['email'], active=True, password=hashed_password)
+        user = User(email=request.form['email'], active=False, password=hashed_password)
         user.username = user.email
         user.confirmed_at = datetime.datetime.now()
         
@@ -65,7 +65,7 @@ def signup():
         
         db.session.add(user)
         db.session.commit()
-        flash('Por favor, confira seu e-mail para verificar sua conta.', 'success')
+        flash('Por favor, aguarde sua conta ser aprovada pelo setor de estágios para começar usar sua conta.', 'success')
         
         return redirect(url_for('index'))
     else:
@@ -413,6 +413,29 @@ def lista_estagios():
 def lista_admin():
     admins = User.query.join(User.roles).filter(Role.name == 'admin').options(joinedload(User.roles)).all()
     return render_template('admin/listagem_admin.html', admins=admins)
+
+@app.route('/admin/listar-usuarios-inativos', methods=['GET'])
+@roles_required('admin')
+def listar_usuarios_inativos():
+    usuarios_inativos = User.query.filter_by(active=False).all()
+    return render_template('admin/listagem_usuarios_inativos.html', usuarios=usuarios_inativos)
+
+@app.route('/admin/ativar-usuario/<int:user_id>', methods=['GET', 'POST'])
+@roles_required('admin')
+def ativar_usuario(user_id):
+    usuario = User.query.get_or_404(user_id)
+    if not usuario.active:
+        try:
+            usuario.active = True
+            usuario.confirmed_at = datetime.datetime.now()
+            db.session.commit()
+            flash('Usuário ativado com sucesso!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao ativar usuário: {str(e)}', 'error')
+    else:
+        flash('Usuário já está ativo.', 'info')
+    return redirect(url_for('listar_usuarios_inativos'))
 
 # Fim Area de Listagem Admin
 
@@ -1086,8 +1109,6 @@ def editar_atividade_estagio(atividade_id):
     
     return render_template('aluno/editar_atividade.html', form=form, atividade=atividade)
 
-@app.route('/banca/avaliacao/<int:estagio_id>', methods=['GET', 'POST'])
-
 @app.route('/listar-atividades-empresa/<int:estagio_id>', methods=['GET'])
 def listar_atividades_empresa(estagio_id):
     estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
@@ -1115,4 +1136,5 @@ def listar_atividades_admin(estagio_id):
     atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
 
     return render_template('aluno/listagem_atividades_admin.html', atividades=atividades, estagio=estagio)
+
 # Fim Area Aluno

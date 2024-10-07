@@ -1,25 +1,21 @@
-- [ ]  Improve css - Working on
+- [ ]  Improve css - Working on - Stopped for focus on deploy
 - [ ]  Fix date picker - day - month - year 
-- [ ]  number range is english change to portuguese
+- [ ]  inputs validations is in english change to portuguese
 - [ ]  add logs
 - [ ]  add default pages  as 404, 500, 401
-- [ ]  select of supervisor need to be following the company
-- [ ]  Create a live server for tests. - NEXT
+- [ ]  select of supervisor need to be following the company selected
+- [ ]  Create a live server for tests. - Doing now
 - [X]  student flow.
-- [ ]  Admin page for approve new members or internship. - Doing
+- [X]  Admin page for approve new members.
 - [ ]  Back to page button on evaluation
-- [ ]  improve message of error when email duplicated
-- [ ]  can have more than 2 evaluators ?
+- [X]  improve message of error when email duplicated
 - [ ]  fix inputs can not be 0 in evaluation company or supervisor
 - [ ]  fix value not being populated on evaluation of supervisor
-- [ ]  Just get supervisor from the selected company
 - [ ]  home company strange behavior
 - [ ]  implement select for yes / no / so so in autoavaliação
 - [X]  activities of student
-- [ ]  activities of student show on supervisor
-- [ ]  accept professor
-- [ ]  
-- [ ]  
+- [X]  activities of student show on supervisor
+- [ ]  Register need create the entity, now created just student
 - [ ]  
 - [ ]  
 - [ ]  

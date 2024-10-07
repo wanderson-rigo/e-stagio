@@ -18,6 +18,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('signup') }}">Cadastrar</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
@@ -39,15 +48,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('lista_admin') }}">Admins</a>
                 </li>
-                {% if not current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="{{ url_for('listar_usuarios_inativos') }}">Usuarios novos</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup') }}">Cadastrar</a>
-                </li>
-                {% endif %}
-                {% if current_user.is_authenticated %}
+
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Sair</a>
                 </li>
