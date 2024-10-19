@@ -32,25 +32,25 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#empresaTable').DataTable({
-        "language": {
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "Nenhuma empresa encontrada",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "Nenhuma empresa disponível",
-            "infoFiltered": "(filtrado de _MAX_ registros no total)",
-            "search": "Buscar:",
-            "paginate": {
-                "first":      "Primeiro",
-                "last":       "Último",
-                "next":       "Próximo",
-                "previous":   "Anterior"
+    $(document).ready(function () {
+        $('#empresaTable').DataTable({
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Nenhuma empresa encontrada",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhuma empresa disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+                "emptyTable": "Nenhum dado disponível na tabela"
             },
-            "emptyTable":     "Nenhum dado disponível na tabela"
-        },
-        "pageLength": 10
+            "pageLength": 10
+        });
     });
-});
 </script>
 {% endblock %}
