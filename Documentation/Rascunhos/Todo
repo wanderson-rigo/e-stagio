@@ -1,12 +1,12 @@
 - [ ]  Create a live server for tests. - Doing now - <==
-- [X]  Generate PDFs Filled. - Doing now - <==
-- [ ]  Show dates on right format on PDF
 
-- [ ]  Back to page button on evaluation
+- [X]  Generate PDFs Filled. - Working but need some improvement on editable PDFs 
+- [X]  Show dates on right format on PDF
+
+- [X]  Back to page button on evaluation
 - [ ]  fix inputs can not be 0 in evaluation company or supervisor
 - [ ]  fix value not being populated on evaluation of supervisor
 - [ ]  home company strange behavior
-- [ ]  implement select for yes / no / so so in autoavaliação
 - [ ]  Register need create the entity, now created just user
 - [ ]  Improve css - Working on - Stopped for focus on deploy
 - [ ]  Fix date picker - day - month - year 

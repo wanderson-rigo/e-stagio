@@ -21,7 +21,7 @@
                 <td>{{ estagio.supervisor.nome }}</td>
                 <td>{{ estagio.status | readable_status }}</td>
                 <td>
-                    <a href="{{ url_for('avaliacao_professor', estagio_id=estagio.id) }}" class="btn btn-primary">Notas e Considerações</a>
+                    <a href="{{ url_for('avaliacao_professor', estagio_id=estagio.id) }}" class="btn btn-primary">Notas e Atas</a>
                     <a href="{{ url_for('notas_banca', estagio_id=estagio.id) }}" class="btn btn-primary">Notas Banca</a>
                     <a href="{{ url_for('listar_atividades_professor', estagio_id=estagio.id) }}" class="btn btn-primary">Atividades</a>
                 </td>

@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
+    <a href="{{ url_for('index_aluno') }}" class="btn btn-secondary">Voltar <-</a>
     <h2>Lista de Atividades de Estágio</h2>
     <a href="{{ url_for('cadastrar_atividade_estagio') }}" class="btn btn-success mb-3">Adicionar Nova Atividade</a>
     <table id="atividadesTable" class="table table-striped">

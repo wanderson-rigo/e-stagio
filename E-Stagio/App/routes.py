@@ -892,6 +892,7 @@ def index_aluno():
     
     if estagio:  # Se o aluno já possui um estágio, mostrar os dados do estágio para edição
         form = EstagioFormAdd(obj=estagio)
+        form.estagio_id = estagio.id
         form.professor_id.choices = [
             (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(
                 or_(

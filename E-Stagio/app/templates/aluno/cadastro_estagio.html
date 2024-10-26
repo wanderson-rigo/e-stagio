@@ -146,6 +146,10 @@
         <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
         <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary">Fazer Autoavaliação</a>
         <a href="{{ url_for('listar_atividades_estagio') }}" class="btn btn-primary">Ver Atividades de Estágio</a>
+        <a href="{{ url_for('generate_company_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Avaliação Empresa</a>
+        <a href="{{ url_for('generate_professor_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Avaliação Professor</a>
+        <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Autoavaliação do Estagiário</a>
+        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Ata da Banca</a>
     </form>
 </div>
 {% endblock %}

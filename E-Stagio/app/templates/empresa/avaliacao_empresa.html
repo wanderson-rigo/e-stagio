@@ -1,6 +1,7 @@
 {% extends "base_empresa.html" %}
 {% block content %}
 <div class="container mt-4">
+    <a href="{{ url_for('index_empresa') }}" class="btn btn-secondary">Voltar <-</a>
     <h2>Avaliação da Empresa</h2>
     <form method="POST">
         {{ form.hidden_tag() }}

@@ -1,6 +1,7 @@
 {% extends "base_professor.html" %}
 {% block content %}
 <div class="container mt-4">
+    <a href="{{ url_for('index_professor') }}" class="btn btn-secondary">Voltar <-</a>
     <h2>Avaliação da Banca</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
@@ -166,6 +167,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
+        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Ata da Banca</a>
     </form>
 </div>
 {% endblock %}
