@@ -348,8 +348,6 @@ def cadastro_estagio():
         except Exception as e:
             db.session.rollback()
             flash(f'Failed to create estágio. Error: {str(e)}', 'error')
-    else:
-        flash(f'Formulário inválido: {form.errors}', 'error')
 
     return render_template('admin/cadastro_estagio.html', form=form)
 
@@ -703,8 +701,6 @@ def editar_estagio(id):
         except Exception as e:
             db.session.rollback()
             flash(f'Erro ao atualizar estágio: {e}', 'error')
-    else:
-        flash(f'Formulário inválido: {form.errors}', 'error')
 
     return render_template('admin/editar_estagio.html', form=form, estagio=estagio)
 # Fim Area de Edição Admin
