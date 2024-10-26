@@ -860,6 +860,9 @@ def notas_banca(estagio_id):
             estagio.banca_nota_apresentacao_oral_2 = form.banca_nota_apresentacao_oral_2.data
             estagio.banca_nota_pratica_profissional_2 = form.banca_nota_pratica_profissional_2.data
             estagio.banca_nota_relatorio_2 = form.banca_nota_relatorio_2.data
+            estagio.banca_nota_apresentacao_oral_supervisor = form.banca_nota_apresentacao_oral_supervisor.data
+            estagio.banca_nota_pratica_profissional_supervisor = form.banca_nota_pratica_profissional_supervisor.data
+            estagio.banca_nota_relatorio_supervisor = form.banca_nota_relatorio_supervisor.data
             estagio.banca_avaliador_1 = form.banca_avaliador_1.data
             estagio.banca_avaliador_2 = form.banca_avaliador_2.data
             estagio.banca_aprovado = form.banca_aprovado.data
@@ -1306,5 +1309,121 @@ def generate_self_evaluation_pdf(estagio_id):
     pdf_stream.seek(0)
 
     return send_file(pdf_stream, as_attachment=True, download_name=f"Autoavaliacao_Estagiario_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
+
+@app.route('/generate_ata_banca_pdf/<int:estagio_id>', methods=['GET'])
+def generate_ata_banca_pdf(estagio_id):
+    # Buscar detalhes do estágio (Estagio)
+    estagio = Estagio.query.filter(Estagio.id == estagio_id).first_or_404()
+
+    # Calcular médias e valores derivados
+    avaliacao_concedente_peso = (estagio.banca_nota_avaliacao_empresa or 0) * 2
+    avaliacao_orientador_peso = (estagio.banca_nota_avaliacao_orientador or 0) * 2
+    
+    apresentacao_oral_n1 = estagio.banca_nota_apresentacao_oral_supervisor or 0
+    apresentacao_oral_n2 = estagio.banca_nota_apresentacao_oral_1 or 0
+    apresentacao_oral_n3 = estagio.banca_nota_apresentacao_oral_2 or 0
+    apresentacao_oral_media = (apresentacao_oral_n1 + apresentacao_oral_n2 + apresentacao_oral_n3) / 3
+    apresentacao_oral_media_peso = apresentacao_oral_media * 2
+
+    pratica_profissional_n1 = estagio.banca_nota_pratica_profissional_supervisor or 0
+    pratica_profissional_n2 = estagio.banca_nota_pratica_profissional_1 or 0
+    pratica_profissional_n3 = estagio.banca_nota_pratica_profissional_2 or 0
+    pratica_profissional_media = (pratica_profissional_n1 + pratica_profissional_n2 + pratica_profissional_n3) / 3
+    pratica_profissional_media_peso = pratica_profissional_media * 2
+
+    relatorio_descritivo_n1 = estagio.banca_nota_relatorio_supervisor or 0
+    relatorio_descritivo_n2 = estagio.banca_nota_relatorio_1 or 0
+    relatorio_descritivo_n3 = estagio.banca_nota_relatorio_2 or 0
+    relatorio_descritivo_media = (relatorio_descritivo_n1 + relatorio_descritivo_n2 + relatorio_descritivo_n3) / 3
+    relatorio_descritivo_media_peso = relatorio_descritivo_media  # Mesma média
+
+    autoavaliacao = estagio.banca_autoavaliacao or 0
+    autoavaliacao_peso = autoavaliacao  # Mesma nota
+
+    # Calculando nota final
+    nota_final = (
+        avaliacao_concedente_peso +
+        avaliacao_orientador_peso +
+        apresentacao_oral_media_peso +
+        pratica_profissional_media_peso +
+        relatorio_descritivo_media_peso +
+        autoavaliacao_peso
+    )
+
+    # Formatar as datas no formato dia/mês/ano
+    data_relatorio = estagio.banca_relatorio_entrega.strftime('%d/%m/%Y') if estagio.banca_relatorio_entrega else ''
+    data_apresentacao = estagio.banca_refazer_apresentacao.strftime('%d/%m/%Y') if estagio.banca_refazer_apresentacao else ''
+    ano = estagio.banca_relatorio_entrega.year if estagio.banca_relatorio_entrega else estagio.banca_refazer_apresentacao.year if estagio.banca_refazer_apresentacao else ''
+
+    # Criar o dicionário com os dados a serem preenchidos
+    data_dict = {
+        'avaliacao_concedente': str(estagio.banca_nota_avaliacao_empresa or ''),
+        'avaliacao_concedente_peso': str(avaliacao_concedente_peso),
+        'avaliacao_orientador': str(estagio.banca_nota_avaliacao_orientador or ''),
+        'avaliacao_orientador_peso': str(avaliacao_orientador_peso),
+        'apresentacao_oral_n1': str(apresentacao_oral_n1),
+        'apresentacao_oral_n2': str(apresentacao_oral_n2),
+        'apresentacao_oral_n3': str(apresentacao_oral_n3),
+        'apresentacao_oral_media': str(apresentacao_oral_media),
+        'apresentacao_oral_media_peso': str(apresentacao_oral_media_peso),
+        'pratica_profissional_n1': str(pratica_profissional_n1),
+        'pratica_profissional_n2': str(pratica_profissional_n2),
+        'pratica_profissional_n3': str(pratica_profissional_n3),
+        'pratica_profissional_media': str(pratica_profissional_media),
+        'pratica_profissional_media_peso': str(pratica_profissional_media_peso),
+        'relatorio_descritivo_n1': str(relatorio_descritivo_n1),
+        'relatorio_descritivo_n2': str(relatorio_descritivo_n2),
+        'relatorio_descritivo_n3': str(relatorio_descritivo_n3),
+        'relatorio_descritivo_media': str(relatorio_descritivo_media),
+        'relatorio_descritivo_media_peso': str(relatorio_descritivo_media_peso),
+        'autoavalicao': str(autoavaliacao),
+        'autoavalicao_peso': str(autoavaliacao_peso),
+        'nota_final': str(nota_final),
+        'data_relatorio': data_relatorio,
+        'data_apresentacao': data_apresentacao,
+        'ano': str(ano),
+        'comentarios': estagio.banca_comentarios or '',
+        'nome_avaliador1': estagio.banca_avaliador_1 or '',
+        'nome_avaliador2': estagio.banca_avaliador_2 or '',
+        'orientador': estagio.professor.nome,
+    }
+
+    # Campos de checkbox
+    data_dict.update({
+        'aprovado': 'Yes' if estagio.banca_aprovado else '',
+        'aprovado_ressalva': 'Yes' if estagio.banca_aprovado_com_ressalva else '',
+        'reprovado': 'Yes' if estagio.banca_reprovado else '',
+    })
+
+    # Caminho do PDF editável
+    base_dir = os.path.dirname(__file__)
+    input_pdf_path = os.path.join(base_dir, 'Files', 'ata_banca_editavel.pdf')
+
+    # Abrir e preencher o PDF
+    doc = fitz.open(input_pdf_path)
+    for page in doc:
+        widgets = page.widgets()
+        if widgets:
+            for field in widgets:
+                field_name = field.field_name
+                if field_name in data_dict:
+                    field.field_value = data_dict[field_name]
+                    field.update()
+
+    # Atualizar os metadados do PDF
+    title = f"Ata Banca - {estagio.aluno.nome}"
+    doc.set_metadata({"title": title})
+
+    # Remover os campos de formulário para "flatten" o PDF
+    for page in doc:
+        page.clean_contents()
+
+    # Salvar o PDF em memória usando BytesIO
+    pdf_stream = BytesIO()
+    doc.save(pdf_stream, incremental=False, deflate=True)
+    pdf_stream.seek(0)
+
+    return send_file(pdf_stream, as_attachment=True, download_name=f"Ata_Banca_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
+
 
 # Fim Area criação de PDFs

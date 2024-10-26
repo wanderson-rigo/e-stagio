@@ -30,6 +30,30 @@
         </div>
 
         <div class="form-group">
+            {{ form.banca_nota_apresentacao_oral_supervisor.label(class="form-label") }}
+            {{ form.banca_nota_apresentacao_oral_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_supervisor.errors else "")) }}
+            {% for error in form.banca_nota_apresentacao_oral_supervisor.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.banca_nota_pratica_profissional_supervisor.label(class="form-label") }}
+            {{ form.banca_nota_pratica_profissional_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_supervisor.errors else "")) }}
+            {% for error in form.banca_nota_pratica_profissional_supervisor.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.banca_nota_relatorio_supervisor.label(class="form-label") }}
+            {{ form.banca_nota_relatorio_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_supervisor.errors else "")) }}
+            {% for error in form.banca_nota_relatorio_supervisor.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
             {{ form.banca_nota_apresentacao_oral_1.label(class="form-label") }}
             {{ form.banca_nota_apresentacao_oral_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_1.errors else "")) }}
             {% for error in form.banca_nota_apresentacao_oral_1.errors %}

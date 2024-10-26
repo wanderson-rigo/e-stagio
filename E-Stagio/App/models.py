@@ -222,6 +222,9 @@ class Estagio(db.Model):
     banca_relatorio_entrega = db.Column(db.Date, nullable=True)
     banca_refazer_apresentacao = db.Column(db.Date, nullable=True)
     banca_comentarios = db.Column(db.Text, nullable=True)
+    banca_nota_apresentacao_oral_supervisor = db.Column(db.Float, nullable=True)
+    banca_nota_pratica_profissional_supervisor = db.Column(db.Float, nullable=True)
+    banca_nota_relatorio_supervisor = db.Column(db.Float, nullable=True)
     
     aluno = db.relationship('Aluno', backref=db.backref('estagios', lazy=True))
     professor = db.relationship('Professor', backref=db.backref('estagios', lazy=True))
