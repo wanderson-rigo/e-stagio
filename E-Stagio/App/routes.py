@@ -12,7 +12,6 @@ from sqlalchemy import or_, and_
 import fitz
 import os
 from io import BytesIO
-from collections import defaultdict
 import locale
 import zipfile
 

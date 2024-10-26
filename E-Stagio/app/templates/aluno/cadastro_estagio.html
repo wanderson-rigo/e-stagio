@@ -150,6 +150,7 @@
         <a href="{{ url_for('generate_professor_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Avaliação Professor</a>
         <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Autoavaliação do Estagiário</a>
         <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Ata da Banca</a>
+        <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Acompanhamento PDF</a>
     </form>
 </div>
 {% endblock %}
