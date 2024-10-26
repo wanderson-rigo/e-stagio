@@ -48,6 +48,7 @@ def index():
     else:
         return render_template('index.html') 
 
+# Area registro e login
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -62,7 +63,7 @@ def signup():
         hashed_password = hash_password(request.form['password'])
         user = User(email=request.form['email'], active=False, password=hashed_password)
         user.username = user.email
-        user.confirmed_at = datetime.datetime.now()
+        user.confirmed_at = datetime.now()
         
         role_id = request.form.get('options')
         role = Role.query.filter_by(id=role_id).first()
@@ -76,6 +77,47 @@ def signup():
         return redirect(url_for('index'))
     else:
         return render_template("signup.html", msg=msg, roles=roles)
+
+@app.route('/signup_professor', methods=['GET', 'POST'])
+def signup_professor():
+    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
+    if form.validate_on_submit():
+        try:
+            # Create a new user
+            hashed_password = hash_password(form.password.data)
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=False,  # Set to False until approved by admin
+                username=form.email.data,
+                confirmed_at=datetime.now()
+            )
+            professor_role = Role.query.filter_by(name='professor').first()
+            if professor_role:
+                user.roles.append(professor_role)
+                
+            db.session.add(user)
+            db.session.flush()  # Get user ID before commit
+
+            # Create a new professor linked to the user
+            professor = Professor(
+                nome=form.nome.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                user_id=user.id,
+                is_approved=True
+            )
+            db.session.add(professor)
+            db.session.commit()
+
+            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
+
+    return render_template('signup_professor.html', form=form)
+
     
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -96,6 +138,8 @@ def signin():
     else:
         return render_template("signin.html", msg=msg)
 
+
+# Fim Area Registro e Login
 # Fim Area Geral
 
 # Inicio Area de Cadastros Admin
@@ -114,7 +158,7 @@ def cadastro_professor():
                 password=hashed_password,
                 active=True,
                 username=form.email.data,
-                confirmed_at=datetime.datetime.now()
+                confirmed_at=datetime.now()
             )
             professor_role = Role.query.filter_by(name='professor').first()
             if professor_role:
@@ -158,7 +202,7 @@ def cadastro_empresa():
                 password=hashed_password,
                 active=True,
                 username=form.email.data,
-                confirmed_at=datetime.datetime.now()
+                confirmed_at=datetime.now()
             )
             empresa_role = Role.query.filter_by(name='empresa').first()
             if empresa_role:
@@ -208,7 +252,7 @@ def cadastro_aluno():
                 password=hashed_password,
                 active=True,
                 username=email,  # Ensure username is not None
-                confirmed_at=datetime.datetime.now()
+                confirmed_at=datetime.now()
             )
             aluno_role = Role.query.filter_by(name='aluno').first()
             if aluno_role:
@@ -258,7 +302,7 @@ def cadastro_supervisor():
                 password=hashed_password,
                 active=True,
                 username = form.email.data,
-                confirmed_at = datetime.datetime.now()
+                confirmed_at = datetime.now()
             )
             
             supervisor_role = Role.query.filter_by(name='supervisor').first()
@@ -373,7 +417,7 @@ def cadastro_admin():
                 password=hashed_password,
                 active=True,
                 username=form.email.data,
-                confirmed_at=datetime.datetime.now()
+                confirmed_at=datetime.now()
             )
             
             admin_role = Role.query.filter_by(name='admin').first()
@@ -447,7 +491,7 @@ def ativar_usuario(user_id):
     if not usuario.active:
         try:
             usuario.active = True
-            usuario.confirmed_at = datetime.datetime.now()
+            usuario.confirmed_at = datetime.now()
             db.session.commit()
             flash('Usuário ativado com sucesso!', 'success')
         except Exception as e:

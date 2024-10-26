@@ -11,8 +11,8 @@
 - [X]  Fix date picker - day - month - year 
 - [X]  inputs validations is in english change to portuguese
 - [X]  select of supervisor need to be following the company selected
-- [ ]  
-- [ ]  
+- [ ]  Fix Email sender that is not working anymore.
+- [ ]  Avaliacao supervisor PDF need to generate
 - [ ]  
 - [ ]  
 - [ ]  Improve css - Working on - Stopped for focus on deploy
