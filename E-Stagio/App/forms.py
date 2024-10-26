@@ -171,7 +171,7 @@ class SupervisorAvaliacaoForm(FlaskForm):
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])
-    supervisor_nota_assiduidade_e_pontualidade = FloatField('Assiduidade e Pontualidade', validators=[
+    supervisor_nota_assiduidade_e_pontuabilidade = FloatField('Assiduidade e Pontualidade', validators=[
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])

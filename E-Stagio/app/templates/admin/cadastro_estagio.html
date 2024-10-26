@@ -2,151 +2,176 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-5">
-    <a class="btn btn-secondary" href="{{ url_for('lista_estagios') }}">Voltar <-</a>
-    <h2 class="mb-4">Cadastro de Estágio</h2>
-    <form method="POST" class="needs-validation" novalidate>
-        {{ form.hidden_tag() }}
-        {{ form.csrf_token }}
+    <a class="btn btn-secondary" href="{{ url_for('lista_estagios') }}">Voltar <- </a>
+            <h2 class="mb-4">Cadastro de Estágio</h2>
+            <form method="POST" class="needs-validation" >
+                {{ form.hidden_tag() }}
+                {{ form.csrf_token }}
 
-        <div class="form-group">
-            {{ form.aluno_id.label(class="form-label") }}
-            {{ form.aluno_id(class="form-control") }}
-            {% if form.aluno_id.errors %}
-                {% for error in form.aluno_id.errors %}
+                <div class="form-group">
+                    {{ form.aluno_id.label(class="form-label") }}
+                    {{ form.aluno_id(class="form-control") }}
+                    {% if form.aluno_id.errors %}
+                    {% for error in form.aluno_id.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.professor_id.label(class="form-label") }}
-            {{ form.professor_id(class="form-control") }}
-            {% if form.professor_id.errors %}
-                {% for error in form.professor_id.errors %}
+                <div class="form-group">
+                    {{ form.professor_id.label(class="form-label") }}
+                    {{ form.professor_id(class="form-control") }}
+                    {% if form.professor_id.errors %}
+                    {% for error in form.professor_id.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.supervisor_id.label(class="form-label") }}
-            {{ form.supervisor_id(class="form-control") }}
-            {% if form.supervisor_id.errors %}
-                {% for error in form.supervisor_id.errors %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.empresa_id.label(class="form-label") }}
+                    {{ form.empresa_id(class="form-control", id="empresa_id") }}
+                    {% if form.empresa_id.errors %}
+                    {% for error in form.empresa_id.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.empresa_id.label(class="form-label") }}
-            {{ form.empresa_id(class="form-control") }}
-            {% if form.empresa_id.errors %}
-                {% for error in form.empresa_id.errors %}
+                <div class="form-group">
+                    {{ form.supervisor_id.label(class="form-label") }}
+                    {{ form.supervisor_id(class="form-control", id="supervisor_id") }}
+                    {% if form.supervisor_id.errors %}
+                    {% for error in form.supervisor_id.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.modalidade.label(class="form-label") }}
-            {{ form.modalidade(class="form-control") }}
-            {% if form.modalidade.errors %}
-                {% for error in form.modalidade.errors %}
+                <div class="form-group">
+                    {{ form.modalidade.label(class="form-label") }}
+                    {{ form.modalidade(class="form-control") }}
+                    {% if form.modalidade.errors %}
+                    {% for error in form.modalidade.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.carga_horaria.label(class="form-label") }}
-            {{ form.carga_horaria(class="form-control") }}
-            {% if form.carga_horaria.errors %}
-                {% for error in form.carga_horaria.errors %}
+                <div class="form-group">
+                    {{ form.carga_horaria.label(class="form-label") }}
+                    {{ form.carga_horaria(class="form-control") }}
+                    {% if form.carga_horaria.errors %}
+                    {% for error in form.carga_horaria.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.atividades.label(class="form-label") }}
-            {{ form.atividades(class="form-control") }}
-            {% if form.atividades.errors %}
-                {% for error in form.atividades.errors %}
+                <div class="form-group">
+                    {{ form.atividades.label(class="form-label") }}
+                    {{ form.atividades(class="form-control") }}
+                    {% if form.atividades.errors %}
+                    {% for error in form.atividades.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.setor.label(class="form-label") }}
-            {{ form.setor(class="form-control") }}
-            {% if form.setor.errors %}
-                {% for error in form.setor.errors %}
+                <div class="form-group">
+                    {{ form.setor.label(class="form-label") }}
+                    {{ form.setor(class="form-control") }}
+                    {% if form.setor.errors %}
+                    {% for error in form.setor.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.remuneracao.label(class="form-check-label") }}
-            {{ form.remuneracao(class="form-check-input") }}
-            {% if form.remuneracao.errors %}
-                {% for error in form.remuneracao.errors %}
+                <div class="form-group">
+                    {{ form.remuneracao.label(class="form-check-label") }}
+                    {{ form.remuneracao(class="form-check-input") }}
+                    {% if form.remuneracao.errors %}
+                    {% for error in form.remuneracao.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.valor_remuneracao.label(class="form-label") }}
-            {{ form.valor_remuneracao(class="form-control") }}
-            {% if form.valor_remuneracao.errors %}
-                {% for error in form.valor_remuneracao.errors %}
+                <div class="form-group">
+                    {{ form.valor_remuneracao.label(class="form-label") }}
+                    {{ form.valor_remuneracao(class="form-control") }}
+                    {% if form.valor_remuneracao.errors %}
+                    {% for error in form.valor_remuneracao.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.horario_estagio.label(class="form-label") }}
-            {{ form.horario_estagio(class="form-control") }}
-            {% if form.horario_estagio.errors %}
-                {% for error in form.horario_estagio.errors %}
+                <div class="form-group">
+                    {{ form.horario_estagio.label(class="form-label") }}
+                    {{ form.horario_estagio(class="form-control") }}
+                    {% if form.horario_estagio.errors %}
+                    {% for error in form.horario_estagio.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.data_inicio.label(class="form-label") }}
-            {{ form.data_inicio(class="form-control") }}
-            {% if form.data_inicio.errors %}
-                {% for error in form.data_inicio.errors %}
+                <div class="form-group">
+                    {{ form.data_inicio.label(class="form-label") }}
+                    {{ form.data_inicio(class="form-control") }}
+                    {% if form.data_inicio.errors %}
+                    {% for error in form.data_inicio.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.data_conclusao.label(class="form-label") }}
-            {{ form.data_conclusao(class="form-control") }}
-            {% if form.data_conclusao.errors %}
-                {% for error in form.data_conclusao.errors %}
+                <div class="form-group">
+                    {{ form.data_conclusao.label(class="form-label") }}
+                    {{ form.data_conclusao(class="form-control") }}
+                    {% if form.data_conclusao.errors %}
+                    {% for error in form.data_conclusao.errors %}
                     <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
 
-        <div class="form-group">
-            {{ form.status.label(class="form-label") }}
-            {{ form.status(class="form-control" + (" is-invalid" if form.status.errors else "")) }}
-            {% for error in form.status.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+                <div class="form-group">
+                    {{ form.status.label(class="form-label") }}
+                    {{ form.status(class="form-control" + (" is-invalid" if form.status.errors else "")) }}
+                    {% for error in form.status.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
 
-        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
-    </form>
+                <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+            </form>
 </div>
+<script>
+    document.getElementById('empresa_id').addEventListener('change', function () {
+        const empresaId = this.value;
+
+        fetch(`/get_supervisores/${empresaId}`)
+            .then(response => response.json())
+            .then(data => {
+                const supervisorSelect = document.getElementById('supervisor_id');
+                supervisorSelect.innerHTML = '';
+
+                data.supervisores.forEach(function (supervisor) {
+                    const option = document.createElement('option');
+                    option.value = supervisor.id;
+                    option.text = supervisor.nome;
+                    supervisorSelect.appendChild(option);
+                });
+
+                if (data.supervisores.length > 0) {
+                    document.getElementById('supervisor_id').value = data.supervisores[0].id;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar supervisores:', error);
+            });
+    });
+</script>
 {% endblock %}

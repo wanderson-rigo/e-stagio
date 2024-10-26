@@ -27,9 +27,9 @@
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.supervisor_nota_assiduidade_e_pontualidade.label(class="form-label") }}
-            {{ form.supervisor_nota_assiduidade_e_pontualidade(type="number", class="form-control" + (" is-invalid" if form.supervisor_nota_assiduidade_e_pontualidade.errors else "")) }}
-            {% for error in form.supervisor_nota_assiduidade_e_pontualidade.errors %}
+            {{ form.supervisor_nota_assiduidade_e_pontuabilidade.label(class="form-label") }}
+            {{ form.supervisor_nota_assiduidade_e_pontuabilidade(type="number", class="form-control" + (" is-invalid" if form.supervisor_nota_assiduidade_e_pontuabilidade.errors else "")) }}
+            {% for error in form.supervisor_nota_assiduidade_e_pontuabilidade.errors %}
             <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         </div>

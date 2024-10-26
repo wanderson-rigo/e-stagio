@@ -1,28 +1,21 @@
 - [ ]  Create a live server for tests. - Doing now - <==
+- [ ]  Register need create the entity, now created just user
 
 - [X]  Generate PDFs Filled. - Working but need some improvement on editable PDFs 
 - [X]  Show dates on right format on PDF
 
 - [X]  Back to page button on evaluation
-- [ ]  fix inputs can not be 0 in evaluation company or supervisor
-- [ ]  fix value not being populated on evaluation of supervisor
-- [ ]  home company strange behavior
-- [ ]  Register need create the entity, now created just user
+- [X]  fix inputs can not be 0 in evaluation company or supervisor
+- [X]  fix value not being populated on evaluation of supervisor
+- [X]  home company strange behavior
+- [X]  Fix date picker - day - month - year 
+- [X]  inputs validations is in english change to portuguese
+- [X]  select of supervisor need to be following the company selected
+- [ ]  
+- [ ]  
+- [ ]  
+- [ ]  
 - [ ]  Improve css - Working on - Stopped for focus on deploy
-- [ ]  Fix date picker - day - month - year 
-- [ ]  inputs validations is in english change to portuguese
 - [ ]  add logs
 - [ ]  add default pages  as 404, 500, 401
-- [ ]  select of supervisor need to be following the company selected
-- [ ]  
-- [ ]  
-- [ ]  
-- [ ]  
-- [ ]  
-- [ ]  
-
-
-
-
-
 

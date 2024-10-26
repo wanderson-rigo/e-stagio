@@ -1,6 +1,7 @@
 import datetime
+from datetime import datetime
 from flask_mail import Message
-from flask import render_template, redirect, url_for, flash, request, send_file
+from flask import render_template, redirect, url_for, flash, request, send_file, jsonify
 from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio, AtividadesEstagio
@@ -11,6 +12,9 @@ from sqlalchemy import or_, and_
 import fitz
 import os
 from io import BytesIO
+from collections import defaultdict
+import locale
+import zipfile
 
 # Inicio Area Geral
 
@@ -292,23 +296,30 @@ def cadastro_supervisor():
 @roles_required('admin')
 def cadastro_estagio():
     form = EstagioForm()
+    
+    # Preencher as opções de alunos, professores e empresas
     form.aluno_id.choices = [
         (a.id, a.nome) for a in Aluno.query.join(Aluno.user).filter(Aluno.is_approved == True, User.active == True).all()
     ]
-    
+
     form.professor_id.choices = [
         (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(Professor.is_approved == True, User.active == True).all()
     ]
-    
-    form.supervisor_id.choices = [
-        (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(Supervisor.is_approved == True, User.active == True).all()
-    ]
-    
+
     form.empresa_id.choices = [
         (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
     ]
-    
-    form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
+
+    # Preencher as opções de supervisores dinamicamente com base na empresa selecionada
+    empresa_id = request.form.get('empresa_id')
+    if empresa_id:
+        form.supervisor_id.choices = [
+            (s.id, s.nome) for s in Supervisor.query.filter(Supervisor.empresa_id == int(empresa_id), Supervisor.is_approved == True).all()
+        ]
+    else:
+        form.supervisor_id.choices = []
+
+    form.status.choices = [(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
 
     if form.validate_on_submit():
         try:
@@ -327,20 +338,29 @@ def cadastro_estagio():
                 data_inicio=form.data_inicio.data,
                 data_conclusao=form.data_conclusao.data,
                 is_approved=True,
-                status = form.status.data
+                status=form.status.data
             )
-            
+
             db.session.add(estagio)
             db.session.commit()
-            
+
             flash('Estágio cadastrado com sucesso!', 'success')
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
             flash(f'Failed to create estágio. Error: {str(e)}', 'error')
-            return render_template('admin/cadastro_estagio.html', form=form)
+    else:
+        flash(f'Formulário inválido: {form.errors}', 'error')
 
     return render_template('admin/cadastro_estagio.html', form=form)
+
+@app.route('/get_supervisores/<int:empresa_id>', methods=['GET'])
+@roles_required('admin')
+def get_supervisores(empresa_id):
+    supervisores = Supervisor.query.filter_by(empresa_id=empresa_id, is_approved=True).all()
+    supervisores_data = [{'id': s.id, 'nome': s.nome} for s in supervisores]
+
+    return jsonify({'supervisores': supervisores_data})
 
 @app.route('/admin/cadastro-admin', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -603,6 +623,7 @@ def editar_estagio(id):
     estagio = Estagio.query.get_or_404(id)
     form = EstagioForm(obj=estagio)
 
+    # Preencher as opções de alunos e professores
     form.aluno_id.choices = [
         (a.id, a.nome) for a in Aluno.query.join(Aluno.user).filter(
             or_(
@@ -611,7 +632,7 @@ def editar_estagio(id):
             )
         ).all()
     ]
-    
+
     form.professor_id.choices = [
         (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(
             or_(
@@ -620,16 +641,7 @@ def editar_estagio(id):
             )
         ).all()
     ]
-    
-    form.supervisor_id.choices = [
-        (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(
-            or_(
-                Supervisor.id == estagio.supervisor_id,
-                and_(Supervisor.is_approved == True, User.active == True)
-            )
-        ).all()
-    ]
-    
+
     form.empresa_id.choices = [
         (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(
             or_(
@@ -638,11 +650,28 @@ def editar_estagio(id):
             )
         ).all()
     ]
-    
-    form.status.choices=[(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
-    
-    # Definir a opção selecionada com o valor atual
-    # Define apenas na carga inicial da página (GET), não após o envio do formulário (POST)
+
+    # Preencher as opções de supervisores com base na empresa atual
+    empresa_id = form.empresa_id.data
+    if empresa_id:
+        form.supervisor_id.choices = [
+            (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(
+                or_(
+                    Supervisor.id == estagio.supervisor_id,
+                    and_(
+                        Supervisor.empresa_id == empresa_id,
+                        Supervisor.is_approved == True,
+                        User.active == True
+                    )
+                )
+            ).all()
+        ]
+    else:
+        form.supervisor_id.choices = []
+
+    form.status.choices = [(choice.name, choice.value.replace('_', ' ').title()) for choice in StatusEstagio]
+
+    # Definir os valores iniciais do formulário (GET)
     if request.method == 'GET':
         form.aluno_id.data = estagio.aluno_id
         form.professor_id.data = estagio.professor_id
@@ -650,6 +679,7 @@ def editar_estagio(id):
         form.empresa_id.data = estagio.empresa_id
         form.status.data = estagio.status.name
 
+    # Atualizar o estágio ao submeter o formulário (POST)
     if form.validate_on_submit():
         try:
             estagio.aluno_id = form.aluno_id.data
@@ -666,7 +696,7 @@ def editar_estagio(id):
             estagio.data_inicio = form.data_inicio.data
             estagio.data_conclusao = form.data_conclusao.data
             estagio.status = StatusEstagio[form.status.data]
-            
+
             db.session.merge(estagio)
             db.session.commit()
             flash('Estágio atualizado com sucesso!', 'success')
@@ -674,9 +704,10 @@ def editar_estagio(id):
         except Exception as e:
             db.session.rollback()
             flash(f'Erro ao atualizar estágio: {e}', 'error')
+    else:
+        flash(f'Formulário inválido: {form.errors}', 'error')
 
     return render_template('admin/editar_estagio.html', form=form, estagio=estagio)
-
 # Fim Area de Edição Admin
 
 # Inicio Area Empresa
@@ -771,7 +802,7 @@ def avaliacao_supervisor(estagio_id):
             estagio.supervisor_nota_interesse = form.supervisor_nota_interesse.data
             estagio.supervisor_nota_iniciativa = form.supervisor_nota_iniciativa.data
             estagio.supervisor_nota_cooperacao = form.supervisor_nota_cooperacao.data
-            estagio.supervisor_nota_assiduidade_e_pontuabilidade = form.supervisor_nota_assiduidade_e_pontualidade.data
+            estagio.supervisor_nota_assiduidade_e_pontuabilidade = form.supervisor_nota_assiduidade_e_pontuabilidade.data
             estagio.supervisor_nota_criatividade_e_engenhosidade = form.supervisor_nota_criatividade_e_engenhosidade.data
             estagio.supervisor_nota_disciplina = form.supervisor_nota_disciplina.data
             estagio.supervisor_nota_sociabilidade = form.supervisor_nota_sociabilidade.data
@@ -787,7 +818,7 @@ def avaliacao_supervisor(estagio_id):
                 form.supervisor_nota_interesse.data,
                 form.supervisor_nota_iniciativa.data,
                 form.supervisor_nota_cooperacao.data,
-                form.supervisor_nota_assiduidade_e_pontualidade.data,
+                form.supervisor_nota_assiduidade_e_pontuabilidade.data,
                 form.supervisor_nota_criatividade_e_engenhosidade.data,
                 form.supervisor_nota_disciplina.data,
                 form.supervisor_nota_sociabilidade.data,
@@ -1426,5 +1457,89 @@ def generate_ata_banca_pdf(estagio_id):
 
     return send_file(pdf_stream, as_attachment=True, download_name=f"Ata_Banca_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
 
+import zipfile
+import locale
 
+@app.route('/generate_atividades_estagio_pdf/<int:estagio_id>', methods=['GET'])
+def generate_atividades_estagio_pdf(estagio_id):
+    # Set locale to Portuguese for month names
+    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+
+    # Fetch internship (Estagio) details and its activities
+    estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
+    atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
+
+    # Group activities by month and year
+    atividades_por_mes = {}
+    for atividade in atividades:
+        mes_ano = atividade.data.strftime('%Y-%m')
+        if mes_ano not in atividades_por_mes:
+            atividades_por_mes[mes_ano] = []
+        atividades_por_mes[mes_ano].append(atividade)
+
+    base_dir = os.path.dirname(__file__)
+    input_pdf_path = os.path.join(base_dir, 'Files', 'atividades_estagio_editavel.pdf')
+
+    pdf_files = []
+
+    for mes_ano, atividades_mes in atividades_por_mes.items():
+        # Prepare data for the PDF
+        nome_mes_pt = atividades_mes[0].data.strftime('%B/%Y').capitalize()
+        data_dict = {
+            'nome_estagiario': estagio.aluno.nome,
+            'nome_empresa': estagio.empresa.nome_empresa,
+            'nome_mes': nome_mes_pt,
+            'nome_mes2': nome_mes_pt,
+            'nome_empresa2': estagio.empresa.nome_empresa,
+            'nome_estagiario2': estagio.aluno.nome,
+            'observacoes': ''  # Add any observations if needed
+        }
+
+        # Fill in the fields for each day of the month
+        for atividade in atividades_mes:
+            dia = atividade.data.day
+            data_dict[f'entrada_{dia:02d}'] = atividade.horario_entrada.strftime('%H:%M')
+            data_dict[f'saida_{dia:02d}'] = atividade.horario_saida.strftime('%H:%M')
+            data_dict[f'horas_{dia:02d}'] = str(atividade.horas_totais)
+            data_dict[f'descricao_{dia:02d}'] = atividade.descricao
+
+        # Open and fill the PDF template
+        doc = fitz.open(input_pdf_path)
+        for page in doc:
+            widgets = page.widgets()
+            if widgets:
+                for field in widgets:
+                    field_name = field.field_name
+                    if field_name in data_dict:
+                        field.field_value = data_dict[field_name]
+                        field.update()
+
+        # Update metadata and flatten the PDF
+        title = f"Atividades Estágio - {nome_mes_pt} - {estagio.aluno.nome}"
+        doc.set_metadata({"title": title})
+        for page in doc:
+            page.clean_contents()
+
+        # Save the PDF to memory
+        pdf_stream = BytesIO()
+        doc.save(pdf_stream, incremental=False, deflate=True)
+        pdf_stream.seek(0)
+
+        # Add the PDF stream to the list
+        pdf_files.append((pdf_stream, f"Atividades_Estagio_{nome_mes_pt}_{estagio.aluno.nome}.pdf"))
+
+    # Create a response with multiple PDF files
+    if len(pdf_files) == 1:
+        # If there's only one file, return it directly
+        return send_file(pdf_files[0][0], as_attachment=True, download_name=pdf_files[0][1], mimetype='application/pdf')
+    else:
+        # If there are multiple files, create a zip
+        zip_stream = BytesIO()
+        with zipfile.ZipFile(zip_stream, 'w') as zip_file:
+            for pdf_stream, filename in pdf_files:
+                zip_file.writestr(filename, pdf_stream.read())
+        zip_stream.seek(0)
+        return send_file(zip_stream, as_attachment=True, download_name=f"Atividades_Estagio_{estagio.aluno.nome}.zip", mimetype='application/zip')
+
+    
 # Fim Area criação de PDFs
