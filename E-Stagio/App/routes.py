@@ -1,6 +1,6 @@
 import datetime
 from flask_mail import Message
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, send_file
 from app import app, db, mail
 from flask_security.utils import hash_password
 from app.models import User, Role, Professor, Empresa, Aluno, Supervisor, Estagio, StatusEstagio, AtividadesEstagio
@@ -8,6 +8,9 @@ from flask_security import login_user, current_user, roles_required, login_requi
 from app.forms import *
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, and_
+import fitz
+import os
+from io import BytesIO
 
 # Inicio Area Geral
 
@@ -1138,3 +1141,170 @@ def listar_atividades_admin(estagio_id):
     return render_template('aluno/listagem_atividades_admin.html', atividades=atividades, estagio=estagio)
 
 # Fim Area Aluno
+
+# Area criação de PDFs
+
+@app.route('/generate_company_pdf/<int:estagio_id>', methods=['GET'])
+def generate_company_pdf(estagio_id):
+    # Fetch internship (Estagio) details
+    estagio = Estagio.query.join(Empresa).filter(Estagio.id == estagio_id).first_or_404()
+    
+    data_inicio_formatada = estagio.data_inicio.strftime('%d/%m/%Y') if estagio.data_inicio else ''
+    data_conclusao_formatada = estagio.data_conclusao.strftime('%d/%m/%Y') if estagio.data_conclusao else ''
+
+    # Populate data dictionary with relevant fields
+    data_dict = {
+        'nome_estagiario': estagio.aluno.nome,
+        'nome_empresa': estagio.empresa.nome_empresa,
+        'nome_curso': 'Informática',
+        'periodo': f"{data_inicio_formatada} - {data_conclusao_formatada}",
+        'nota_interesse': str(estagio.empresa_nota_interesse or ''),
+        'nota_iniciativa': str(estagio.empresa_nota_iniciativa or ''),
+        'nota_cooperacao': str(estagio.empresa_nota_cooperacao or ''),
+        'nota_assiduidade': str(estagio.empresa_nota_assiduidade or ''),
+        'nota_pontualidade': str(estagio.empresa_nota_pontualidade or ''),
+        'nota_disciplina': str(estagio.empresa_nota_disciplina or ''),
+        'nota_sociabilidade': str(estagio.empresa_nota_sociabilidade or ''),
+        'nota_adaptabilidade': str(estagio.empresa_nota_adaptabilidade or ''),
+        'nota_responsabilidade': str(estagio.empresa_nota_responsabilidade or ''),
+        'nota_etica': str(estagio.empresa_nota_etica or ''),
+        'nota_media': str(estagio.empresa_media_notas or ''),
+        'atividades': estagio.empresa_atividades or '',
+        'observacoes': estagio.emprsa_comentarios or ''
+    }
+
+    base_dir = os.path.dirname(__file__)
+    input_pdf_path = os.path.join(base_dir, 'Files', 'avaliacao_empresa_editavel.pdf')
+    
+    doc = fitz.open(input_pdf_path)
+    
+    title = f"Avaliação Empresa - {estagio.empresa.nome_empresa} - Aluno {estagio.aluno.nome}"
+    doc.set_metadata({"title": title})
+    
+    for page in doc:
+        widgets = page.widgets()
+        if widgets:
+            for field in widgets:
+                field_name = field.field_name
+                if field_name in data_dict:
+                    field.text_color = (0, 0, 0)  # Define a cor do texto como preto (RGB)
+                    field.font_size = 12  # Define o tamanho da fonte
+                    field.field_value = data_dict[field_name]
+                    field.update()
+
+    for page in doc:
+        page.clean_contents()
+
+    pdf_stream = BytesIO()
+    doc.save(pdf_stream, incremental=False, deflate=True)
+    pdf_stream.seek(0)
+    
+    return send_file(pdf_stream, as_attachment=True, download_name=f"Avaliacao_Empresa_{estagio.empresa.nome_empresa}_Aluno_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
+
+@app.route('/generate_professor_pdf/<int:estagio_id>', methods=['GET'])
+def generate_professor_pdf(estagio_id):
+    estagio = Estagio.query.join(Professor).filter(Estagio.id == estagio_id).first_or_404()
+
+    data_dict = {
+        'nome_estagiario': estagio.aluno.nome,
+        'nome_empresa': estagio.empresa.nome_empresa,
+        'nota': str(estagio.professor_nota_avaliacao or ''),
+        'comentarios': estagio.professor_avaliacao_comentarios or '',
+    }
+
+    base_dir = os.path.dirname(__file__)
+    input_pdf_path = os.path.join(base_dir, 'Files', 'avaliacao_professor_editavel.pdf')
+    
+    doc = fitz.open(input_pdf_path)
+    for page in doc:
+        widgets = page.widgets()
+        if widgets:
+            for field in widgets:
+                field_name = field.field_name
+                if field_name in data_dict:
+                    field.field_value = data_dict[field_name]
+                    field.update()
+
+    title = f"Avaliação Professor - {estagio.professor.nome} - Aluno {estagio.aluno.nome}"
+    doc.set_metadata({"title": title})
+
+    for page in doc:
+        page.clean_contents()
+
+    pdf_stream = BytesIO()
+    doc.save(pdf_stream, incremental=False, deflate=True)
+    pdf_stream.seek(0)
+    
+    return send_file(pdf_stream, as_attachment=True, download_name=f"Avaliacao_Professor_{estagio.professor.nome}_Aluno_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
+
+@app.route('/generate_self_evaluation_pdf/<int:estagio_id>', methods=['GET'])
+def generate_self_evaluation_pdf(estagio_id):
+    estagio = Estagio.query.filter(Estagio.id == estagio_id).first_or_404()
+
+    data_inicio_formatada = estagio.data_inicio.strftime('%d/%m/%Y') if estagio.data_inicio else ''
+    data_conclusao_formatada = estagio.data_conclusao.strftime('%d/%m/%Y') if estagio.data_conclusao else ''
+    
+    data_dict = {
+        'nome_estagiario': estagio.aluno.nome,
+        'nome_empresa': estagio.empresa.nome_empresa,
+        'periodo': f"{data_inicio_formatada} - {data_conclusao_formatada}",
+        'nota_rendimento': str(estagio.aluno_nota_rendimento or ''),
+        'nota_compreensao': str(estagio.aluno_nota_facilidade_e_compreensao or ''),
+        'nota_conhecimentos': str(estagio.aluno_nota_conhecimentos_tecnicos or ''),
+        'nota_organizacao': str(estagio.aluno_nota_organizacao_metodo_trabalho or ''),
+        'nota_iniciativa': str(estagio.aluno_nota_iniciativa_independencia or ''),
+        'nota_assiduidade': str(estagio.aluno_nota_assiduidade or ''),
+        'nota_disciplina': str(estagio.aluno_nota_disciplina or ''),
+        'nota_sociabilidade': str(estagio.aluno_nota_sociabilidade_desempenho or ''),
+        'nota_cooperacao': str(estagio.aluno_nota_cooperecao or ''),
+        'nota_responsabilidade': str(estagio.aluno_nota_responsabilidade or ''),
+        'media_nota': str(estagio.aluno_media_notas or ''),
+        'atividades': estagio.aluno_atividades or '',
+        'comentarios': estagio.aluno_comentarios or ''
+    }
+
+    def map_checkbox_value(value, field_name_prefix):
+        return {
+            f"{field_name_prefix}_sim": 'Yes' if value == 1 else '',
+            f"{field_name_prefix}_nao": 'Yes' if value == 2 else '',
+            f"{field_name_prefix}_medio": 'Yes' if value == 3 else '',
+        }
+
+    checkbox_fields = {
+        **map_checkbox_value(estagio.aluno_avaliacao_empresa_condicoes, 'condicoes'),
+        **map_checkbox_value(estagio.aluno_avaliacao_atendeu_expectativas, 'expectativa'),
+        **map_checkbox_value(estagio.aluno_avaliacao_contribui_formacao_profissional, 'contribuiu'),
+        **map_checkbox_value(estagio.aluno_avaliacao_recomendaria_para_outro, 'recomendaria'),
+        **map_checkbox_value(estagio.aluno_avaliacao_curso_capacitou, 'capacitou'),
+        **map_checkbox_value(estagio.aluno_avaliacao_orientador_acompanhou, 'orientador_acompanhou'),
+        **map_checkbox_value(estagio.aluno_avaliacao_supervisor_acompanhou, 'supervisor_acompanhou'),
+    }
+
+    data_dict.update(checkbox_fields)
+
+    base_dir = os.path.dirname(__file__)
+    input_pdf_path = os.path.join(base_dir, 'Files', 'autoavaliacao_editavel.pdf')
+
+    doc = fitz.open(input_pdf_path)
+    for page in doc:
+        widgets = page.widgets()
+        if widgets:
+            for field in widgets:
+                field_name = field.field_name
+                if field_name in data_dict:
+                    field.field_value = data_dict[field_name]
+                    field.update()
+
+    title = f"Autoavaliação Estagiário - {estagio.aluno.nome}"
+    doc.set_metadata({"title": title})
+
+    for page in doc:
+        page.clean_contents()
+
+    pdf_stream = BytesIO()
+    doc.save(pdf_stream, incremental=False, deflate=True)
+    pdf_stream.seek(0)
+
+    return send_file(pdf_stream, as_attachment=True, download_name=f"Autoavaliacao_Estagiario_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
+
+# Fim Area criação de PDFs
