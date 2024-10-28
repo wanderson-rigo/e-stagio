@@ -1,18 +1,14 @@
 - [ ]  Create a live server for tests. - Doing now - <==
-- [ ]  Register need create the entity, now created just user
+- [X]  Register need create the entity, now created just user
 
-- [X]  Generate PDFs Filled. - Working but need some improvement on editable PDFs 
-- [X]  Show dates on right format on PDF
-
-- [X]  Back to page button on evaluation
-- [X]  fix inputs can not be 0 in evaluation company or supervisor
-- [X]  fix value not being populated on evaluation of supervisor
-- [X]  home company strange behavior
-- [X]  Fix date picker - day - month - year 
-- [X]  inputs validations is in english change to portuguese
-- [X]  select of supervisor need to be following the company selected
 - [ ]  Fix Email sender that is not working anymore.
 - [ ]  Avaliacao supervisor PDF need to generate
+- [ ]  Show errors on login page
+- [ ]  fix forget password
+- [ ]  add email messages for people when activating the user and where is necessary
+- [ ]  
+- [ ]  
+- [ ]  
 - [ ]  
 - [ ]  
 - [ ]  Improve css - Working on - Stopped for focus on deploy

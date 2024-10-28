@@ -120,144 +120,148 @@ def signup_professor():
 
 @app.route('/signup_empresa', methods=['GET', 'POST'])
 def signup_empresa():
-    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
+    form = EmpresaForm()  # Use the existing EmpresaForm to gather data
     if form.validate_on_submit():
         try:
-            # Create a new user
+            # Create a new user for the company
             hashed_password = hash_password(form.password.data)
             user = User(
                 email=form.email.data,
                 password=hashed_password,
-                active=False,  # Set to False until approved by admin
+                active=False,  # Set to False until manually approved by admin
                 username=form.email.data,
                 confirmed_at=datetime.now()
             )
-            professor_role = Role.query.filter_by(name='professor').first()
-            if professor_role:
-                user.roles.append(professor_role)
+            empresa_role = Role.query.filter_by(name='empresa').first()
+            if empresa_role:
+                user.roles.append(empresa_role)
                 
             db.session.add(user)
-            db.session.flush()  # Get user ID before commit
+            db.session.flush()  # Get user ID before committing
 
-            # Create a new professor linked to the user
-            professor = Professor(
-                nome=form.nome.data,
-                cpf=form.cpf.data,
-                email=form.email.data,
+            # Create a new company entity linked to the user
+            empresa = Empresa(
+                nome_empresa=form.nome.data,
+                cnpj=form.cnpj.data,
+                email_empresa=form.email.data,
                 user_id=user.id,
+                qsa=form.qsa.data,
+                nome_responsavel=form.nome_responsavel.data,
+                email_responsavel=form.email_responsavel.data,
+                telefone_responsavel=form.telefone_responsavel.data,
+                telefone_empresa=form.telefone.data,
+                rg_responsavel=form.rg_responsavel.data,
+                cpf_responsavel=form.cpf_responsavel.data,
                 is_approved=True
             )
-            db.session.add(professor)
+            
+            db.session.add(empresa)
             db.session.commit()
-
-            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
+            
+            flash('Cadastro da empresa realizado com sucesso! Aguarde a aprovação.', 'success')
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
-            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
-
-    return render_template('signup_professor.html', form=form)
- 
-@app.route('/signup_supervisor', methods=['GET', 'POST'])
-def signup_supervisor():
-    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
-    if form.validate_on_submit():
-        try:
-            # Create a new user
-            hashed_password = hash_password(form.password.data)
-            user = User(
-                email=form.email.data,
-                password=hashed_password,
-                active=False,  # Set to False until approved by admin
-                username=form.email.data,
-                confirmed_at=datetime.now()
-            )
-            professor_role = Role.query.filter_by(name='professor').first()
-            if professor_role:
-                user.roles.append(professor_role)
-                
-            db.session.add(user)
-            db.session.flush()  # Get user ID before commit
-
-            # Create a new professor linked to the user
-            professor = Professor(
-                nome=form.nome.data,
-                cpf=form.cpf.data,
-                email=form.email.data,
-                user_id=user.id,
-                is_approved=True
-            )
-            db.session.add(professor)
-            db.session.commit()
-
-            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
-            return redirect(url_for('index'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
-
-    return render_template('signup_professor.html', form=form)
-
-@app.route('/signup_aluno', methods=['GET', 'POST'])
-def signup_aluno():
-    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
-    if form.validate_on_submit():
-        try:
-            # Create a new user
-            hashed_password = hash_password(form.password.data)
-            user = User(
-                email=form.email.data,
-                password=hashed_password,
-                active=False,  # Set to False until approved by admin
-                username=form.email.data,
-                confirmed_at=datetime.now()
-            )
-            professor_role = Role.query.filter_by(name='professor').first()
-            if professor_role:
-                user.roles.append(professor_role)
-                
-            db.session.add(user)
-            db.session.flush()  # Get user ID before commit
-
-            # Create a new professor linked to the user
-            professor = Professor(
-                nome=form.nome.data,
-                cpf=form.cpf.data,
-                email=form.email.data,
-                user_id=user.id,
-                is_approved=True
-            )
-            db.session.add(professor)
-            db.session.commit()
-
-            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
-            return redirect(url_for('index'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
-
-    return render_template('signup_professor.html', form=form)
- 
+            flash(f'Erro ao cadastrar empresa: {str(e)}', 'error')
     
-@app.route('/signin', methods=['GET', 'POST'])
-def signin():
-    msg=""
-    if request.method == 'POST':
-        user = User.query.filter_by(email=request.form['email']).first()
-        if user:
-            if  user.password == request.form['password']:
-                login_user(user)
-                return redirect(url_for('index'))
-            else:
-                msg="Usuario ou Senha Incorretos"
-        
-        else:
-            msg="Usuario ou Senha Incorretos"
-        return render_template('signin.html', msg=msg)
-        
-    else:
-        return render_template("signin.html", msg=msg)
+    return render_template('signup_empresa.html', form=form)
 
+@app.route('/signup/supervisor', methods=['GET', 'POST'])
+def signup_supervisor():
+    form = SupervisorForm()
+    form.empresaId.choices = [
+        (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
+    ]
+
+    if form.validate_on_submit():
+        try:
+            hashed_password = hash_password(form.password.data)
+
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=False,
+                username=form.email.data,
+                confirmed_at=datetime.now()
+            )
+
+            supervisor_role = Role.query.filter_by(name='supervisor').first()
+            if supervisor_role:
+                user.roles.append(supervisor_role)
+
+            db.session.add(user)
+            db.session.flush()
+
+            supervisor = Supervisor(
+                nome=form.nome.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                user_id=user.id,
+                formacao=form.formacao.data,
+                empresa_id=form.empresaId.data,
+                telefone=form.telefone.data,
+                is_approved=True  # Supervisor needs approval
+            )
+
+            db.session.add(supervisor)
+            db.session.commit()
+
+            flash('Cadastro realizado com sucesso! Aguarde aprovação pelo setor de estágios.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Falha ao criar Supervisor. Erro: {str(e)}', 'error')
+            return render_template('signup_supervisor.html', form=form)
+
+    return render_template('signup_supervisor.html', form=form)
+
+@app.route('/signup/aluno', methods=['GET', 'POST'])
+def signup_aluno():
+    form = AlunoForm()
+
+    if form.validate_on_submit():
+        try:
+            hashed_password = hash_password(form.password.data)
+            email = form.email.data
+
+            user = User(
+                email=email,
+                password=hashed_password,
+                active=False,
+                username=email,  # Ensure username is not None
+                confirmed_at=datetime.now()
+            )
+
+            aluno_role = Role.query.filter_by(name='aluno').first()
+            if aluno_role:
+                user.roles.append(aluno_role)
+
+            db.session.add(user)
+            db.session.flush()
+
+            aluno = Aluno(
+                nome=form.nome.data,
+                matricula=form.matricula.data,
+                data_de_nascimento=form.dob.data,
+                rg=form.rg.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                celular=form.celular.data,
+                user_id=user.id,
+                is_approved=True  # Student needs approval
+            )
+
+            db.session.add(aluno)
+            db.session.commit()
+
+            flash('Cadastro realizado com sucesso! Aguarde aprovação pelo setor de estágios.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Falha ao criar aluno. Erro: {str(e)}', 'error')
+            return render_template('signup_aluno.html', form=form)
+
+    return render_template('signup_aluno.html', form=form)
 
 # Fim Area Registro e Login
 # Fim Area Geral
@@ -1139,6 +1143,8 @@ def index_aluno():
                 flash(f'Erro ao atualizar estágio: {e}', 'error')
     else:  # Se o aluno não possui um estágio, permitir o cadastro
         form = EstagioFormAdd()
+        form.estagio_id = 0
+        
         form.professor_id.choices = [
             (p.id, p.nome) for p in Professor.query.join(Professor.user).filter(Professor.is_approved == True, User.active == True).all()
         ]
