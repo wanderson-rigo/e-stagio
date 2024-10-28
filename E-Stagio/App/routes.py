@@ -118,6 +118,126 @@ def signup_professor():
 
     return render_template('signup_professor.html', form=form)
 
+@app.route('/signup_empresa', methods=['GET', 'POST'])
+def signup_empresa():
+    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
+    if form.validate_on_submit():
+        try:
+            # Create a new user
+            hashed_password = hash_password(form.password.data)
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=False,  # Set to False until approved by admin
+                username=form.email.data,
+                confirmed_at=datetime.now()
+            )
+            professor_role = Role.query.filter_by(name='professor').first()
+            if professor_role:
+                user.roles.append(professor_role)
+                
+            db.session.add(user)
+            db.session.flush()  # Get user ID before commit
+
+            # Create a new professor linked to the user
+            professor = Professor(
+                nome=form.nome.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                user_id=user.id,
+                is_approved=True
+            )
+            db.session.add(professor)
+            db.session.commit()
+
+            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
+
+    return render_template('signup_professor.html', form=form)
+ 
+@app.route('/signup_supervisor', methods=['GET', 'POST'])
+def signup_supervisor():
+    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
+    if form.validate_on_submit():
+        try:
+            # Create a new user
+            hashed_password = hash_password(form.password.data)
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=False,  # Set to False until approved by admin
+                username=form.email.data,
+                confirmed_at=datetime.now()
+            )
+            professor_role = Role.query.filter_by(name='professor').first()
+            if professor_role:
+                user.roles.append(professor_role)
+                
+            db.session.add(user)
+            db.session.flush()  # Get user ID before commit
+
+            # Create a new professor linked to the user
+            professor = Professor(
+                nome=form.nome.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                user_id=user.id,
+                is_approved=True
+            )
+            db.session.add(professor)
+            db.session.commit()
+
+            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
+
+    return render_template('signup_professor.html', form=form)
+
+@app.route('/signup_aluno', methods=['GET', 'POST'])
+def signup_aluno():
+    form = ProfessorForm()  # Use the existing ProfessorForm to gather required data
+    if form.validate_on_submit():
+        try:
+            # Create a new user
+            hashed_password = hash_password(form.password.data)
+            user = User(
+                email=form.email.data,
+                password=hashed_password,
+                active=False,  # Set to False until approved by admin
+                username=form.email.data,
+                confirmed_at=datetime.now()
+            )
+            professor_role = Role.query.filter_by(name='professor').first()
+            if professor_role:
+                user.roles.append(professor_role)
+                
+            db.session.add(user)
+            db.session.flush()  # Get user ID before commit
+
+            # Create a new professor linked to the user
+            professor = Professor(
+                nome=form.nome.data,
+                cpf=form.cpf.data,
+                email=form.email.data,
+                user_id=user.id,
+                is_approved=True
+            )
+            db.session.add(professor)
+            db.session.commit()
+
+            flash('Cadastro de professor realizado com sucesso! Aguarde a aprovação.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao cadastrar professor: {str(e)}', 'error')
+
+    return render_template('signup_professor.html', form=form)
+ 
     
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
