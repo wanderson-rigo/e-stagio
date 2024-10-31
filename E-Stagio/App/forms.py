@@ -277,7 +277,7 @@ class EstagioFormAdd(FlaskForm):
     horario_estagio = StringField('Horário do Estágio', validators=[DataRequired(message='Este campo é obrigatório.')])
     data_inicio = DateField('Data de Início', format='%Y-%m-%d', validators=[DataRequired(message='Este campo é obrigatório.')])
     data_conclusao = DateField('Data de Conclusão', format='%Y-%m-%d', validators=[DataRequired(message='Este campo é obrigatório.')])
-    estagio_id = HiddenField('ID do Estágio', validators=[DataRequired(message='Este campo é obrigatório.')])
+    estagio_id = HiddenField('ID do Estágio')
     submit = SubmitField('Salvar Estágio')
 
 class AutoAvaliacaoForm(FlaskForm):

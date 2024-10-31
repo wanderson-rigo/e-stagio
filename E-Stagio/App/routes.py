@@ -957,42 +957,39 @@ def avaliacao_supervisor(estagio_id):
         Supervisor.user_id == current_user.id
     ).first_or_404()
 
-    form = SupervisorAvaliacaoForm(obj=estagio)
-    
+    form = EmpresaAvaliacaoForm(obj=estagio)
+
     if form.validate_on_submit():
         try:
             # Atualiza as notas e outros campos de avaliação
-            estagio.supervisor_nota_interesse = form.supervisor_nota_interesse.data
-            estagio.supervisor_nota_iniciativa = form.supervisor_nota_iniciativa.data
-            estagio.supervisor_nota_cooperacao = form.supervisor_nota_cooperacao.data
-            estagio.supervisor_nota_assiduidade_e_pontuabilidade = form.supervisor_nota_assiduidade_e_pontuabilidade.data
-            estagio.supervisor_nota_criatividade_e_engenhosidade = form.supervisor_nota_criatividade_e_engenhosidade.data
-            estagio.supervisor_nota_disciplina = form.supervisor_nota_disciplina.data
-            estagio.supervisor_nota_sociabilidade = form.supervisor_nota_sociabilidade.data
-            estagio.supervisor_nota_adaptabilidade = form.supervisor_nota_adaptabilidade.data
-            estagio.supervisor_nota_responsabilidade = form.supervisor_nota_responsabilidade.data
-            estagio.supervisor_evolucao_tecnica = form.supervisor_evolucao_tecnica.data
-            estagio.supervisor_nota_etica = form.supervisor_nota_etica.data
-            estagio.supervisor_atividades = form.supervisor_atividades.data
-            estagio.supervisor_comentarios = form.supervisor_comentarios.data
+            estagio.empresa_nota_interesse = form.empresa_nota_interesse.data
+            estagio.empresa_nota_iniciativa = form.empresa_nota_iniciativa.data
+            estagio.empresa_nota_cooperacao = form.empresa_nota_cooperacao.data
+            estagio.empresa_nota_assiduidade = form.empresa_nota_assiduidade.data
+            estagio.empresa_nota_pontualidade = form.empresa_nota_pontualidade.data
+            estagio.empresa_nota_disciplina = form.empresa_nota_disciplina.data
+            estagio.empresa_nota_sociabilidade = form.empresa_nota_sociabilidade.data
+            estagio.empresa_nota_adaptabilidade = form.empresa_nota_adaptabilidade.data
+            estagio.empresa_nota_responsabilidade = form.empresa_nota_responsabilidade.data
+            estagio.empresa_nota_etica = form.empresa_nota_etica.data
+            estagio.empresa_atividades = form.empresa_atividades.data
+            estagio.emprsa_comentarios = form.emprsa_comentarios.data
             
             # Calcula a média das notas
-            notas = [
-                form.supervisor_nota_interesse.data,
-                form.supervisor_nota_iniciativa.data,
-                form.supervisor_nota_cooperacao.data,
-                form.supervisor_nota_assiduidade_e_pontuabilidade.data,
-                form.supervisor_nota_criatividade_e_engenhosidade.data,
-                form.supervisor_nota_disciplina.data,
-                form.supervisor_nota_sociabilidade.data,
-                form.supervisor_nota_adaptabilidade.data,
-                form.supervisor_nota_responsabilidade.data,
-                form.supervisor_evolucao_tecnica.data,
-                form.supervisor_nota_etica.data
-            ]
+            estagio.empresa_media_notas = sum([
+                form.empresa_nota_interesse.data,
+                form.empresa_nota_iniciativa.data,
+                form.empresa_nota_cooperacao.data,
+                form.empresa_nota_assiduidade.data,
+                form.empresa_nota_pontualidade.data,
+                form.empresa_nota_disciplina.data,
+                form.empresa_nota_sociabilidade.data,
+                form.empresa_nota_adaptabilidade.data,
+                form.empresa_nota_responsabilidade.data,
+                form.empresa_nota_etica.data
+            ]) / 10
             
-            estagio.supervisor_media_notas = sum(filter(None, notas)) / len([n for n in notas if n is not None])
-            estagio.banca_nota_avaliacao_orientador = estagio.supervisor_media_notas
+            estagio.banca_nota_avaliacao_empresa = estagio.empresa_media_notas
 
             db.session.commit()
             flash('Avaliação salva com sucesso!', 'success')
@@ -1046,6 +1043,9 @@ def notas_banca(estagio_id):
 
     form = BancaAvaliacaoForm(obj=estagio)
     
+    if request.method == 'GET':
+        form.banca_autoavaliacao.data = estagio.aluno_media_notas
+    
     if form.validate_on_submit():
         try:
             estagio.banca_nota_apresentacao_oral_1 = form.banca_nota_apresentacao_oral_1.data
@@ -1083,7 +1083,7 @@ def notas_banca(estagio_id):
 def index_aluno():
     aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
     estagio = Estagio.query.filter_by(aluno_id=aluno.id).first()
-    
+    print(estagio)
     if estagio:  # Se o aluno já possui um estágio, mostrar os dados do estágio para edição
         form = EstagioFormAdd(obj=estagio)
         form.estagio_id = estagio.id
@@ -1119,7 +1119,10 @@ def index_aluno():
             form.supervisor_id.data = estagio.supervisor_id
             form.empresa_id.data = estagio.empresa_id
 
+        print(form.validate_on_submit())
+        
         if form.validate_on_submit():
+            print("teste")
             try:
                 estagio.professor_id = form.professor_id.data
                 estagio.supervisor_id = form.supervisor_id.data
@@ -1134,6 +1137,10 @@ def index_aluno():
                 estagio.data_inicio = form.data_inicio.data
                 estagio.data_conclusao = form.data_conclusao.data
 
+                print(form)
+                print(form.supervisor_id)
+                print(form.supervisor_id.data)
+                
                 db.session.merge(estagio)
                 db.session.commit()
                 flash('Estágio atualizado com sucesso!', 'success')
@@ -1141,6 +1148,8 @@ def index_aluno():
             except Exception as e:
                 db.session.rollback()
                 flash(f'Erro ao atualizar estágio: {e}', 'error')
+                return redirect(url_for('index'))
+                
     else:  # Se o aluno não possui um estágio, permitir o cadastro
         form = EstagioFormAdd()
         form.estagio_id = 0
@@ -1513,8 +1522,8 @@ def generate_ata_banca_pdf(estagio_id):
     estagio = Estagio.query.filter(Estagio.id == estagio_id).first_or_404()
 
     # Calcular médias e valores derivados
-    avaliacao_concedente_peso = (estagio.banca_nota_avaliacao_empresa or 0) * 2
-    avaliacao_orientador_peso = (estagio.banca_nota_avaliacao_orientador or 0) * 2
+    avaliacao_concedente_peso = (estagio.empresa_media_notas or 0) * 2
+    avaliacao_orientador_peso = (estagio.professor_nota_avaliacao or 0) * 2
     
     apresentacao_oral_n1 = estagio.banca_nota_apresentacao_oral_supervisor or 0
     apresentacao_oral_n2 = estagio.banca_nota_apresentacao_oral_1 or 0
@@ -1534,7 +1543,7 @@ def generate_ata_banca_pdf(estagio_id):
     relatorio_descritivo_media = (relatorio_descritivo_n1 + relatorio_descritivo_n2 + relatorio_descritivo_n3) / 3
     relatorio_descritivo_media_peso = relatorio_descritivo_media  # Mesma média
 
-    autoavaliacao = estagio.banca_autoavaliacao or 0
+    autoavaliacao = estagio.aluno_media_notas or 0
     autoavaliacao_peso = autoavaliacao  # Mesma nota
 
     # Calculando nota final
