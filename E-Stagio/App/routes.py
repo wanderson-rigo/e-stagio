@@ -520,7 +520,6 @@ def cadastro_estagio():
     return render_template('admin/cadastro_estagio.html', form=form)
 
 @app.route('/get_supervisores/<int:empresa_id>', methods=['GET'])
-@roles_required('admin')
 def get_supervisores(empresa_id):
     supervisores = Supervisor.query.filter_by(empresa_id=empresa_id, is_approved=True).all()
     supervisores_data = [{'id': s.id, 'nome': s.nome} for s in supervisores]
@@ -1083,7 +1082,7 @@ def notas_banca(estagio_id):
 def index_aluno():
     aluno = Aluno.query.filter_by(user_id=current_user.id).first_or_404()
     estagio = Estagio.query.filter_by(aluno_id=aluno.id).first()
-    print(estagio)
+    
     if estagio:  # Se o aluno já possui um estágio, mostrar os dados do estágio para edição
         form = EstagioFormAdd(obj=estagio)
         form.estagio_id = estagio.id
@@ -1096,33 +1095,24 @@ def index_aluno():
             ).all()
         ]
 
-        form.supervisor_id.choices = [
-            (s.id, s.nome) for s in Supervisor.query.join(Supervisor.user).filter(
-                or_(
-                    Supervisor.id == estagio.supervisor_id,
-                    and_(Supervisor.is_approved == True, User.active == True)
-                )
-            ).all()
+        form.empresa_id.choices = [
+            (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(Empresa.is_approved == True, User.active == True).all()
         ]
 
-        form.empresa_id.choices = [
-            (e.id, e.nome_empresa) for e in Empresa.query.join(Empresa.user).filter(
-                or_(
-                    Empresa.id == estagio.empresa_id,
-                    and_(Empresa.is_approved == True, User.active == True)
-                )
-            ).all()
-        ]
+        # Preencher as opções de supervisores dinamicamente com base na empresa selecionada
+        if estagio.empresa_id:
+            form.supervisor_id.choices = [
+                (s.id, s.nome) for s in Supervisor.query.filter(Supervisor.empresa_id == int(estagio.empresa_id), Supervisor.is_approved == True).all()
+            ]
+        else:
+            form.supervisor_id.choices = []
 
         if request.method == 'GET':
             form.professor_id.data = estagio.professor_id
             form.supervisor_id.data = estagio.supervisor_id
             form.empresa_id.data = estagio.empresa_id
 
-        print(form.validate_on_submit())
-        
         if form.validate_on_submit():
-            print("teste")
             try:
                 estagio.professor_id = form.professor_id.data
                 estagio.supervisor_id = form.supervisor_id.data
@@ -1137,10 +1127,6 @@ def index_aluno():
                 estagio.data_inicio = form.data_inicio.data
                 estagio.data_conclusao = form.data_conclusao.data
 
-                print(form)
-                print(form.supervisor_id)
-                print(form.supervisor_id.data)
-                
                 db.session.merge(estagio)
                 db.session.commit()
                 flash('Estágio atualizado com sucesso!', 'success')
