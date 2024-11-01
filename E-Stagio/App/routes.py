@@ -1545,13 +1545,14 @@ def generate_ata_banca_pdf(estagio_id):
     # Formatar as datas no formato dia/mês/ano
     data_relatorio = estagio.banca_relatorio_entrega.strftime('%d/%m/%Y') if estagio.banca_relatorio_entrega else ''
     data_apresentacao = estagio.banca_refazer_apresentacao.strftime('%d/%m/%Y') if estagio.banca_refazer_apresentacao else ''
-    ano = estagio.banca_relatorio_entrega.year if estagio.banca_relatorio_entrega else estagio.banca_refazer_apresentacao.year if estagio.banca_refazer_apresentacao else ''
-
+    data_inicio_formatada = estagio.data_inicio.strftime('%d/%m/%Y') if estagio.data_inicio else ''
+    data_conclusao_formatada = estagio.data_conclusao.strftime('%d/%m/%Y') if estagio.data_conclusao else ''
+    
     # Criar o dicionário com os dados a serem preenchidos
     data_dict = {
         'avaliacao_concedente': str(estagio.banca_nota_avaliacao_empresa or ''),
         'avaliacao_concedente_peso': str(avaliacao_concedente_peso),
-        'avaliacao_orientador': str(estagio.banca_nota_avaliacao_orientador or ''),
+        'avaliacao_orientador': str(estagio.professor_nota_avaliacao or ''),
         'avaliacao_orientador_peso': str(avaliacao_orientador_peso),
         'apresentacao_oral_n1': str(apresentacao_oral_n1),
         'apresentacao_oral_n2': str(apresentacao_oral_n2),
@@ -1573,11 +1574,14 @@ def generate_ata_banca_pdf(estagio_id):
         'nota_final': str(nota_final),
         'data_relatorio': data_relatorio,
         'data_apresentacao': data_apresentacao,
-        'ano': str(ano),
         'comentarios': estagio.banca_comentarios or '',
         'nome_avaliador1': estagio.banca_avaliador_1 or '',
         'nome_avaliador2': estagio.banca_avaliador_2 or '',
         'orientador': estagio.professor.nome,
+        'aluno': estagio.aluno.nome,
+        'Empresa': estagio.empresa.nome_empresa,
+        'periodo': f"{data_inicio_formatada} - {data_conclusao_formatada}",
+        'horas': str(estagio.carga_horaria),
     }
 
     # Campos de checkbox
@@ -1585,11 +1589,13 @@ def generate_ata_banca_pdf(estagio_id):
         'aprovado': 'Yes' if estagio.banca_aprovado else '',
         'aprovado_ressalva': 'Yes' if estagio.banca_aprovado_com_ressalva else '',
         'reprovado': 'Yes' if estagio.banca_reprovado else '',
+        'relatorio': 'Yes' if estagio.banca_relatorio_entrega else '',
+        'apresentacao': 'Yes' if estagio.banca_refazer_apresentacao else '',
     })
 
     # Caminho do PDF editável
     base_dir = os.path.dirname(__file__)
-    input_pdf_path = os.path.join(base_dir, 'Files', 'ata_banca_editavel.pdf')
+    input_pdf_path = os.path.join(base_dir, 'Files', 'banca_editavel.pdf')
 
     # Abrir e preencher o PDF
     doc = fitz.open(input_pdf_path)
@@ -1616,9 +1622,6 @@ def generate_ata_banca_pdf(estagio_id):
     pdf_stream.seek(0)
 
     return send_file(pdf_stream, as_attachment=True, download_name=f"Ata_Banca_{estagio.aluno.nome}.pdf", mimetype='application/pdf')
-
-import zipfile
-import locale
 
 @app.route('/generate_atividades_estagio_pdf/<int:estagio_id>', methods=['GET'])
 def generate_atividades_estagio_pdf(estagio_id):
