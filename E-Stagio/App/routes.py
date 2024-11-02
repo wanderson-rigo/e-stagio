@@ -22,7 +22,7 @@ import zipfile
 def send_test_email():
     try:
         msg = Message("Test Email",
-                      recipients=["brunopergher_1@hotmail.com"],  # Substitua pelo endereço de e-mail do destinatário
+                      recipients=["brunopergher_1@hotmail.com"],
                       body="This is a test email sent from Flask-Mail.")
         
         mail.send(msg)
@@ -49,34 +49,6 @@ def index():
         return render_template('index.html') 
 
 # Area registro e login
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    msg = ""
-    roles = Role.query.filter(Role.name != 'admin').all()
-    if request.method == 'POST':
-        user = User.query.filter_by(email=request.form['email']).first()
-        if user:
-            msg = "Email já esta em uso"
-            return render_template('signup.html', msg=msg, roles=roles)
-        
-        hashed_password = hash_password(request.form['password'])
-        user = User(email=request.form['email'], active=False, password=hashed_password)
-        user.username = user.email
-        user.confirmed_at = datetime.now()
-        
-        role_id = request.form.get('options')
-        role = Role.query.filter_by(id=role_id).first()
-        if role:
-            user.roles.append(role)
-        
-        db.session.add(user)
-        db.session.commit()
-        flash('Por favor, aguarde sua conta ser aprovada pelo setor de estágios para começar usar sua conta.', 'success')
-        
-        return redirect(url_for('index'))
-    else:
-        return render_template("signup.html", msg=msg, roles=roles)
 
 @app.route('/signup_professor', methods=['GET', 'POST'])
 def signup_professor():
@@ -617,6 +589,21 @@ def ativar_usuario(user_id):
             usuario.confirmed_at = datetime.now()
             db.session.commit()
             flash('Usuário ativado com sucesso!', 'success')
+            msg = Message("Conta Ativada Com Sucesso!",
+                      recipients=[usuario.email],
+                      body=(
+                        "Olá,\n\n"
+                        "Sua conta no E-Stágio foi aprovada com sucesso!\n"
+                        "Agora você já pode acessar o sistema e aproveitar todas as funcionalidades disponíveis.\n\n"
+                        "Por favor, não responda a este e-mail. Caso precise de ajuda, entre em contato com o suporte.\n\n"
+                        "\n\n"
+                        "Atenciosamente,\n"
+                        "Equipe E-Stágio"
+                      )
+                    )
+        
+            mail.send(msg)
+            
         except Exception as e:
             db.session.rollback()
             flash(f'Erro ao ativar usuário: {str(e)}', 'error')

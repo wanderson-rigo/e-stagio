@@ -4,10 +4,13 @@ from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_mail import Mail
 from config import Config
+from flask_babel import Babel
 
 # Initialize Flask
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config['BABEL_DEFAULT_LOCALE'] = 'pt'  # Set default locale to Portuguese
+babel = Babel(app)
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)

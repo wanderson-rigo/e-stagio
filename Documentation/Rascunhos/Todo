@@ -1,10 +1,9 @@
 - [ ]  Create a live server for tests. - Doing now - <==
 - [X]  Register need create the entity, now created just user
 
-- [ ]  Fix Email sender that is not working anymore.
-- [ ]  Show errors on login page
-- [ ]  fix forget password
-- [ ]  add email messages for people when activating the user and where is necessary
+- [X]  Show errors on login page
+- [X]  fix forget password
+- [X]  add email messages for people when activating the user and where is necessary
 - [ ]  
 - [ ]  
 - [ ]  

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,16 +27,16 @@
                     <a class="nav-link" href="/login">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup_aluno') }}">Cadastrao Aluno</a>
+                    <a class="nav-link" href="{{ url_for('signup_aluno') }}">Novo Aluno</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup_professor') }}">Cadastro Professor</a>
+                    <a class="nav-link" href="{{ url_for('signup_professor') }}">Novo Professor</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup_empresa') }}">Cadastro Empresa</a>
+                    <a class="nav-link" href="{{ url_for('signup_empresa') }}">Novo Empresa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup_supervisor') }}">Cadastro Supervisor</a>
+                    <a class="nav-link" href="{{ url_for('signup_supervisor') }}">Novo Supervisor</a>
                 </li>
                 {% endif %}
                 {% if current_user.is_authenticated %}

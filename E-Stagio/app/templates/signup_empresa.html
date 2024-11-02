@@ -1,7 +1,8 @@
-{% extends "base.html" %}
+{% extends "base_default.html" %}
+
 {% block content %}
 <!-- signup.html -->
-<a class="btn btn-secondary" href="{{ url_for('signup') }}">Voltar <-</a>
+<a class="btn btn-secondary" href="{{ url_for('index') }}">Voltar <-</a>
 <h2>Cadastro de Empresa</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
