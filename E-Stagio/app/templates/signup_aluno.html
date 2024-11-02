@@ -1,6 +1,6 @@
 {% extends "base_default.html" %}
 {% block content %}
-<a class="btn btn-secondary" href="{{ url_for('index') }}">Voltar <-</a>
+<a class="btn btn-secondary" href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i> Voltar </a>
 <h2>Cadastro de Aluno</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
@@ -10,7 +10,7 @@
                 {{ form.nome.label }}<br>
                 {{ form.nome(size=32) }}<br>
                 {% for error in form.nome.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -20,7 +20,7 @@
                 {{ form.matricula.label }}<br>
                 {{ form.matricula(size=32) }}<br>
                 {% for error in form.matricula.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -32,7 +32,7 @@
                 {{ form.email.label }}<br>
                 {{ form.email(size=32) }}<br>
                 {% for error in form.email.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -42,7 +42,7 @@
                 {{ form.celular.label }}<br>
                 {{ form.celular(size=32) }}<br>
                 {% for error in form.celular.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -54,7 +54,7 @@
                 {{ form.cpf.label }}<br>
                 {{ form.cpf(size=32) }}<br>
                 {% for error in form.cpf.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -64,7 +64,7 @@
                 {{ form.rg.label }}<br>
                 {{ form.rg(size=32) }}<br>
                 {% for error in form.rg.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -76,7 +76,7 @@
                 {{ form.password.label }}<br>
                 {{ form.password(size=32) }}<br>
                 {% for error in form.password.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>
@@ -85,7 +85,7 @@
                 {{ form.dob.label }}<br>
                 {{ form.dob(type='date') }}<br>
                 {% for error in form.dob.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </p>
         </div>

@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-    <a class="btn btn-secondary" href="{{ url_for('lista_estagios') }}">Voltar <- </a>
+    <a class="btn btn-secondary" href="{{ url_for('lista_estagios') }}"><i class="fas fa-arrow-left"></i> Voltar </a>
             <h2>Editar Estágio</h2>
             <form method="POST">
                 {{ form.hidden_tag() }}

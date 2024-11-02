@@ -34,9 +34,12 @@
 {% block scripts %}
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
 <script>
 $(document).ready(function() {
     $('#adminsTable').DataTable({
+        responsive: true,
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros por página",
             "zeroRecords": "Nenhum admin encontrado",
@@ -56,44 +59,4 @@ $(document).ready(function() {
     });
 });
 </script>
-
-<style>
-@media (max-width: 768px) {
-    .table-responsive table thead {
-        display: none;
-    }
-
-    .table-responsive table tbody, 
-    .table-responsive table tr, 
-    .table-responsive table td {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-
-    .table-responsive table tr {
-        margin-bottom: 15px;
-        border-bottom: 1px solid #dee2e6; 
-        padding: 10px 0;
-    }
-
-    .table-responsive table td {
-        text-align: center; 
-        position: relative;
-        padding: 10px 0;
-    }
-
-    .table-responsive table td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        width: 100%;
-        padding: 10px 0;
-        font-weight: bold;
-        text-align: center; 
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-    }
-}
-</style>
 {% endblock %}

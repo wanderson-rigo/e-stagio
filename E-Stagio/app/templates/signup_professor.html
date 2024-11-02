@@ -2,9 +2,7 @@
 
 {% block content %}
 <!-- signup.html -->
-<h2 class="mb-4">Registrar</h2>
-
-<a class="btn btn-secondary" href="{{ url_for('index') }}">Voltar <-</a>
+<a class="btn btn-secondary" href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
 <h2>Cadastro de Professor</h2>
 <form method="POST">
     {{ form.hidden_tag() }}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-    <a class="btn btn-secondary" href="{{ url_for('lista_empresas') }}">Voltar <-</a>
+    <a class="btn btn-secondary" href="{{ url_for('lista_empresas') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
     <h2>Editar Empresa</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
