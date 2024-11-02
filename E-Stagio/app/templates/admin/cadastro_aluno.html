@@ -1,98 +1,80 @@
 <!-- templates/admin/cadastro_aluno.html -->
 {% extends "base.html" %}
 {% block content %}
-<a class="btn btn-secondary" href="{{ url_for('lista_alunos') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
-<h2>Cadastro de Aluno</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-6">
-            <p>
-                {{ form.nome.label }}<br>
-                {{ form.nome(size=32) }}<br>
+<div class="container mb-5">
+    <a class="btn btn-secondary mb-3" href="{{ url_for('lista_alunos') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
+    <h2 class="mb-4">Cadastro de Aluno</h2>
+    <form method="POST" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.nome.label(class="form-label") }}
+                {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
                 {% for error in form.nome.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
-            </p>
-        </div>
+            </div>
 
-        <div class="col-6">
-            <p>
-                {{ form.matricula.label }}<br>
-                {{ form.matricula(size=32) }}<br>
+            <div class="col-md-6 mb-3">
+                {{ form.matricula.label(class="form-label") }}
+                {{ form.matricula(class="form-control" + (" is-invalid" if form.matricula.errors else "")) }}
                 {% for error in form.matricula.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
-            </p>
-        </div>
-    </div>
+            </div>
 
-    <div class="row">
-        <div class="col-6">
-            <p>
-                {{ form.email.label }}<br>
-                {{ form.email(size=32) }}<br>
+            <div class="col-md-6 mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
                 {% for error in form.email.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
-            </p>
-        </div>
+            </div>
 
-        <div class="col-6">
-            <p>
-                {{ form.celular.label }}<br>
-                {{ form.celular(size=32) }}<br>
+            <div class="col-md-6 mb-3">
+                {{ form.celular.label(class="form-label") }}
+                {{ form.celular(class="form-control" + (" is-invalid" if form.celular.errors else "")) }}
                 {% for error in form.celular.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
-            </p>
-        </div>
-    </div>
+            </div>
 
-    <div class="row">
-        <div class="col-6">
-            <p>
-                {{ form.cpf.label }}<br>
-                {{ form.cpf(size=32) }}<br>
+            <div class="col-md-6 mb-3">
+                {{ form.cpf.label(class="form-label") }}
+                {{ form.cpf(class="form-control" + (" is-invalid" if form.cpf.errors else "")) }}
                 {% for error in form.cpf.errors %}
-                    <span style="color: red;">{{ error }}</span>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
-            </p>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.rg.label(class="form-label") }}
+                {{ form.rg(class="form-control" + (" is-invalid" if form.rg.errors else "")) }}
+                {% for error in form.rg.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                {% for error in form.password.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.dob.label(class="form-label") }}
+                {{ form.dob(class="form-control" + (" is-invalid" if form.dob.errors else ""), type='date') }}
+                {% for error in form.dob.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
 
-        <div class="col-6">
-            <p>
-                {{ form.rg.label }}<br>
-                {{ form.rg(size=32) }}<br>
-                {% for error in form.rg.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </p>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-6">
-            <p>
-                {{ form.password.label }}<br>
-                {{ form.password(size=32) }}<br>
-                {% for error in form.password.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </p>
-        </div>
-        <div class="col-6">
-            <p>
-                {{ form.dob.label }}<br>
-                {{ form.dob(type='date') }}<br>
-                {% for error in form.dob.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </p>
-        </div>
-    </div>
-    <p>
-        {{ form.submit() }}
-    </p>
-</form>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+</div>
 {% endblock %}

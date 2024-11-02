@@ -1,39 +1,47 @@
 <!-- templates/admin/editar_professor.html -->
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-4">
-    <a class="btn btn-secondary" href="{{ url_for('lista_professores') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Editar Professor</h2>
-    <form method="POST">
+<div class="container mb-5">
+    <a class="btn btn-secondary mb-3" href="{{ url_for('lista_professores') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
+    <h2 class="mb-4">Editar Professor</h2>
+    <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.nome.label(class="form-label") }}
-            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
-            {% for error in form.nome.errors %}
-            <div class="invalid-feedback">{{ error }}</div
-            {% endfor %}
+        {{ form.csrf_token }}
+
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.nome.label(class="form-label") }}
+                {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+                {% for error in form.nome.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                {% for error in form.email.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.cpf.label(class="form-label") }}
+                {{ form.cpf(class="form-control" + (" is-invalid" if form.cpf.errors else "")) }}
+                {% for error in form.cpf.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3 form-check">
+                {{ form.ativo(class="form-check-input" + (" is-invalid" if form.ativo.errors else "")) }}
+                {{ form.ativo.label(class="form-check-label") }}
+                {% for error in form.ativo.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
-            {% for error in form.email.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.cpf.label(class="form-label") }}
-            {{ form.cpf(class="form-control" + (" is-invalid" if form.cpf.errors else "")) }}
-            {% for error in form.cpf.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.ativo.label(class="form-check-label") }}
-            {{ form.ativo(class="form-control" + (" is-invalid" if form.ativo.errors else "")) }}
-            {% for error in form.ativo.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+
         <button type="submit" class="btn btn-primary">Atualizar</button>
         <a href="{{ url_for('lista_professores') }}" class="btn btn-secondary">Cancelar</a>
     </form>

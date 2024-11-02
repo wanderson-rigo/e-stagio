@@ -2,30 +2,36 @@
 {% block content %}
 <div class="container mt-4">
     <a href="{{ url_for('index_professor') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Avaliação do Professor Orientador</h2>
-    <form method="POST">
+    <h2 class="mb-4">Avaliação do Professor Orientador</h2>
+    <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         
-        <div class="form-group">
-            {{ form.professor_nota_avaliacao.label(class="form-label") }}
-            {{ form.professor_nota_avaliacao(type="number", class="form-control" + (" is-invalid" if form.professor_nota_avaliacao.errors else "")) }}
-            {% for error in form.professor_nota_avaliacao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.professor_nota_avaliacao.label(class="form-label") }}
+                {{ form.professor_nota_avaliacao(type="number", class="form-control" + (" is-invalid" if form.professor_nota_avaliacao.errors else "")) }}
+                {% for error in form.professor_nota_avaliacao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-12 mb-3">
+                {{ form.professor_avaliacao_comentarios.label(class="form-label") }}
+                {{ form.professor_avaliacao_comentarios(class="form-control" + (" is-invalid" if form.professor_avaliacao_comentarios.errors else "")) }}
+                {% for error in form.professor_avaliacao_comentarios.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.professor_avaliacao_comentarios.label(class="form-label") }}
-            {{ form.professor_avaliacao_comentarios(class="form-control" + (" is-invalid" if form.professor_avaliacao_comentarios.errors else "")) }}
-            {% for error in form.professor_avaliacao_comentarios.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+
+        <div class="d-flex justify-content-start mt-4">
+            <button type="submit" class="btn btn-primary me-3">Salvar Avaliação</button>
+            <a href="{{ url_for('generate_company_pdf', estagio_id=estagio.id) }}" class="btn btn-primary me-3">Avaliação Empresa</a>
+            <a href="{{ url_for('generate_professor_pdf', estagio_id=estagio.id) }}" class="btn btn-primary me-3">Avaliação Professor</a>
+            <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=estagio.id) }}" class="btn btn-primary me-3">Autoavaliação do Estagiário</a>
+            <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary me-3">Ata da Banca</a>
+            <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Acompanhamento PDF</a>
         </div>
-        <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
-        <a href="{{ url_for('generate_company_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Avaliação Empresa</a>
-        <a href="{{ url_for('generate_professor_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Avaliação Professor</a>
-        <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Autoavaliação do Estagiário</a>
-        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Ata da Banca</a>
-        <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Acompanhamento PDF</a>
     </form>
 </div>
 

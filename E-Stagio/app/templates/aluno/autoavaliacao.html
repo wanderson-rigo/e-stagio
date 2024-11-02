@@ -1,165 +1,169 @@
+<!-- templates/aluno/autoavaliacao.html -->
 {% extends "base_aluno.html" %}
 {% block content %}
-<div class="container mt-4">
-    <a href="{{ url_for('index_aluno') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Autoavaliação do Estágio</h2>
-    <form method="POST">
+<div class="container mb-5">
+    <a href="{{ url_for('index_aluno') }}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Voltar</a>
+    <h2 class="mb-4">Autoavaliação do Estágio</h2>
+    <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
-        
+        {{ form.csrf_token }}
+
         <!-- Campos de autoavaliação numérica -->
-        <div class="form-group">
-            {{ form.aluno_nota_rendimento.label(class="form-label") }}
-            {{ form.aluno_nota_rendimento(class="form-control" + (" is-invalid" if form.aluno_nota_rendimento.errors else "")) }}
-            {% for error in form.aluno_nota_rendimento.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_rendimento.label(class="form-label") }}
+                {{ form.aluno_nota_rendimento(class="form-control" + (" is-invalid" if form.aluno_nota_rendimento.errors else "")) }}
+                {% for error in form.aluno_nota_rendimento.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_facilidade_e_compreensao.label(class="form-label") }}
-            {{ form.aluno_nota_facilidade_e_compreensao(class="form-control" + (" is-invalid" if form.aluno_nota_facilidade_e_compreensao.errors else "")) }}
-            {% for error in form.aluno_nota_facilidade_e_compreensao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_facilidade_e_compreensao.label(class="form-label") }}
+                {{ form.aluno_nota_facilidade_e_compreensao(class="form-control" + (" is-invalid" if form.aluno_nota_facilidade_e_compreensao.errors else "")) }}
+                {% for error in form.aluno_nota_facilidade_e_compreensao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_conhecimentos_tecnicos.label(class="form-label") }}
-            {{ form.aluno_nota_conhecimentos_tecnicos(class="form-control" + (" is-invalid" if form.aluno_nota_conhecimentos_tecnicos.errors else "")) }}
-            {% for error in form.aluno_nota_conhecimentos_tecnicos.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_conhecimentos_tecnicos.label(class="form-label") }}
+                {{ form.aluno_nota_conhecimentos_tecnicos(class="form-control" + (" is-invalid" if form.aluno_nota_conhecimentos_tecnicos.errors else "")) }}
+                {% for error in form.aluno_nota_conhecimentos_tecnicos.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_organizacao_metodo_trabalho.label(class="form-label") }}
-            {{ form.aluno_nota_organizacao_metodo_trabalho(class="form-control" + (" is-invalid" if form.aluno_nota_organizacao_metodo_trabalho.errors else "")) }}
-            {% for error in form.aluno_nota_organizacao_metodo_trabalho.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_organizacao_metodo_trabalho.label(class="form-label") }}
+                {{ form.aluno_nota_organizacao_metodo_trabalho(class="form-control" + (" is-invalid" if form.aluno_nota_organizacao_metodo_trabalho.errors else "")) }}
+                {% for error in form.aluno_nota_organizacao_metodo_trabalho.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_iniciativa_independencia.label(class="form-label") }}
-            {{ form.aluno_nota_iniciativa_independencia(class="form-control" + (" is-invalid" if form.aluno_nota_iniciativa_independencia.errors else "")) }}
-            {% for error in form.aluno_nota_iniciativa_independencia.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_iniciativa_independencia.label(class="form-label") }}
+                {{ form.aluno_nota_iniciativa_independencia(class="form-control" + (" is-invalid" if form.aluno_nota_iniciativa_independencia.errors else "")) }}
+                {% for error in form.aluno_nota_iniciativa_independencia.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_disciplina.label(class="form-label") }}
-            {{ form.aluno_nota_disciplina(class="form-control" + (" is-invalid" if form.aluno_nota_disciplina.errors else "")) }}
-            {% for error in form.aluno_nota_disciplina.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_disciplina.label(class="form-label") }}
+                {{ form.aluno_nota_disciplina(class="form-control" + (" is-invalid" if form.aluno_nota_disciplina.errors else "")) }}
+                {% for error in form.aluno_nota_disciplina.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_sociabilidade_desempenho.label(class="form-label") }}
-            {{ form.aluno_nota_sociabilidade_desempenho(class="form-control" + (" is-invalid" if form.aluno_nota_sociabilidade_desempenho.errors else "")) }}
-            {% for error in form.aluno_nota_sociabilidade_desempenho.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_sociabilidade_desempenho.label(class="form-label") }}
+                {{ form.aluno_nota_sociabilidade_desempenho(class="form-control" + (" is-invalid" if form.aluno_nota_sociabilidade_desempenho.errors else "")) }}
+                {% for error in form.aluno_nota_sociabilidade_desempenho.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_assiduidade.label(class="form-label") }}
-            {{ form.aluno_nota_assiduidade(class="form-control" + (" is-invalid" if form.aluno_nota_assiduidade.errors else "")) }}
-            {% for error in form.aluno_nota_assiduidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_assiduidade.label(class="form-label") }}
+                {{ form.aluno_nota_assiduidade(class="form-control" + (" is-invalid" if form.aluno_nota_assiduidade.errors else "")) }}
+                {% for error in form.aluno_nota_assiduidade.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_cooperecao.label(class="form-label") }}
-            {{ form.aluno_nota_cooperecao(class="form-control" + (" is-invalid" if form.aluno_nota_cooperecao.errors else "")) }}
-            {% for error in form.aluno_nota_cooperecao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_cooperecao.label(class="form-label") }}
+                {{ form.aluno_nota_cooperecao(class="form-control" + (" is-invalid" if form.aluno_nota_cooperecao.errors else "")) }}
+                {% for error in form.aluno_nota_cooperecao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_nota_responsabilidade.label(class="form-label") }}
-            {{ form.aluno_nota_responsabilidade(class="form-control" + (" is-invalid" if form.aluno_nota_responsabilidade.errors else "")) }}
-            {% for error in form.aluno_nota_responsabilidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_nota_responsabilidade.label(class="form-label") }}
+                {{ form.aluno_nota_responsabilidade(class="form-control" + (" is-invalid" if form.aluno_nota_responsabilidade.errors else "")) }}
+                {% for error in form.aluno_nota_responsabilidade.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <!-- Avaliações de sim, não, mais ou menos (1, 2, 3) -->
-        <div class="form-group">
-            {{ form.aluno_avaliacao_empresa_condicoes.label(class="form-label") }}
-            {{ form.aluno_avaliacao_empresa_condicoes(class="form-control" + (" is-invalid" if form.aluno_avaliacao_empresa_condicoes.errors else "")) }}
-            {% for error in form.aluno_avaliacao_empresa_condicoes.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <!-- Avaliações de sim, não, mais ou menos (1, 2, 3) -->
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_empresa_condicoes.label(class="form-label") }}
+                {{ form.aluno_avaliacao_empresa_condicoes(class="form-control" + (" is-invalid" if form.aluno_avaliacao_empresa_condicoes.errors else "")) }}
+                {% for error in form.aluno_avaliacao_empresa_condicoes.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_atendeu_expectativas.label(class="form-label") }}
-            {{ form.aluno_avaliacao_atendeu_expectativas(class="form-control" + (" is-invalid" if form.aluno_avaliacao_atendeu_expectativas.errors else "")) }}
-            {% for error in form.aluno_avaliacao_atendeu_expectativas.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_atendeu_expectativas.label(class="form-label") }}
+                {{ form.aluno_avaliacao_atendeu_expectativas(class="form-control" + (" is-invalid" if form.aluno_avaliacao_atendeu_expectativas.errors else "")) }}
+                {% for error in form.aluno_avaliacao_atendeu_expectativas.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_contribui_formacao_profissional.label(class="form-label") }}
-            {{ form.aluno_avaliacao_contribui_formacao_profissional(class="form-control" + (" is-invalid" if form.aluno_avaliacao_contribui_formacao_profissional.errors else "")) }}
-            {% for error in form.aluno_avaliacao_contribui_formacao_profissional.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_contribui_formacao_profissional.label(class="form-label") }}
+                {{ form.aluno_avaliacao_contribui_formacao_profissional(class="form-control" + (" is-invalid" if form.aluno_avaliacao_contribui_formacao_profissional.errors else "")) }}
+                {% for error in form.aluno_avaliacao_contribui_formacao_profissional.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_recomendaria_para_outro.label(class="form-label") }}
-            {{ form.aluno_avaliacao_recomendaria_para_outro(class="form-control" + (" is-invalid" if form.aluno_avaliacao_recomendaria_para_outro.errors else "")) }}
-            {% for error in form.aluno_avaliacao_recomendaria_para_outro.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_recomendaria_para_outro.label(class="form-label") }}
+                {{ form.aluno_avaliacao_recomendaria_para_outro(class="form-control" + (" is-invalid" if form.aluno_avaliacao_recomendaria_para_outro.errors else "")) }}
+                {% for error in form.aluno_avaliacao_recomendaria_para_outro.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_curso_capacitou.label(class="form-label") }}
-            {{ form.aluno_avaliacao_curso_capacitou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_curso_capacitou.errors else "")) }}
-            {% for error in form.aluno_avaliacao_curso_capacitou.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_curso_capacitou.label(class="form-label") }}
+                {{ form.aluno_avaliacao_curso_capacitou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_curso_capacitou.errors else "")) }}
+                {% for error in form.aluno_avaliacao_curso_capacitou.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_orientador_acompanhou.label(class="form-label") }}
-            {{ form.aluno_avaliacao_orientador_acompanhou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_orientador_acompanhou.errors else "")) }}
-            {% for error in form.aluno_avaliacao_orientador_acompanhou.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_orientador_acompanhou.label(class="form-label") }}
+                {{ form.aluno_avaliacao_orientador_acompanhou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_orientador_acompanhou.errors else "")) }}
+                {% for error in form.aluno_avaliacao_orientador_acompanhou.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            {{ form.aluno_avaliacao_supervisor_acompanhou.label(class="form-label") }}
-            {{ form.aluno_avaliacao_supervisor_acompanhou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_supervisor_acompanhou.errors else "")) }}
-            {% for error in form.aluno_avaliacao_supervisor_acompanhou.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="col-md-6 mb-3">
+                {{ form.aluno_avaliacao_supervisor_acompanhou.label(class="form-label") }}
+                {{ form.aluno_avaliacao_supervisor_acompanhou(class="form-control" + (" is-invalid" if form.aluno_avaliacao_supervisor_acompanhou.errors else "")) }}
+                {% for error in form.aluno_avaliacao_supervisor_acompanhou.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <!-- Campo de texto para atividades realizadas -->
-        <div class="form-group">
-            {{ form.aluno_atividades.label(class="form-label") }}
-            {{ form.aluno_atividades(class="form-control" + (" is-invalid" if form.aluno_atividades.errors else "")) }}
-            {% for error in form.aluno_atividades.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <!-- Campo de texto para atividades realizadas -->
+            <div class="col-12 mb-3">
+                {{ form.aluno_atividades.label(class="form-label") }}
+                {{ form.aluno_atividades(class="form-control" + (" is-invalid" if form.aluno_atividades.errors else "")) }}
+                {% for error in form.aluno_atividades.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <!-- Campo de texto para comentários -->
-        <div class="form-group">
-            {{ form.aluno_comentarios.label(class="form-label") }}
-            {{ form.aluno_comentarios(class="form-control" + (" is-invalid" if form.aluno_comentarios.errors else "")) }}
-            {% for error in form.aluno_comentarios.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+            <!-- Campo de texto para comentários -->
+            <div class="col-12 mb-3">
+                {{ form.aluno_comentarios.label(class="form-label") }}
+                {{ form.aluno_comentarios(class="form-control" + (" is-invalid" if form.aluno_comentarios.errors else "")) }}
+                {% for error in form.aluno_comentarios.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Botão de submissão -->

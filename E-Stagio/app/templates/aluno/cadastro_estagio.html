@@ -1,7 +1,7 @@
 <!-- templates/aluno/cadastro_estagio.html -->
 {% extends "base_aluno.html" %}
 {% block content %}
-<div class="container mt-5">
+<div class="container mb-5">
     <h2 class="mb-4">
         {% if form and form.professor_id %}
         Meu Estágio
@@ -13,137 +13,122 @@
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
 
-        <div class="form-group">
+        <div class="form-group mb-4">
             <label class="form-label">Aluno</label>
             <input type="text" class="form-control" value="{{ aluno.nome }}" readonly>
         </div>
 
-        <div class="form-group">
-            {{ form.professor_id.label(class="form-label") }}
-            {{ form.professor_id(class="form-control") }}
-            {% if form.professor_id.errors %}
-            {% for error in form.professor_id.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.professor_id.label(class="form-label") }}
+                {{ form.professor_id(class="form-control" + (" is-invalid" if form.professor_id.errors else "")) }}
+                {% for error in form.professor_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.empresa_id.label(class="form-label") }}
+                {{ form.empresa_id(class="form-control", id="empresa_id") }}
+                {% if form.empresa_id.errors %}
+                {% for error in form.empresa_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.supervisor_id.label(class="form-label") }}
+                {{ form.supervisor_id(class="form-control", id="supervisor_id") }}
+                {% if form.supervisor_id.errors %}
+                {% for error in form.supervisor_id.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.modalidade.label(class="form-label") }}
+                {{ form.modalidade(class="form-control" + (" is-invalid" if form.modalidade.errors else "")) }}
+                {% for error in form.modalidade.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.carga_horaria.label(class="form-label") }}
+                {{ form.carga_horaria(class="form-control" + (" is-invalid" if form.carga_horaria.errors else "")) }}
+                {% for error in form.carga_horaria.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.setor.label(class="form-label") }}
+                {{ form.setor(class="form-control" + (" is-invalid" if form.setor.errors else "")) }}
+                {% for error in form.setor.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-12 mb-3">
+                {{ form.atividades.label(class="form-label") }}
+                {{ form.atividades(class="form-control" + (" is-invalid" if form.atividades.errors else "")) }}
+                {% for error in form.atividades.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.remuneracao.label(class="form-check-label") }}
+                {{ form.remuneracao(class="form-check-input ms-2" + (" is-invalid" if form.remuneracao.errors else ""))
+                }}
+                {% for error in form.remuneracao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.valor_remuneracao.label(class="form-label") }}
+                {{ form.valor_remuneracao(class="form-control" + (" is-invalid" if form.valor_remuneracao.errors else
+                "")) }}
+                {% for error in form.valor_remuneracao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.horario_estagio.label(class="form-label") }}
+                {{ form.horario_estagio(class="form-control" + (" is-invalid" if form.horario_estagio.errors else ""))
+                }}
+                {% for error in form.horario_estagio.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.data_inicio.label(class="form-label") }}
+                {{ form.data_inicio(class="form-control" + (" is-invalid" if form.data_inicio.errors else "")) }}
+                {% for error in form.data_inicio.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.data_conclusao.label(class="form-label") }}
+                {{ form.data_conclusao(class="form-control" + (" is-invalid" if form.data_conclusao.errors else "")) }}
+                {% for error in form.data_conclusao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Status</label>
+                <input type="text" class="form-control" value="Aguardando Aprovação" readonly>
+            </div>
         </div>
 
-        <div class="form-group">
-            {{ form.empresa_id.label(class="form-label") }}
-            {{ form.empresa_id(class="form-control", id="empresa_id") }}
-            {% if form.empresa_id.errors %}
-            {% for error in form.empresa_id.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.supervisor_id.label(class="form-label") }}
-            {{ form.supervisor_id(class="form-control", id="supervisor_id") }}
-            {% if form.supervisor_id.errors %}
-            {% for error in form.supervisor_id.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.modalidade.label(class="form-label") }}
-            {{ form.modalidade(class="form-control") }}
-            {% if form.modalidade.errors %}
-            {% for error in form.modalidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.carga_horaria.label(class="form-label") }}
-            {{ form.carga_horaria(class="form-control") }}
-            {% if form.carga_horaria.errors %}
-            {% for error in form.carga_horaria.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.atividades.label(class="form-label") }}
-            {{ form.atividades(class="form-control") }}
-            {% if form.atividades.errors %}
-            {% for error in form.atividades.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.setor.label(class="form-label") }}
-            {{ form.setor(class="form-control") }}
-            {% if form.setor.errors %}
-            {% for error in form.setor.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.remuneracao.label(class="form-check-label") }}
-            {{ form.remuneracao(class="form-check-input") }}
-            {% if form.remuneracao.errors %}
-            {% for error in form.remuneracao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.valor_remuneracao.label(class="form-label") }}
-            {{ form.valor_remuneracao(class="form-control") }}
-            {% if form.valor_remuneracao.errors %}
-            {% for error in form.valor_remuneracao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.horario_estagio.label(class="form-label") }}
-            {{ form.horario_estagio(class="form-control") }}
-            {% if form.horario_estagio.errors %}
-            {% for error in form.horario_estagio.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.data_inicio.label(class="form-label") }}
-            {{ form.data_inicio(class="form-control") }}
-            {% if form.data_inicio.errors %}
-            {% for error in form.data_inicio.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            {{ form.data_conclusao.label(class="form-label") }}
-            {{ form.data_conclusao(class="form-control") }}
-            {% if form.data_conclusao.errors %}
-            {% for error in form.data_conclusao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">Status</label>
-            <input type="text" class="form-control" value="Aguardando Aprovação" readonly>
-        </div>
-
-        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+        <button type="submit" class="btn btn-primary">Salvar Estágio</button>
 
         {% if form.estagio_id > 0 %}
         <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary">Fazer Autoavaliação</a>

@@ -2,164 +2,168 @@
 {% block content %}
 <div class="container mt-4">
     <a href="{{ url_for('index_professor') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Avaliação da Banca</h2>
-    <form method="POST">
+    <h2 class="mb-4">Avaliação da Banca</h2>
+    <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         
-        <div class="form-group">
-            {{ form.banca_nota_avaliacao_empresa.label(class="form-label") }}
-            {{ form.banca_nota_avaliacao_empresa(type="number", class="form-control" + (" is-invalid" if form.banca_nota_avaliacao_empresa.errors else "")) }}
-            {% for error in form.banca_nota_avaliacao_empresa.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_avaliacao_empresa.label(class="form-label") }}
+                {{ form.banca_nota_avaliacao_empresa(type="number", class="form-control" + (" is-invalid" if form.banca_nota_avaliacao_empresa.errors else "")) }}
+                {% for error in form.banca_nota_avaliacao_empresa.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.banca_autoavaliacao.label(class="form-label") }}
+                {{ form.banca_autoavaliacao(type="number", class="form-control" + (" is-invalid" if form.banca_autoavaliacao.errors else "")) }}
+                {% for error in form.banca_autoavaliacao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_apresentacao_oral_supervisor.label(class="form-label") }}
+                {{ form.banca_nota_apresentacao_oral_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_supervisor.errors else "")) }}
+                {% for error in form.banca_nota_apresentacao_oral_supervisor.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_pratica_profissional_supervisor.label(class="form-label") }}
+                {{ form.banca_nota_pratica_profissional_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_supervisor.errors else "")) }}
+                {% for error in form.banca_nota_pratica_profissional_supervisor.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_relatorio_supervisor.label(class="form-label") }}
+                {{ form.banca_nota_relatorio_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_supervisor.errors else "")) }}
+                {% for error in form.banca_nota_relatorio_supervisor.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_apresentacao_oral_1.label(class="form-label") }}
+                {{ form.banca_nota_apresentacao_oral_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_1.errors else "")) }}
+                {% for error in form.banca_nota_apresentacao_oral_1.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_pratica_profissional_1.label(class="form-label") }}
+                {{ form.banca_nota_pratica_profissional_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_1.errors else "")) }}
+                {% for error in form.banca_nota_pratica_profissional_1.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_relatorio_1.label(class="form-label") }}
+                {{ form.banca_nota_relatorio_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_1.errors else "")) }}
+                {% for error in form.banca_nota_relatorio_1.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_apresentacao_oral_2.label(class="form-label") }}
+                {{ form.banca_nota_apresentacao_oral_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_2.errors else "")) }}
+                {% for error in form.banca_nota_apresentacao_oral_2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_pratica_profissional_2.label(class="form-label") }}
+                {{ form.banca_nota_pratica_profissional_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_2.errors else "")) }}
+                {% for error in form.banca_nota_pratica_profissional_2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_nota_relatorio_2.label(class="form-label") }}
+                {{ form.banca_nota_relatorio_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_2.errors else "")) }}
+                {% for error in form.banca_nota_relatorio_2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_avaliador_1.label(class="form-label") }}
+                {{ form.banca_avaliador_1(class="form-control" + (" is-invalid" if form.banca_avaliador_1.errors else "")) }}
+                {% for error in form.banca_avaliador_1.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_avaliador_2.label(class="form-label") }}
+                {{ form.banca_avaliador_2(class="form-control" + (" is-invalid" if form.banca_avaliador_2.errors else "")) }}
+                {% for error in form.banca_avaliador_2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_aprovado.label(class="form-check-label") }}
+                {{ form.banca_aprovado(class="form-check-input" + (" is-invalid" if form.banca_aprovado.errors else "")) }}
+                {% for error in form.banca_aprovado.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_reprovado.label(class="form-check-label") }}
+                {{ form.banca_reprovado(class="form-check-input" + (" is-invalid" if form.banca_reprovado.errors else "")) }}
+                {% for error in form.banca_reprovado.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_aprovado_com_ressalva.label(class="form-check-label") }}
+                {{ form.banca_aprovado_com_ressalva(class="form-check-input" + (" is-invalid" if form.banca_aprovado_com_ressalva.errors else "")) }}
+                {% for error in form.banca_aprovado_com_ressalva.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_relatorio_entrega.label(class="form-label") }}
+                {{ form.banca_relatorio_entrega(type="date", class="form-control" + (" is-invalid" if form.banca_relatorio_entrega.errors else "")) }}
+                {% for error in form.banca_relatorio_entrega.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                {{ form.banca_refazer_apresentacao.label(class="form-label") }}
+                {{ form.banca_refazer_apresentacao(type="date", class="form-control" + (" is-invalid" if form.banca_refazer_apresentacao.errors else "")) }}
+                {% for error in form.banca_refazer_apresentacao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-12 mb-3">
+                {{ form.banca_comentarios.label(class="form-label") }}
+                {{ form.banca_comentarios(class="form-control" + (" is-invalid" if form.banca_comentarios.errors else "")) }}
+                {% for error in form.banca_comentarios.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
         </div>
 
-        <div class="form-group">
-            {{ form.banca_autoavaliacao.label(class="form-label") }}
-            {{ form.banca_autoavaliacao(type="number", class="form-control" + (" is-invalid" if form.banca_autoavaliacao.errors else "")) }}
-            {% for error in form.banca_autoavaliacao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+        <div class="d-flex justify-content-start mt-4">
+            <button type="submit" class="btn btn-primary me-3">Salvar Avaliação</button>
+            <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Ata da Banca</a>
         </div>
-
-        <div class="form-group">
-            {{ form.banca_nota_apresentacao_oral_supervisor.label(class="form-label") }}
-            {{ form.banca_nota_apresentacao_oral_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_supervisor.errors else "")) }}
-            {% for error in form.banca_nota_apresentacao_oral_supervisor.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_pratica_profissional_supervisor.label(class="form-label") }}
-            {{ form.banca_nota_pratica_profissional_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_supervisor.errors else "")) }}
-            {% for error in form.banca_nota_pratica_profissional_supervisor.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_relatorio_supervisor.label(class="form-label") }}
-            {{ form.banca_nota_relatorio_supervisor(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_supervisor.errors else "")) }}
-            {% for error in form.banca_nota_relatorio_supervisor.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.banca_nota_apresentacao_oral_1.label(class="form-label") }}
-            {{ form.banca_nota_apresentacao_oral_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_1.errors else "")) }}
-            {% for error in form.banca_nota_apresentacao_oral_1.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_pratica_profissional_1.label(class="form-label") }}
-            {{ form.banca_nota_pratica_profissional_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_1.errors else "")) }}
-            {% for error in form.banca_nota_pratica_profissional_1.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_relatorio_1.label(class="form-label") }}
-            {{ form.banca_nota_relatorio_1(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_1.errors else "")) }}
-            {% for error in form.banca_nota_relatorio_1.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_apresentacao_oral_2.label(class="form-label") }}
-            {{ form.banca_nota_apresentacao_oral_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_apresentacao_oral_2.errors else "")) }}
-            {% for error in form.banca_nota_apresentacao_oral_2.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_pratica_profissional_2.label(class="form-label") }}
-            {{ form.banca_nota_pratica_profissional_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_pratica_profissional_2.errors else "")) }}
-            {% for error in form.banca_nota_pratica_profissional_2.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_nota_relatorio_2.label(class="form-label") }}
-            {{ form.banca_nota_relatorio_2(type="number", class="form-control" + (" is-invalid" if form.banca_nota_relatorio_2.errors else "")) }}
-            {% for error in form.banca_nota_relatorio_2.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_avaliador_1.label(class="form-label") }}
-            {{ form.banca_avaliador_1(class="form-control" + (" is-invalid" if form.banca_avaliador_1.errors else "")) }}
-            {% for error in form.banca_avaliador_1.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_avaliador_2.label(class="form-label") }}
-            {{ form.banca_avaliador_2(class="form-control" + (" is-invalid" if form.banca_avaliador_2.errors else "")) }}
-            {% for error in form.banca_avaliador_2.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_aprovado.label(class="form-label") }}
-            {{ form.banca_aprovado(class="form-check-input" + (" is-invalid" if form.banca_aprovado.errors else "")) }}
-            {% for error in form.banca_aprovado.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_reprovado.label(class="form-label") }}
-            {{ form.banca_reprovado(class="form-check-input" + (" is-invalid" if form.banca_reprovado.errors else "")) }}
-            {% for error in form.banca_reprovado.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_aprovado_com_ressalva.label(class="form-label") }}
-            {{ form.banca_aprovado_com_ressalva(class="form-check-input" + (" is-invalid" if form.banca_aprovado_com_ressalva.errors else "")) }}
-            {% for error in form.banca_aprovado_com_ressalva.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_relatorio_entrega.label(class="form-label") }}
-            {{ form.banca_relatorio_entrega(type="date", class="form-control" + (" is-invalid" if form.banca_relatorio_entrega.errors else "")) }}
-            {% for error in form.banca_relatorio_entrega.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_refazer_apresentacao.label(class="form-label") }}
-            {{ form.banca_refazer_apresentacao(type="date", class="form-control" + (" is-invalid" if form.banca_refazer_apresentacao.errors else "")) }}
-            {% for error in form.banca_refazer_apresentacao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="form-group">
-            {{ form.banca_comentarios.label(class="form-label") }}
-            {{ form.banca_comentarios(class="form-control" + (" is-invalid" if form.banca_comentarios.errors else "")) }}
-            {% for error in form.banca_comentarios.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
-        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Ata da Banca</a>
     </form>
 </div>
 {% endblock %}
