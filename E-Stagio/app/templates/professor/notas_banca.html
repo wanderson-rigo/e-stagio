@@ -110,26 +110,27 @@
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
-            
-            <div class="col-md-6 mb-3">
-                {{ form.banca_aprovado.label(class="form-check-label") }}
+
+
+            <div class="col-md-6 mb-3 form-check">
                 {{ form.banca_aprovado(class="form-check-input" + (" is-invalid" if form.banca_aprovado.errors else "")) }}
+                {{ form.banca_aprovado.label(class="form-check-label") }}
                 {% for error in form.banca_aprovado.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
-            
-            <div class="col-md-6 mb-3">
-                {{ form.banca_reprovado.label(class="form-check-label") }}
+
+            <div class="col-md-6 mb-3 form-check">
                 {{ form.banca_reprovado(class="form-check-input" + (" is-invalid" if form.banca_reprovado.errors else "")) }}
+                {{ form.banca_reprovado.label(class="form-check-label") }}
                 {% for error in form.banca_reprovado.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
             
-            <div class="col-md-6 mb-3">
-                {{ form.banca_aprovado_com_ressalva.label(class="form-check-label") }}
+            <div class="col-md-6 mb-3 form-check">
                 {{ form.banca_aprovado_com_ressalva(class="form-check-input" + (" is-invalid" if form.banca_aprovado_com_ressalva.errors else "")) }}
+                {{ form.banca_aprovado_com_ressalva.label(class="form-check-label") }}
                 {% for error in form.banca_aprovado_com_ressalva.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
