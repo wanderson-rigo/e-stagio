@@ -1,99 +1,158 @@
 {% extends "base_supervisor.html" %}
 {% block content %}
-<div class="container mt-4">
-    <a href="{{ url_for('index_supervisor') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Avaliação do Supervisor</h2>
+<div class="container">
+    <a href="{{ url_for('index_supervisor') }}" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <h2 class="text-center mb-4">Avaliação da Concedente</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.empresa_nota_interesse.label(class="form-label") }}
-            {{ form.empresa_nota_interesse(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_interesse.errors else "")) }}
-            {% for error in form.empresa_nota_interesse.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_interesse.label(class="form-label") }}
+                    {{ form.empresa_nota_interesse(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_interesse.errors else "")) }}
+                    {% for error in form.empresa_nota_interesse.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_iniciativa.label(class="form-label") }}
+                    {{ form.empresa_nota_iniciativa(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_iniciativa.errors else "")) }}
+                    {% for error in form.empresa_nota_iniciativa.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_cooperacao.label(class="form-label") }}
+                    {{ form.empresa_nota_cooperacao(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_cooperacao.errors else "")) }}
+                    {% for error in form.empresa_nota_cooperacao.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_assiduidade.label(class="form-label") }}
+                    {{ form.empresa_nota_assiduidade(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_assiduidade.errors else "")) }}
+                    {% for error in form.empresa_nota_assiduidade.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_pontualidade.label(class="form-label") }}
+                    {{ form.empresa_nota_pontualidade(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_pontualidade.errors else "")) }}
+                    {% for error in form.empresa_nota_pontualidade.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_disciplina.label(class="form-label") }}
+                    {{ form.empresa_nota_disciplina(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_disciplina.errors else "")) }}
+                    {% for error in form.empresa_nota_disciplina.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_sociabilidade.label(class="form-label") }}
+                    {{ form.empresa_nota_sociabilidade(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_sociabilidade.errors else "")) }}
+                    {% for error in form.empresa_nota_sociabilidade.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_adaptabilidade.label(class="form-label") }}
+                    {{ form.empresa_nota_adaptabilidade(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_adaptabilidade.errors else "")) }}
+                    {% for error in form.empresa_nota_adaptabilidade.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_responsabilidade.label(class="form-label") }}
+                    {{ form.empresa_nota_responsabilidade(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_responsabilidade.errors else "")) }}
+                    {% for error in form.empresa_nota_responsabilidade.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.empresa_nota_etica.label(class="form-label") }}
+                    {{ form.empresa_nota_etica(type="number", class="form-control" + (" is-invalid" if
+                    form.empresa_nota_etica.errors else "")) }}
+                    {% for error in form.empresa_nota_etica.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form.empresa_atividades.label(class="form-label") }}
+                    {{ form.empresa_atividades(class="form-control" + (" is-invalid" if form.empresa_atividades.errors
+                    else "")) }}
+                    {% for error in form.empresa_atividades.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    {{ form.emprsa_comentarios.label(class="form-label") }}
+                    {{ form.emprsa_comentarios(class="form-control" + (" is-invalid" if form.emprsa_comentarios.errors
+                    else "")) }}
+                    {% for error in form.emprsa_comentarios.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="media_notas" class="form-label">Média das Notas</label>
+                    <input type="text" id="media_notas" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="col-12 text-center mt-3">
+                <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.empresa_nota_iniciativa.label(class="form-label") }}
-            {{ form.empresa_nota_iniciativa(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_iniciativa.errors else "")) }}
-            {% for error in form.empresa_nota_iniciativa.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_cooperacao.label(class="form-label") }}
-            {{ form.empresa_nota_cooperacao(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_cooperacao.errors else "")) }}
-            {% for error in form.empresa_nota_cooperacao.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_assiduidade.label(class="form-label") }}
-            {{ form.empresa_nota_assiduidade(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_assiduidade.errors else "")) }}
-            {% for error in form.empresa_nota_assiduidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_pontualidade.label(class="form-label") }}
-            {{ form.empresa_nota_pontualidade(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_pontualidade.errors else "")) }}
-            {% for error in form.empresa_nota_pontualidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_disciplina.label(class="form-label") }}
-            {{ form.empresa_nota_disciplina(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_disciplina.errors else "")) }}
-            {% for error in form.empresa_nota_disciplina.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_sociabilidade.label(class="form-label") }}
-            {{ form.empresa_nota_sociabilidade(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_sociabilidade.errors else "")) }}
-            {% for error in form.empresa_nota_sociabilidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_adaptabilidade.label(class="form-label") }}
-            {{ form.empresa_nota_adaptabilidade(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_adaptabilidade.errors else "")) }}
-            {% for error in form.empresa_nota_adaptabilidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_responsabilidade.label(class="form-label") }}
-            {{ form.empresa_nota_responsabilidade(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_responsabilidade.errors else "")) }}
-            {% for error in form.empresa_nota_responsabilidade.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_nota_etica.label(class="form-label") }}
-            {{ form.empresa_nota_etica(type="number", class="form-control" + (" is-invalid" if form.empresa_nota_etica.errors else "")) }}
-            {% for error in form.empresa_nota_etica.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.empresa_atividades.label(class="form-label") }}
-            {{ form.empresa_atividades(class="form-control" + (" is-invalid" if form.empresa_atividades.errors else "")) }}
-            {% for error in form.empresa_atividades.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.emprsa_comentarios.label(class="form-label") }}
-            {{ form.emprsa_comentarios(class="form-control" + (" is-invalid" if form.emprsa_comentarios.errors else "")) }}
-            {% for error in form.emprsa_comentarios.errors %}
-            <div class="invalid-feedback">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            <label for="media_notas" class="form-label">Média das Notas</label>
-            <input type="text" id="media_notas" class="form-control" readonly>
-        </div>
-        <button type="submit" class="btn btn-primary">Salvar Avaliação</button>
     </form>
 </div>
 <script>

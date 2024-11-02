@@ -2,7 +2,9 @@
 {% block content %}
 <div class="container">
     <a href="{{ url_for('index_empresa') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2 class="mb-4">Avaliação da Empresa</h2>
+
+    <h2 class="mb-4 text-center">Avaliação da Concedente</h2>
+    
     <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         

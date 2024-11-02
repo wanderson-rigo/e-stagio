@@ -2,7 +2,7 @@
 {% extends "base_aluno.html" %}
 {% block content %}
 <div class="container mb-5">
-    <h2 class="mb-4">
+    <h2 class="mb-4 text-center">
         {% if form and form.professor_id %}
         Meu Estágio
         {% else %}
@@ -79,10 +79,9 @@
                 {% endfor %}
             </div>
 
-            <div class="col-md-6 mb-3">
-                {{ form.remuneracao.label(class="form-check-label") }}
-                {{ form.remuneracao(class="form-check-input ms-2" + (" is-invalid" if form.remuneracao.errors else ""))
-                }}
+            <div class="col-md-6 form-check mb-3 d-flex align-items-center">
+                {{ form.remuneracao(class="form-check-input" + (" is-invalid" if form.remuneracao.errors else "")) }}
+                {{ form.remuneracao.label(class="form-check-label ms-2") }}
                 {% for error in form.remuneracao.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
@@ -128,22 +127,46 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar Estágio</button>
+        <div class="container mt-4">
+            <div class="row gy-3">
+                <div class="col-12 col-md-3 mt-3">
+                    <button type="submit" class="btn btn-primary w-100">Salvar Estágio</button>
+                </div>
 
-        {% if form.estagio_id > 0 %}
-        <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary">Fazer Autoavaliação</a>
-        <a href="{{ url_for('listar_atividades_estagio') }}" class="btn btn-primary">Ver Atividades de Estágio</a>
-        <a href="{{ url_for('generate_company_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Avaliação
-            Concedente</a>
-        <a href="{{ url_for('generate_professor_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Avaliação
-            Professor</a>
-        <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=form.estagio_id) }}"
-            class="btn btn-primary">Autoavaliação do Estagiário</a>
-        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=form.estagio_id) }}" class="btn btn-primary">Ata da
-            Banca</a>
-        <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=form.estagio_id) }}"
-            class="btn btn-primary">Acompanhamento PDF</a>
-        {% endif %}
+                {% if form.estagio_id > 0 %}
+                <!-- First Row (4 Elements) -->
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('auto_avaliacao') }}" class="btn btn-primary w-100">Fazer Autoavaliação</a>
+                </div>
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('listar_atividades_estagio') }}" class="btn btn-primary w-100">Ver Atividades de
+                        Estágio</a>
+                </div>
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('generate_company_pdf', estagio_id=form.estagio_id) }}"
+                        class="btn btn-primary w-100">Avaliação Concedente PDF</a>
+                </div>
+
+                <!-- Second Row (4 Elements) -->
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('generate_professor_pdf', estagio_id=form.estagio_id) }}"
+                        class="btn btn-primary w-100">Avaliação Professor PDF</a>
+                </div>
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=form.estagio_id) }}"
+                        class="btn btn-primary w-100">Autoavaliação PDF</a>
+                </div>
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=form.estagio_id) }}"
+                        class="btn btn-primary w-100">Ata da Banca PDF</a>
+                </div>
+                <div class="col-12 col-md-3 mt-3">
+                    <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=form.estagio_id) }}"
+                        class="btn btn-primary w-100">Acompanhamento PDF</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </form>
 </div>
 <script>

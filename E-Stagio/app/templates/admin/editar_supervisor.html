@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mb-5">
     <a class="btn btn-secondary mb-3" href="{{ url_for('lista_supervisores') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2 class="mb-4">Editar Supervisor</h2>
+    <h2 class="mb-4 text-center">Editar Supervisor</h2>
     <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}

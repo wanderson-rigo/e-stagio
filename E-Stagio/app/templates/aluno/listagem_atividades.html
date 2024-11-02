@@ -1,11 +1,20 @@
 <!-- templates/aluno/listagem_atividades.html -->
-{% extends "base.html" %}
+{% extends "base_aluno.html" %}
 {% block content %}
 <div class="container mt-4">
-    <a href="{{ url_for('index_aluno') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2>Atividades de Estágio</h2>
-    <a href="{{ url_for('cadastrar_atividade_estagio') }}" class="btn btn-success mb-3">Adicionar Nova Atividade</a>
-    <table id="atividadesTable" class="table table-striped">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <div class="mb-2 mb-md-0">
+            <a href="{{ url_for('index_aluno') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
+        </div>
+        <div class="mb-2 mb-md-0">
+            <h2 class="text-center text-md-left">Atividades do Estágio</h2>
+        </div>
+        <div>
+            <a href="{{ url_for('cadastrar_atividade_estagio') }}" class="btn btn-success mb-3 mb-md-0">Adicionar Atividade <i class="fas fa-plus"></i></a>
+        </div>
+    </div>
+    
+    <table id="atividadesTable" class="mt-2 table table-striped table-hover align-middle table-bordered">
         <thead>
             <tr>
                 <th>Data</th>
@@ -25,7 +34,8 @@
                 <td>{{ atividade.horario_saida.strftime('%H:%M') }}</td>
                 <td>{{ atividade.horas_totais }}</td>
                 <td>
-                    <a href="{{ url_for('editar_atividade_estagio', atividade_id=atividade.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('editar_atividade_estagio', atividade_id=atividade.id) }}"
+                        class="btn btn-primary">Editar</a>
                 </td>
             </tr>
             {% else %}
@@ -39,28 +49,31 @@
 
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
 
 <script>
-$(document).ready(function() {
-    $('#atividadesTable').DataTable({
-        "order": [[0, "asc"]],
-        "language": {
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "Nenhuma atividade encontrada",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "Nenhuma atividade disponível",
-            "infoFiltered": "(filtrado de _MAX_ registros no total)",
-            "search": "Buscar:",
-            "paginate": {
-                "first": "Primeiro",
-                "last": "Último",
-                "next": "Próximo",
-                "previous": "Anterior"
+    $(document).ready(function () {
+        $('#atividadesTable').DataTable({
+            "responsive": true,
+            "order": [[0, "asc"]],
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Nenhuma atividade encontrada",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhuma atividade disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+                "emptyTable": "Nenhum dado disponível na tabela"
             },
-            "emptyTable": "Nenhum dado disponível na tabela"
-        },
-        "pageLength": 10
+            "pageLength": 10
+        });
     });
-});
 </script>
 {% endblock %}

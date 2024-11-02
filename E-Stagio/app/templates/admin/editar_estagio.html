@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mb-5">
     <a class="btn btn-secondary mb-3" href="{{ url_for('lista_estagios') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2 class="mb-4">Editar Estágio</h2>
+    <h2 class="mb-4 text-center">Editar Estágio</h2>
     <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
@@ -73,7 +73,7 @@
                 {% endfor %}
             </div>
 
-            <div class="col-md-6 mb-3 form-check">
+            <div class="col-md-6 form-check mb-3 d-flex align-items-center">
                 {{ form.remuneracao(class="form-check-input" + (" is-invalid" if form.remuneracao.errors else "")) }}
                 {{ form.remuneracao.label(class="form-check-label") }}
                 {% for error in form.remuneracao.errors %}
@@ -122,13 +122,29 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Atualizar</button>
-        <a href="{{ url_for('lista_estagios') }}" class="btn btn-secondary">Cancelar</a>
-        <a href="{{ url_for('generate_company_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Avaliação Empresa</a>
-        <a href="{{ url_for('generate_professor_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Avaliação Professor</a>
-        <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Autoavaliação do Estagiário</a>
-        <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Ata da Banca</a>
-        <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=estagio.id) }}" class="btn btn-primary">Acompanhamento PDF</a>
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary w-100">Atualizar</button>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('generate_company_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Avaliação Concedente PDF</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('generate_professor_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Avaliação Professor PDF</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Autoavaliação do Estagiário PDF</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Ata da Banca PDF</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Acompanhamento PDF</a>
+                </div>
+            </div>
+        </div>
+        
     </form>
 </div>
 <script>

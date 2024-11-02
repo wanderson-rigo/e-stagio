@@ -243,15 +243,15 @@ class BancaAvaliacaoForm(FlaskForm):
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])
-    banca_nota_apresentacao_oral_supervisor = FloatField('Nota Apresentação Oral Supervisor', validators=[
+    banca_nota_apresentacao_oral_supervisor = FloatField('Nota Apresentação Oral Orientador', validators=[
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])
-    banca_nota_pratica_profissional_supervisor = FloatField('Nota Prática Profissional Supervisor', validators=[
+    banca_nota_pratica_profissional_supervisor = FloatField('Nota Prática Profissional Orientador', validators=[
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])
-    banca_nota_relatorio_supervisor = FloatField('Nota Relatório Supervisor', validators=[
+    banca_nota_relatorio_supervisor = FloatField('Nota Relatório Orientador', validators=[
         DataRequired(message='Este campo é obrigatório.'),
         NumberRange(min=0, max=10, message='A nota deve estar entre 0 e 10.')
     ])

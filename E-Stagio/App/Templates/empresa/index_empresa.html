@@ -1,9 +1,10 @@
 {% extends "base_empresa.html" %}
 {% block content %}
 <!-- home.html -->
-<div class="container mt-4">
-    <h2>Estágiarios</h2>
-    <table id="estagiosTable" class="table table-striped">
+<div class="container">
+    <h2 class="text-center">Estagiários</h2>
+
+    <table id="estagiosTable" class="mt-2 table table-striped table-hover align-middle table-bordered">
         <thead>
             <tr>
                 <th>Aluno</th>
@@ -36,12 +37,16 @@
 
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
 <script>
 $(document).ready(function() {
     $('#estagiosTable').DataTable({
+        responsive: true,
         "language": {
                 "lengthMenu": "Mostrar _MENU_ registros por página",
-                "zeroRecords": "Nenhum Estágiario encontrado",
+                "zeroRecords": "Nenhum Estagiário encontrado",
                 "info": "Mostrando página _PAGE_ de _PAGES_",
                 "infoEmpty": "Nenhum registro disponível",
                 "infoFiltered": "(filtrado de _MAX_ registros no total)",

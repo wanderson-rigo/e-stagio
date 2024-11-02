@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mb-5">
     <a class="btn btn-secondary mb-3" href="{{ url_for('lista_estagios') }}"><i class="fas fa-arrow-left"></i> Voltar</a>
-    <h2 class="mb-4">Cadastro de Estágio</h2>
+    <h2 class="mb-4 text-center">Cadastro de Estágio</h2>
     <form method="POST" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
@@ -73,7 +73,7 @@
                 {% endfor %}
             </div>
 
-            <div class="col-md-6 mb-3 form-check">
+            <div class="col-md-6 form-check mb-3 d-flex align-items-center">
                 {{ form.remuneracao(class="form-check-input" + (" is-invalid" if form.remuneracao.errors else "")) }}
                 {{ form.remuneracao.label(class="form-check-label") }}
                 {% for error in form.remuneracao.errors %}
