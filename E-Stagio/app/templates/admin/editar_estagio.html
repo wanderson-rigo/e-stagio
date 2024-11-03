@@ -11,7 +11,7 @@
         <div class="row g-4">
             <div class="col-md-6 mb-3">
                 {{ form.aluno_id.label(class="form-label") }}
-                {{ form.aluno_id(class="form-control" + (" is-invalid" if form.aluno_id.errors else "")) }}
+                {{ form.aluno_id(class="form-select" + (" is-invalid" if form.aluno_id.errors else "")) }}
                 {% for error in form.aluno_id.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
@@ -19,7 +19,7 @@
 
             <div class="col-md-6 mb-3">
                 {{ form.professor_id.label(class="form-label") }}
-                {{ form.professor_id(class="form-control" + (" is-invalid" if form.professor_id.errors else "")) }}
+                {{ form.professor_id(class="form-select" + (" is-invalid" if form.professor_id.errors else "")) }}
                 {% for error in form.professor_id.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
@@ -27,7 +27,7 @@
 
             <div class="col-md-6 mb-3">
                 {{ form.empresa_id.label(class="form-label") }}
-                {{ form.empresa_id(class="form-control" + (" is-invalid" if form.empresa_id.errors else ""), id="empresa_id") }}
+                {{ form.empresa_id(class="form-select" + (" is-invalid" if form.empresa_id.errors else ""), id="empresa_id") }}
                 {% for error in form.empresa_id.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
@@ -35,7 +35,7 @@
 
             <div class="col-md-6 mb-3">
                 {{ form.supervisor_id.label(class="form-label") }}
-                {{ form.supervisor_id(class="form-control" + (" is-invalid" if form.supervisor_id.errors else ""), id="supervisor_id") }}
+                {{ form.supervisor_id(class="form-select" + (" is-invalid" if form.supervisor_id.errors else ""), id="supervisor_id") }}
                 {% for error in form.supervisor_id.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}

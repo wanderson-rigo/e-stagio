@@ -51,7 +51,7 @@
 
             <div class="col-md-6 mb-3">
                 {{ form.empresaId.label(class="form-label") }}
-                {{ form.empresaId(class="form-control" + (" is-invalid" if form.empresaId.errors else "")) }}
+                {{ form.empresaId(class="form-select" + (" is-invalid" if form.empresaId.errors else "")) }}
                 {% for error in form.empresaId.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
