@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     command: >
-      sh -c "flask db upgrade && gunicorn --bind 0.0.0.0:5000 app:app --workers 3 --threads 2 --timeout 120"
+      sh -c "flask db init && flask db upgrade && gunicorn --bind 0.0.0.0:5000 app:app --workers 3 --threads 2 --timeout 120"
 
 volumes:
   db_data:
