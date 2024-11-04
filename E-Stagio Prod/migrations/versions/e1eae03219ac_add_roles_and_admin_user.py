@@ -24,10 +24,9 @@ def upgrade():
     
     # Inserção do usuário admin diretamente
     hashed_password = hash_password('Admin123!')
-    confirmed_date = '2024-11-04 00:00:00'
     op.execute(f"""
         INSERT INTO "user" (username, email, password, active, fs_uniquifier, confirmed_at)
-        VALUES ('admin', 'admin@admin.com', '{hashed_password}', TRUE, 'unique_identifier_for_admin', '{confirmed_date}')
+        VALUES ('admin', 'admin@admin.com', '{hashed_password}', TRUE, 'unique_identifier_for_admin', '2024-11-02 02:11:35.080072')
     """)
     
     # Associando o papel de admin ao usuário admin criado
