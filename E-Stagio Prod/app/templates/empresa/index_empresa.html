@@ -1,0 +1,68 @@
+{% extends "base_empresa.html" %}
+{% block content %}
+<!-- home.html -->
+<div class="container">
+    <h2 class="text-center">Estagiários</h2>
+
+    <table id="estagiosTable" class="mt-2 table table-striped table-hover align-middle table-bordered">
+        <thead>
+            <tr>
+                <th>Aluno</th>
+                <th>Professor</th>
+                <th>Supervisor</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estagio in estagios %}
+            <tr>
+                <td>{{ estagio.aluno.nome }}</td>
+                <td>{{ estagio.professor.nome }}</td>
+                <td>{{ estagio.supervisor.nome }}</td>
+                <td>{{ estagio.status | readable_status }}</td>
+                <td>
+                    <a href="{{ url_for('avaliacao_empresa', estagio_id=estagio.id) }}" class="btn btn-primary">Notas</a>
+                    <a href="{{ url_for('listar_atividades_empresa', estagio_id=estagio.id) }}" class="btn btn-primary">Atividades</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Nenhum estágio cadastrado na sua empresa.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+<script>
+$(document).ready(function() {
+    $('#estagiosTable').DataTable({
+        responsive: true,
+        "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Nenhum Estagiário encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first":      "Primeiro",
+                    "last":       "Último",
+                    "next":       "Próximo",
+                    "previous":   "Anterior"
+                },
+                "loadingRecords": "Carregando...",
+                "processing":     "Processando...",
+                "emptyTable":     "Nenhum dado disponível na tabela"
+            },
+        "pageLength": 10
+    });
+});
+</script>
+{% endblock %}

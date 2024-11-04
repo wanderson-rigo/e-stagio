@@ -1,0 +1,99 @@
+{% extends "base_default.html" %}
+{% block content %}
+<div class="container">
+    <a class="btn btn-secondary mb-4" href="{{ url_for('index') }}">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+    <h2 class="mb-4">Cadastro Aluno</h2>
+    <form method="POST" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.nome.label(class="form-label") }}
+                    {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+                    {% for error in form.nome.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.matricula.label(class="form-label") }}
+                    {{ form.matricula(class="form-control" + (" is-invalid" if form.matricula.errors else "")) }}
+                    {% for error in form.matricula.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                    {% for error in form.email.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.celular.label(class="form-label") }}
+                    {{ form.celular(class="form-control" + (" is-invalid" if form.celular.errors else "")) }}
+                    {% for error in form.celular.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.cpf.label(class="form-label") }}
+                    {{ form.cpf(class="form-control" + (" is-invalid" if form.cpf.errors else "")) }}
+                    {% for error in form.cpf.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.rg.label(class="form-label") }}
+                    {{ form.rg(class="form-control" + (" is-invalid" if form.rg.errors else "")) }}
+                    {% for error in form.rg.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                    {% for error in form.password.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.dob.label(class="form-label") }}
+                    {{ form.dob(type='date', class="form-control" + (" is-invalid" if form.dob.errors else "")) }}
+                    {% for error in form.dob.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex mt-4">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

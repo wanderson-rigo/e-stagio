@@ -1,0 +1,54 @@
+{% extends "base_professor.html" %}
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('index_professor') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
+
+    <h2 class="mb-4 text-center">Avaliação do Professor Orientador</h2>
+
+    <form method="POST" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <div class="row g-4">
+            <div class="col-12 mb-3">
+                {{ form.professor_nota_avaliacao.label(class="form-label") }}
+                {{ form.professor_nota_avaliacao(type="number", class="form-control" + (" is-invalid" if form.professor_nota_avaliacao.errors else "")) }}
+                {% for error in form.professor_nota_avaliacao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-12 mb-3">
+                {{ form.professor_avaliacao_comentarios.label(class="form-label") }}
+                {{ form.professor_avaliacao_comentarios(class="form-control" + (" is-invalid" if form.professor_avaliacao_comentarios.errors else "")) }}
+                {% for error in form.professor_avaliacao_comentarios.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container mt-2">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col mt-2">
+                    <button type="submit" class="btn btn-primary w-100">Salvar Avaliação</button>
+                </div>
+                <div class="col mt-2">
+                    <a href="{{ url_for('generate_company_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Avaliação Empresa PDF</a>
+                </div>
+                <div class="col mt-2">
+                    <a href="{{ url_for('generate_professor_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Avaliação Professor PDF</a>
+                </div>
+                <div class="col mt-2">
+                    <a href="{{ url_for('generate_self_evaluation_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Autoavaliação do Estagiário PDF</a>
+                </div>
+                <div class="col mt-2">
+                    <a href="{{ url_for('generate_ata_banca_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Ata da Banca PDF</a>
+                </div>
+                <div class="col mt-2">
+                    <a href="{{ url_for('generate_atividades_estagio_pdf', estagio_id=estagio.id) }}" class="btn btn-primary w-100">Acompanhamento PDF</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

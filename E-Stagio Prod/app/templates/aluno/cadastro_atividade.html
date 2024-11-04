@@ -1,0 +1,57 @@
+<!-- templates/admin/cadastro_atividade.html -->
+{% extends "base_aluno.html" %}
+{% block content %}
+<div class="container mb-5">
+    <a href="{{ url_for('listar_atividades_estagio') }}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Voltar</a>
+    
+    <h2 class="mb-4 text-center">Cadastro de Atividade de Estágio</h2>
+    <form method="POST" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+
+        <div class="row g-4">
+            <div class="col-md-6 mb-3">
+                {{ form.descricao.label(class="form-label") }}
+                {{ form.descricao(class="form-control" + (" is-invalid" if form.descricao.errors else "")) }}
+                {% for error in form.descricao.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.data.label(class="form-label") }}
+                {{ form.data(class="form-control" + (" is-invalid" if form.data.errors else "")) }}
+                {% for error in form.data.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.horario_entrada.label(class="form-label") }}
+                {{ form.horario_entrada(class="form-control" + (" is-invalid" if form.horario_entrada.errors else "")) }}
+                {% for error in form.horario_entrada.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.horario_saida.label(class="form-label") }}
+                {{ form.horario_saida(class="form-control" + (" is-invalid" if form.horario_saida.errors else "")) }}
+                {% for error in form.horario_saida.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.horas_totais.label(class="form-label") }}
+                {{ form.horas_totais(class="form-control" + (" is-invalid" if form.horas_totais.errors else "")) }}
+                {% for error in form.horas_totais.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cadastrar Atividade</button>
+    </form>
+</div>
+{% endblock %}
