@@ -16,41 +16,29 @@ branch_labels = None
 depends_on = None
 
 def upgrade():
-    app = current_app._get_current_object()
-    with app.app_context():
-        from app import user_datastore, db
-        
-        roles = ['professor', 'empresa', 'supervisor', 'aluno', 'admin']
-        for role_name in roles:
-            if not user_datastore.find_role(role_name):
-                user_datastore.create_role(name=role_name)
-        db.session.commit()
-
-        if not user_datastore.find_user(email='admin@admin.com'):
-            admin_role = user_datastore.find_or_create_role('admin')
-
-            admin_user = user_datastore.create_user(
-                username='admin',
-                email='admin@admin.com',
-                password=hash_password('Admin123!'),
-                active=True
-            )
-
-            user_datastore.add_role_to_user(admin_user, admin_role)
-            db.session.commit()
+    op.execute("INSERT INTO role (name, description) VALUES ('professor', 'Professor Role')")
+    op.execute("INSERT INTO role (name, description) VALUES ('empresa', 'Empresa Role')")
+    op.execute("INSERT INTO role (name, description) VALUES ('supervisor', 'Supervisor Role')")
+    op.execute("INSERT INTO role (name, description) VALUES ('aluno', 'Aluno Role')")
+    op.execute("INSERT INTO role (name, description) VALUES ('admin', 'Admin Role')")
+    
+    # Inserção do usuário admin diretamente
+    hashed_password = hash_password('Admin123!')
+    op.execute(f"""
+        INSERT INTO "user" (username, email, password, active, fs_uniquifier)
+        VALUES ('admin', 'admin@admin.com', '{hashed_password}', TRUE, 'unique_identifier_for_admin')
+    """)
+    
+    # Associando o papel de admin ao usuário admin criado
+    op.execute("""
+        INSERT INTO roles_users (user_id, role_id)
+        VALUES (
+            (SELECT id FROM "user" WHERE email = 'admin@admin.com'),
+            (SELECT id FROM role WHERE name = 'admin')
+        )
+    """)
 
 def downgrade():
-    app = current_app._get_current_object()
-    with app.app_context():
-        from app import user_datastore, db
-
-        admin_user = user_datastore.find_user(email='admin@admin.com')
-        if admin_user:
-            db.session.delete(admin_user)
-        
-        for role_name in ['professor', 'empresa', 'supervisor', 'aluno', 'admin']:
-            role = user_datastore.find_role(role_name)
-            if role:
-                db.session.delete(role)
-        
-        db.session.commit()
+    op.execute("DELETE FROM roles_users WHERE user_id = (SELECT id FROM \"user\" WHERE email = 'admin@admin.com')")
+    op.execute("DELETE FROM \"user\" WHERE email = 'admin@admin.com'")
+    op.execute("DELETE FROM role WHERE name IN ('professor', 'empresa', 'supervisor', 'aluno', 'admin')")
