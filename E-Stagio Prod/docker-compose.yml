@@ -1,27 +1,29 @@
 version: '3.8'
 
 services:
-  db:
+  estagios-db:
     image: postgres:13
     env_file:
       - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/estagio_data  # Define um diretório personalizado
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - estagio_db_data:/var/lib/postgresql/estagio_data  # Monta o volume no diretório personalizado
     ports:
       - "5432:5432"
 
-  web:
+  estagios-web:
     build: .
     ports:
       - "4000:5000"
     volumes:
       - .:/app
     depends_on:
-      - db
+      - estagios-db
     env_file:
       - .env
     command: >
       sh -c "flask db upgrade && gunicorn --bind 0.0.0.0:5000 app:app --workers 3 --threads 2 --timeout 120"
 
 volumes:
-  db_data:
+  estagio_db_data:
