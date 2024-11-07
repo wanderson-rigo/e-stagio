@@ -150,5 +150,7 @@
                 console.error('Erro ao buscar supervisores:', error);
             });
     });
+
+    document.getElementById('empresa_id').dispatchEvent(new Event('change'));
 </script>
 {% endblock %}

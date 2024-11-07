@@ -14,6 +14,7 @@ import os
 from io import BytesIO
 import locale
 import zipfile
+from babel.dates import format_date
 
 # Inicio Area Geral
 
@@ -1612,10 +1613,6 @@ def generate_ata_banca_pdf(estagio_id):
 
 @app.route('/generate_atividades_estagio_pdf/<int:estagio_id>', methods=['GET'])
 def generate_atividades_estagio_pdf(estagio_id):
-    # Set locale to Portuguese for month names
-    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
-
-    # Fetch internship (Estagio) details and its activities
     estagio = Estagio.query.filter_by(id=estagio_id).first_or_404()
     atividades = AtividadesEstagio.query.filter_by(estagio_id=estagio.id).all()
 
@@ -1634,7 +1631,7 @@ def generate_atividades_estagio_pdf(estagio_id):
 
     for mes_ano, atividades_mes in atividades_por_mes.items():
         # Prepare data for the PDF
-        nome_mes_pt = atividades_mes[0].data.strftime('%B/%Y').capitalize()
+        nome_mes_pt = format_date(atividades_mes[0].data, "MMMM yyyy", locale="pt_BR").capitalize()
         data_dict = {
             'nome_estagiario': estagio.aluno.nome,
             'nome_empresa': estagio.empresa.nome_empresa,
