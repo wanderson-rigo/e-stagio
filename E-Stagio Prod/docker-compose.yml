@@ -1,7 +1,8 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   estagios-db:
+    container_name: estagios-prod-db
     image: postgres:13
     env_file:
       - .env
@@ -11,8 +12,11 @@ services:
       - estagio_db_data:/var/lib/postgresql/estagio_data  # Monta o volume no diretório personalizado
     ports:
       - "5432:5432"
+    networks:
+      - estagios-network
 
   estagios-web:
+    container_name: estagios-prod-web
     build: .
     ports:
       - "4000:5000"
@@ -24,6 +28,12 @@ services:
       - .env
     command: >
       sh -c "flask db upgrade && gunicorn --bind 0.0.0.0:5000 app:app --workers 3 --threads 2 --timeout 120"
+    networks:
+      - estagios-network
 
 volumes:
   estagio_db_data:
+
+networks:
+  estagios-network:
+    external: true
