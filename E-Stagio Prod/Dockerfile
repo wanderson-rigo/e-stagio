@@ -18,3 +18,4 @@ EXPOSE 5000
 
 # Define the default command (this will be overridden by docker-compose)
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--workers", "3", "--threads", "2", "--timeout", "120"]
+
