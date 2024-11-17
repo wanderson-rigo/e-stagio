@@ -1,0 +1,33 @@
+{% extends "base_default.html" %}
+{% block content %}
+<div class="container">
+    <!-- Botão de Voltar -->
+    <a class="btn btn-secondary mb-4" href="{{ url_for('index') }}">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+    
+    <!-- Título da Página -->
+    <h1 class="text-center mb-5">Sobre o Sistema E-Stágio</h1>
+
+    <!-- Descrição do Sistema -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h3 class="card-title">Visão Geral</h3>
+            <p>
+                O E-Stágio é uma plataforma digital desenvolvida para simplificar o gerenciamento de estágios, 
+                oferecendo um meio prático e centralizado de registro e acompanhamento das atividades de estágio. 
+                O sistema é totalmente responsivo, adaptando-se tanto a telas de computadores quanto de dispositivos 
+                móveis para proporcionar uma experiência de uso consistente em qualquer dispositivo.
+            </p>
+            <h4 class="mt-4">Descrição Técnica</h4>
+            <ul>
+                <li>Desenvolvido em Python</li>
+                <li>Banco de dados PostgreSQL</li>
+                <li>Executado em contêiner Docker</li>
+                <li>Hospedado em um servidor Linux (BRDrive)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

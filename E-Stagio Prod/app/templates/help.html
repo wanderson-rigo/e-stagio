@@ -1,0 +1,55 @@
+{% extends "base_default.html" %}
+{% block content %}
+<div class="container">
+    <!-- Botão de Voltar -->
+    <a class="btn btn-secondary mb-4" href="{{ url_for('index') }}">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <!-- Título da Página -->
+    <h1 class="text-center mb-5">Manual de Uso do Sistema E-Stágio</h1>
+
+    <!-- Funcionalidades por Perfil de Usuário -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h3 class="card-title">Funcionalidades por Perfil de Usuário</h3>
+            <ul>
+                <li><b>Aluno Estagiário:</b> Registra as atividades realizadas durante o estágio.</li>
+                <li><b>Supervisor:</b> Acompanha o progresso do aluno estagiário e realiza avaliações periódicas.</li>
+                <li><b>Orientador:</b> Acompanha as atividades do estagiário e também realiza avaliações.</li>
+                <li><b>Avaliador:</b> Monitora e avalia o estágio com base nas atividades registradas.</li>
+                <li><b>Administrador:</b> Gerencia o sistema e é responsável pelo cadastro e manutenção dos usuários.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Recursos Adicionais -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h3 class="card-title">Recursos Adicionais</h3>
+            <p>Todas as atividades, registros e avaliações podem ser exportados para PDF para facilitar a documentação e
+                o compartilhamento de informações.</p>
+        </div>
+    </div>
+
+    <!-- Espaço para Fluxograma -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Fluxograma do Sistema</h3>
+            <p class="text-muted">Aqui está o fluxograma ilustrando o funcionamento do sistema.</p>
+            <div class="text-center p-5 bg-light border rounded">
+                <!-- Imagem para telas grandes -->
+                <img src="{{ url_for('static', filename='Files/Fluxograma.jpg') }}" alt="Fluxograma do Sistema"
+                    class="img-fluid d-none d-lg-block">
+
+                <!-- Imagem para telas pequenas -->
+                <img src="{{ url_for('static', filename='Files/FluxogramaMobile.jpg') }}"
+                    alt="Fluxograma do Sistema (Mobile)" class="img-fluid d-lg-none">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -277,6 +277,23 @@ def cadastro_professor():
             
             flash('Professor cadastrado com sucesso!', 'success')
             
+            msg = Message("Conta Ativada Com Sucesso!",
+                      recipients=[form.email.data],
+                      body=(
+                        "Olá,\n\n"
+                        "Sua conta no E-Stágio foi Criada por um Admin com sucesso!\n"
+                        "Agora você já pode acessar o sistema e aproveitar todas as funcionalidades disponíveis.\n\n"
+                        "Para acessar o sistema use o email que recebeu essa mensagem com a senha: " + form.password.data + "\n\n"
+                        "Por favor, não responda a este e-mail. Caso precise de ajuda, entre em contato com o suporte.\n\n"
+                        ".\n\n"
+                        "\n\n"
+                        "Atenciosamente,\n"
+                        "Equipe E-Stágio"
+                      )
+            )
+        
+            mail.send(msg)
+            
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
@@ -326,6 +343,24 @@ def cadastro_empresa():
             db.session.commit()
             
             flash('Empresa cadastrada com sucesso!', 'success')
+            
+            msg = Message("Conta Ativada Com Sucesso!",
+                      recipients=[form.email.data],
+                      body=(
+                        "Olá,\n\n"
+                        "Sua conta no E-Stágio foi Criada por um Admin com sucesso!\n"
+                        "Agora você já pode acessar o sistema e aproveitar todas as funcionalidades disponíveis.\n\n"
+                        "Para acessar o sistema use o email que recebeu essa mensagem com a senha: " + form.password.data + "\n\n"
+                        "Por favor, não responda a este e-mail. Caso precise de ajuda, entre em contato com o suporte.\n\n"
+                        ".\n\n"
+                        "\n\n"
+                        "Atenciosamente,\n"
+                        "Equipe E-Stágio"
+                      )
+            )
+        
+            mail.send(msg)
+            
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
@@ -374,6 +409,24 @@ def cadastro_aluno():
             db.session.commit()
             
             flash('Aluno cadastrado com sucesso!', 'success')
+            
+            msg = Message("Conta Ativada Com Sucesso!",
+                      recipients=[form.email.data],
+                      body=(
+                        "Olá,\n\n"
+                        "Sua conta no E-Stágio foi Criada por um Admin com sucesso!\n"
+                        "Agora você já pode acessar o sistema e aproveitar todas as funcionalidades disponíveis.\n\n"
+                        "Para acessar o sistema use o email que recebeu essa mensagem com a senha: " + form.password.data + "\n\n"
+                        "Por favor, não responda a este e-mail. Caso precise de ajuda, entre em contato com o suporte.\n\n"
+                        ".\n\n"
+                        "\n\n"
+                        "Atenciosamente,\n"
+                        "Equipe E-Stágio"
+                      )
+            )
+        
+            mail.send(msg)
+            
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
@@ -424,6 +477,24 @@ def cadastro_supervisor():
             db.session.commit()
 
             flash('Supervisor cadastrado com sucesso!', 'success')
+            
+            msg = Message("Conta Ativada Com Sucesso!",
+                      recipients=[form.email.data],
+                      body=(
+                        "Olá,\n\n"
+                        "Sua conta no E-Stágio foi Criada por um Admin com sucesso!\n"
+                        "Agora você já pode acessar o sistema e aproveitar todas as funcionalidades disponíveis.\n\n"
+                        "Para acessar o sistema use o email que recebeu essa mensagem com a senha: " + form.password.data + "\n\n"
+                        "Por favor, não responda a este e-mail. Caso precise de ajuda, entre em contato com o suporte.\n\n"
+                        ".\n\n"
+                        "\n\n"
+                        "Atenciosamente,\n"
+                        "Equipe E-Stágio"
+                      )
+            )
+        
+            mail.send(msg)
+            
             return redirect(url_for('index'))
         except Exception as e:
             db.session.rollback()
@@ -1690,3 +1761,11 @@ def generate_atividades_estagio_pdf(estagio_id):
 
     
 # Fim Area criação de PDFs
+
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
