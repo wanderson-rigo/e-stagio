@@ -14,30 +14,42 @@
         <div class="card-body">
             <h3 class="card-title">Funcionalidades por Perfil de Usuário</h3>
             <ul>
-                <li><b>Aluno Estagiário:</b> Registra as atividades realizadas durante o estágio.</li>
-                <li><b>Supervisor:</b> Acompanha o progresso do aluno estagiário e realiza avaliações periódicas.</li>
-                <li><b>Orientador:</b> Acompanha as atividades do estagiário e também realiza avaliações.</li>
-                <li><b>Avaliador:</b> Monitora e avalia o estágio com base nas atividades registradas.</li>
-                <li><b>Administrador:</b> Gerencia o sistema e é responsável pelo cadastro e manutenção dos usuários.
-                </li>
+                <li><b>Aluno Estagiário:</b> O aluno entra no sistema com uma conta criada pelo administrador ou pode
+                    criar sua própria conta e aguardar a aprovação do administrador. Tem acesso ao estágio cadastrado
+                    pelo administrador, ou pode cadastrar um estágio e aguardar aprovação. Registra as atividades
+                    realizadas durante o estágio. Pode gerar os documentos PDF das atas de avaliação do professor, do
+                    supervisor concedente, autoavaliação e fichas de acompanhamento das atividades.</li>
+                <li><b>Supervisor e Empresa:</b> Acompanham o progresso do aluno estagiário, realizam avaliações
+                    periódicas e consultam o relatório das atividades do estagiário.</li>
+                <li><b>Orientador:</b> O orientador acompanha as atividades do aluno estagiário e realiza avaliações
+                    periódicas. É responsável por cadastrar as notas da avaliação final. Pode gerar o PDF da ata de
+                    avaliação final e outros documentos.</li>
+                <li><b>Administrador:</b> O administrador gerencia todo o sistema, sendo responsável pelo cadastro e
+                    manutenção dos usuários e estágios. Pode aprovar contas de usuários criadas, cadastrar estágios e
+                    gerenciar todas as informações e permissões. Tem a capacidade de gerar todos os tipos de documentos
+                    em PDF.</li>
             </ul>
         </div>
     </div>
 
-    <!-- Recursos Adicionais -->
+    <!-- Espaço para Fluxograma -->
     <div class="card mb-5">
         <div class="card-body">
-            <h3 class="card-title">Recursos Adicionais</h3>
-            <p>Todas as atividades, registros e avaliações podem ser exportados para PDF para facilitar a documentação e
-                o compartilhamento de informações.</p>
-        </div>
-    </div>
-
-    <!-- Espaço para Fluxograma -->
-    <div class="card">
-        <div class="card-body">
             <h3 class="card-title">Fluxograma do Sistema</h3>
-            <p class="text-muted">Aqui está o fluxograma ilustrando o funcionamento do sistema.</p>
+            <p>O fluxograma abaixo ilustra o funcionamento do sistema e as etapas principais do processo de estágio,
+                desde o cadastro dos usuários e estágios até a geração de documentos em PDF.</p>
+            <ul>
+                <li><b>01 e 02 - Cadastro de Usuários e Estágios:</b> O administrador ou o próprio aluno cadastra os
+                    usuários envolvidos e os estágios supervisionados, aguardando aprovação quando necessário.</li>
+                <li><b>03 - Registro de Atividades:</b> O aluno estagiário registra periodicamente as atividades
+                    realizadas durante o estágio.</li>
+                <li><b>04 - Acompanhamento:</b> Orientador e supervisor acompanham as atividades registradas e realizam
+                    avaliações periódicas.</li>
+                <li><b>05 - Avaliações e Notas:</b> As notas são atribuídas com base nas avaliações realizadas pelos
+                    orientadores, supervisores e pelo próprio aluno (autoavaliação).</li>
+                <li><b>06 e 07 - Cálculo e Geração de Relatórios:</b> O sistema calcula as médias de avaliação e permite
+                    a geração dos relatórios em PDF, garantindo a organização e documentação das informações.</li>
+            </ul>
             <div class="text-center p-5 bg-light border rounded">
                 <!-- Imagem para telas grandes -->
                 <img src="{{ url_for('static', filename='Files/Fluxograma.jpg') }}" alt="Fluxograma do Sistema"
@@ -50,6 +62,113 @@
         </div>
     </div>
 
-</div>
+    <!-- Recursos Adicionais -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h3 class="card-title">Recursos Adicionais</h3>
+            <ul>
+                <li>Todas as atividades, registros e avaliações realizadas no sistema podem ser exportadas para PDF,
+                    facilitando a documentação e o compartilhamento de informações entre os envolvidos no processo de
+                    estágio.</li>
+                <li>O sistema também permite ao aluno estagiário acompanhar o status de suas avaliações e notas,
+                    garantindo maior transparência e controle durante todo o período do estágio.</li>
+                <li>As funcionalidades do sistema estão disponíveis em uma interface intuitiva e amigável, promovendo
+                    uma experiência de usuário positiva.</li>
+            </ul>
+        </div>
+    </div>
 
-{% endblock %}
+    <!-- B.4 Principais Funcionalidades -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h3 class="card-title">Principais Funcionalidades</h3>
+            <ul>
+                <li><b>Como se Registrar:</b> Para se registrar, acesse a página inicial do sistema e clique em "Novo" +
+                    qual a função que você precisa exercer no sistema no topo da página, ou no centro da página no botão
+                    "Cadastrar" + a função, por exemplo, se for aluno, clique no botão "Novo Aluno" ou "Cadastrar
+                    Aluno". Preencha os campos necessários (nome, e-mail, senha, etc.) e clique em "Enviar". Aguarde a
+                    aprovação do administrador para ter acesso ao sistema.</li>
+                <li><b>Como Fazer Login:</b> Na página inicial, clique em "Login". Insira seu e-mail e senha cadastrados
+                    e clique em "Entrar". Caso tenha esquecido sua senha, utilize a opção "Esqueci minha senha" para
+                    redefini-la.</li>
+                <li><b>Uso das Tabelas no Sistema:</b> As tabelas do sistema exibem informações relevantes sobre
+                    estágios, atividades, usuários e avaliações. Caso necessário, utilize a barra de pesquisa para
+                    localizar informações específicas de modo ágil, use os botões de ação para editar ou visualizar
+                    detalhes de cada registro. É possível ordenar as tabelas clicando nos títulos das colunas,
+                    ordenando-as pelo tipo de informação que está sendo mostrado. Há também a possibilidade de alterar a
+                    quantidade de linhas que a tabela vai mostrar por página, sendo a quantidade padrão 10.</li>
+                <li><b>Aluno - Registro de Atividades:</b> Para registrar atividades, vá até a seção "Atividades" no
+                    menu principal localizado no topo da página. Clique em "Adicionar Atividade", preencha os detalhes
+                    da atividade realizada e clique em "Salvar". Todas as atividades serão listadas para acompanhamento
+                    e edição, se necessário.</li>
+                <li><b>Como Gerar Documentos em PDF:</b> O sistema permite a geração de vários tipos de documentos em
+                    PDF, como atas de avaliação e fichas de acompanhamento. Vá até a seção correspondente e clique no
+                    botão "Gerar PDF" + qual PDF a ser gerado. Os PDFs a serem gerados são limitados ao tipo de usuário.
+                    O PDF gerado será baixado automaticamente após clicar no botão.</li>
+                <li><b>Acompanhamento e Avaliação:</b> Supervisores e orientadores podem acessar as atividades
+                    registradas pelos alunos e realizar avaliações periódicas. Para avaliar um aluno, acesse na tabela
+                    pelo botão de ação "Notas" ou relativo a notas, ao acessar a página preencha os campos solicitados,
+                    atribuindo notas e comentários. As avaliações ficam disponíveis para consulta e podem ser exportadas
+                    para PDF.</li>
+                <li><b>Suporte e Ajuda:</b> Caso encontre dificuldades, utilize a seção "Ajuda" no menu principal para
+                    ver um breve manual. Caso necessário, entre em contato com o setor de estágios.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Uso do Sistema E-Stágio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        ul li b {
+            color: #007bff;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .text-center img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+        }
+    </style>
+    {% endblock %}
