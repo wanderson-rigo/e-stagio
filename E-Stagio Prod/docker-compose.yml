@@ -11,7 +11,7 @@ services:
     volumes:
       - estagio_db_data:/var/lib/postgresql/estagio_data  # Monta o volume no diretório personalizado
     ports:
-      - "5432:5432"
+      - "50236:5432"
     networks:
       - estagios-network
 
