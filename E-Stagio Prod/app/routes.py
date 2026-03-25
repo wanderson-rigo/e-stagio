@@ -510,7 +510,12 @@ def cadastro_estagio():
     
     # Preencher as opções de alunos, professores e empresas
     form.aluno_id.choices = [
-        (a.id, a.nome) for a in Aluno.query.join(Aluno.user).filter(Aluno.is_approved == True, User.active == True).all()
+    (a.id, a.nome) 
+    for a in Aluno.query
+        .join(Aluno.user)
+        .filter(Aluno.is_approved == True, User.active == True)
+        .order_by(func.lower(Aluno.nome))
+        .all()
     ]
 
     form.professor_id.choices = [
